@@ -10,14 +10,14 @@ if (!appEl) {
   throw Error('No app element found');
 }
 
-const app = createApp(
-  { root: createRootModule() },
-  { sidebar: createSidebarView() },
-  createLayout(appEl, createTemplate),
-);
+const app = createApp({
+  layout: createLayout(appEl, createTemplate),
+  modules:  { root: createRootModule() },
+  views: { sidebar: createSidebarView() },
+});
 
-app.dispatch('root/showSidebar');
+app.dispatch('root', 'showSidebar');
 
 setTimeout(() => {
-  app.dispatch('root/showSidebar', false);
+  app.dispatch('root', 'showSidebar', false);
 }, 3000);

@@ -1,9 +1,13 @@
+import type { Module } from '../../lib/app/app';
+
 export function createRootModule() {
   return {
-    initialState: {
-      first: false
+    actions: <Actions>{
+      showSidebar,
     },
-    showSidebar,
+    initialState: <State>{
+      sidebar: false
+    },
   };
 
   function showSidebar(show = true) {
@@ -11,4 +15,12 @@ export function createRootModule() {
       state: { sidebar: show },
     }
   }
+}
+
+interface Actions {
+  showSidebar: (show?: boolean) => { state: State }
+}
+
+interface State {
+  sidebar: boolean;
 }

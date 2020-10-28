@@ -1,5 +1,8 @@
 import { render, TemplateResult } from 'lit-html';
 
+type Mounted = Record<string, Element>;
+export type Template = (state: any) => TemplateResult;
+
 export function createLayout(root: HTMLElement, template: Template) {
   const mounted: Mounted = {};
 
@@ -40,6 +43,3 @@ export function createLayout(root: HTMLElement, template: Template) {
     };
   }
 }
-
-type Mounted = Record<string, Element>;
-type Template = (state: any) => TemplateResult;

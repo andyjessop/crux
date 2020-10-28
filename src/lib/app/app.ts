@@ -1,38 +1,35 @@
 import { createEventEmitter } from '../event-emitter/event-emitter';
 import { createQueue } from '../queue/queue';
 
-export function createApp(
-  initialModules: any = {},
-  initialViews: any = {},
-  layout: Layout,
-) {
+export function createApp({
+  layout, modules: initialModules, views: initialViews = {},
+}: {
+  layout: Layout;
+  modules: any;
+  views: any;
+}) {
   const modules: any = { ...initialModules };
   const views: any = { ...initialViews };
 
   const emitter = createEventEmitter();
   const queue = createQueue();
-  const state: any = Object.keys(modules)
-    .reduce((acc, cur) => {
-      acc[cur] = modules[cur].initialState || {};
 
-      return acc;
-    }, <any>{})
+  const state: any = Object.keys(modules)
+    .reduce((acc, cur) => Object.assign(acc, { [cur]: modules[cur].initialState }), <any>{});
 
   return {
     ...emitter,
     dispatch,
   };
 
-  function dispatch(act: string, data?: any) {
-    queue.add(queuedDispatch, act, data);
+  function dispatch(module: string, action: string, data?: any) {
+    queue.add(queuedDispatch, module, action, data);
     queue.flush();
   }
 
-  async function queuedDispatch(act: string, data?: any) {
-    const [name, action] = act.split('/');
-
+  async function queuedDispatch(module: string, action: string, data?: any) {
     // Handle the action in the primary module.
-    const { event, state: newState } = modules[name][action](data);
+    const { event, state: newState } = modules[module].actions[action](data);
 
     Object.assign(state[name], newState);
 
@@ -54,3 +51,8 @@ export interface Layout {
 }
 
 export type Update = { mount: { el: Element, viewId: string }[], unmount: { el: Element, viewId: string }[] }
+
+export interface Module<T extends object = {}, U extends Record<string, Function> = {}> {
+  actions: U;
+  initialState?: Partial<T>;
+}
