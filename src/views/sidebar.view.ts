@@ -1,4 +1,4 @@
-export function createSidebar() {
+export function createSidebarView() {
   return {
     mount, unmount,
   };
