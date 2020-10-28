@@ -1,7 +1,18 @@
-import type { Queue } from './types';
+export interface API {
+  add: (fn: Function, ...params: any[]) => Promise<any>;
+  clear: () => void;
+  flush: () => Promise<any>;
+}
 
-export function createQueue(autoFlush: boolean = true): Queue.API {
-  const entries: Queue.Entry[] = [];
+export interface Entry {
+  fn: Function;
+  params: any[];
+  reject: Function;
+  resolve: Function;
+}
+
+export function createQueue(): API {
+  const entries: Entry[] = [];
   let flushing = false;
 
   return {
@@ -26,20 +37,21 @@ export function createQueue(autoFlush: boolean = true): Queue.API {
       resolve: res,
     });
 
-    if (autoFlush && flushing === false) {
-      flush();
-    }
-
     return promise;
   }
 
   function clear() {
     flushing = false;
+    
     entries.length = 0;
   }
 
   async function flush(): Promise<any> {
-    const entry = entries.shift();
+    if (flushing) {
+      return;
+    }
+
+    const entry = entries[0];
 
     if (!entry) {
       flushing = false;
@@ -53,6 +65,12 @@ export function createQueue(autoFlush: boolean = true): Queue.API {
       const result = await entry.fn(...entry.params);
       
       entry.resolve(result);
+
+      entries.shift();
+
+      if (entries.length === 0) {
+        flushing = false;
+      }
 
       return flush();
     } catch (e) {

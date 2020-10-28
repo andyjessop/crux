@@ -1,48 +1,40 @@
-import { createEventEmitter } from './event-emitter';
-import { createQueue } from './queue';
+import { createApp } from "./app/app";
+import { createLayout } from "./layout/layout";
+import { html } from 'lit-html';
+import { createSidebar } from "./views/sidebar";
 
-export function createModulesAPI<T, U, V>(
-  initialModules: Partial<T> = {},
-  initialViews: Partial<U> = {},
-  layout: Layout<V>,
-) {
-  const modules: Partial<T> = { ...initialModules };
-  const views: Partial<U> = { ...initialViews };
+const appEl = document.getElementById('app');
 
-  const emitter = createEventEmitter();
-  const queue = createQueue();
-  const state = {};
+if (!appEl) {
+  throw Error('No app element found');
+}
 
-  return {
-    ...emitter,
-    dispatch,
-  };
-
-  function dispatch(act: string, data: any) {
-    queue.add(queuedDispatch, act, data);
-  }
-
-  async function queuedDispatch(act: string, data: any) {
-    const [name, action] = act.split('/');
-
-    // Handle the action in the primary module.
-    const { event, state: newState } = modules[name][action](data);
-
-    Object.assign(state[name], newState);
-
-    const { mount, unmount } = layout.update(state);
-
-    await Promise.all(unmount.map(viewId => views[viewId].unmount()));
-
-    await Promise.all(mount.map(({ el, viewId }) => views[viewId].mount(el, state)));
-
-    // Emit any event to listening modules and views.
-    if (event) {
-      emitter.emit(event.type, { data: event.data, state });
+const root = {
+  initialState: {
+    first: false
+  },
+  showSidebar: function showSidebar(show = true) {
+    return {
+      state: { sidebar: show },
     }
   }
 }
 
-export interface Layout<T> {
-  update(state: T): { mount: { el: HTMLElement, viewId: string }[], unmount: string[] }
+const app = createApp(
+  { root },
+  { sidebar: createSidebar() },
+  createLayout(appEl, template),
+);
+
+app.dispatch('root/showSidebar');
+
+setTimeout(() => {
+  app.dispatch('root/showSidebar', false);
+}, 3000);
+
+
+function template(state: any) {
+  return html`
+    ${state.root.sidebar ? html`<div data-view-id="sidebar"></div>` : ''}
+  `;
 }
