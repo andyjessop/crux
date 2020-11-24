@@ -1,8 +1,7 @@
 import { createApp } from "./lib/app/app";
-import { createLayout } from "./lib/layout/lit-html.layout";
-import { createSidebarView } from "./views/sidebar.view";
 import { createRootModule } from "./modules/root/root.module";
-import { createTemplate } from "./template/template";
+import { createLayout } from "./layout/layout";
+import { createRouter } from "./lib/router/router/create-router";
 
 const appEl = document.getElementById('app');
 
@@ -10,14 +9,21 @@ if (!appEl) {
   throw Error('No app element found');
 }
 
-const app = createApp({
-  layout: createLayout(appEl, createTemplate),
-  modules:  { root: createRootModule() },
-  views: { sidebar: createSidebarView() },
+const router = createRouter('', {
+  post: '/posts/:id',
+  posts: '/posts'
 });
 
-app.dispatch('root', 'showSidebar');
+const app = createApp({
+  layout: createLayout(appEl, router),
+  modules: { root: createRootModule() },
+  router,
+  views: {
+    post: () => import('./views/post').then(mod => mod.post()),
+    posts: () => import('./views/posts').then(mod => mod.posts())
+  },
+});
 
-setTimeout(() => {
-  app.dispatch('root', 'showSidebar', false);
-}, 3000);
+app.dispatch('root', 'init');
+
+(<any>window).app = app;
