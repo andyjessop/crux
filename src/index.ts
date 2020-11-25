@@ -15,7 +15,8 @@ const router = createRouter('', {
 });
 
 const app = createApp({
-  layout: createLayout(appEl, router),
+  el: appEl,
+  layout: createLayout,
   modules: { root: createRootModule() },
   router,
   views: {

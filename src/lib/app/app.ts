@@ -2,16 +2,19 @@ import { createEventEmitter } from '../event-emitter/event-emitter';
 import { createQueue } from '../queue/queue';
 import { Router } from '../router/router/types';
 
-export function createApp({
-  layout, modules: initialModules, views: initialViews = {}, router,
+export function createApp<
+  T extends Modules,
+  U extends Record<string, View>,
+>({
+  layout, modules: initialModules, views: initialViews, router,
 }: {
   layout: Layout;
-  modules: any;
+  modules: T;
   router: Router.API;
-  views: any;
+  views: U;
 }) {
-  const modules: any = { ...initialModules };
-  const views: any = { ...initialViews };
+  const modules = { ...initialModules };
+  const views = { ...initialViews };
 
   const emitter = createEventEmitter();
   const queue = createQueue();
@@ -104,11 +107,21 @@ export interface Layout {
 
 export type Mounts = { mount: { el: Element, viewId: string }[], unmount: { el: Element, viewId: string }[] }
 
+export type Mount = (params: MountParams) => void;
+export type Unmount = Mount;
 export type MountParams = { currentRoute: Router.RouteData, el: Element, modules: any };
 
-export interface Module<T extends object = {}, U extends Record<string, Function> = {}> {
-  actions: U;
-  initialState?: Partial<T>;
+export interface Module {
+  actions: Record<string, Function>;
 }
 
+export type Modules = Record<string, Module>;
+
 type Mounted = Record<string, Element>;
+
+export type View = ({
+  el, modules,
+}: {
+  el: Element; modules: Modules;
+}) => {
+  mount: Mount, unmount: Unmount};
