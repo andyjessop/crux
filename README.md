@@ -1,6 +1,6 @@
 <div align="center"><img src="./public/images/logo.png" width="200px" /><p width="300px"></div>
 
-<h4 align="center">The framework for long-lived code in browser-based TypeScript/Javascript apps</h4>
+<p align="center"><strong>The framework for long-lived code in browser-based TypeScript/Javascript apps</strong></p>
 
 ---
 
