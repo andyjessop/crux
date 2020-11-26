@@ -1,6 +1,13 @@
 import { createEventEmitter } from '../event-emitter/event-emitter';
 import { createQueue } from '../queue/queue';
 import { Router } from '../router/router/types';
+import type {
+  Layout,
+  Modules,
+  Mounts,
+  Mounted,
+  View,
+} from './types';
 
 export function createApp<
   T extends Modules,
@@ -100,28 +107,3 @@ function createMounts() {
   }
   
 }
-
-export interface Layout {
-  update(state: any): void;
-}
-
-export type Mounts = { mount: { el: Element, viewId: string }[], unmount: { el: Element, viewId: string }[] }
-
-export type Mount = (params: MountParams) => void;
-export type Unmount = Mount;
-export type MountParams = { currentRoute: Router.RouteData, el: Element, modules: any };
-
-export interface Module {
-  actions: Record<string, Function>;
-}
-
-export type Modules = Record<string, Module>;
-
-type Mounted = Record<string, Element>;
-
-export type View = ({
-  el, modules,
-}: {
-  el: Element; modules: Modules;
-}) => {
-  mount: Mount, unmount: Unmount};

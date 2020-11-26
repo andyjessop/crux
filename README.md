@@ -1,8 +1,6 @@
 <div align="center"><img src="./public/images/logo.png" width="200px" /><p width="300px"></div>
 
-# Crux
-
-**The framework for long-lived code in browser-based TypeScript/Javascript apps**
+<h4 align="center">The framework for long-lived code in browser-based TypeScript/Javascript apps</h4>
 
 The core concept of `crux` is that you shouldn't be locked-into a single framework that defines the structure of your code and makes it difficult to change. Instead, the majority of your code should be framework-agnostic, written in the language of your domain, and should be able to simply plug-in to a minimal core. `crux` is that core.
 
@@ -12,9 +10,10 @@ The core concept of `crux` is that you shouldn't be locked-into a single framewo
 
 In summary, `crux`:
 
-- is a Typescript/Javascript web-app framework for the browser
-- promotes highly-decoupled and long-lived code
-- provides simple integration for micro-frontends
+- is a Typescript/Javascript web-app framework for the browser,
+- promotes highly-decoupled and long-lived code,
+- does not tie your code to a single view library,
+- provides simple integration for micro-frontends,
 - lowers your level of technical debt.
 
 ## Usage
@@ -23,7 +22,7 @@ In summary, `crux`:
 import { createApp } from 'crux';
 import { layout } from 'my-app/layout';
 import { post } from 'my-app/views';
-import { posts, user } from 'my-app/modules';
+import { user } from 'my-app/modules';
 
 const app = createApp({
   // App root element
@@ -94,14 +93,12 @@ This example of the `layout` uses `lit-html`:
 ```ts
 import { html, render } from 'lit-html';
 
-export function layout({
-  el, modules, router,
-}) {
+export function layout(el, { modules, router }) {
   return {
     update,
   };
 
-  function template(route: Router.RouteData | null) {
+  function template(route) {
     switch (route?.name) {
       case 'post':
         return html`<div data-view-id="post"></div>`;
@@ -127,18 +124,18 @@ In the example above, the `layout` provides root elements for `post` and `posts`
  * The view accepts the `context` as a parameter when instantiated, and also on both
  * mount and unmount.
  **/
-export function post({ el, modules, router }) {
+export function post({ modules, router }) {
   return {
     mount, unmount,
   };
 
-  function mount({ el, modules, router }) {
+  function mount(el, { modules, router }) {
     const postId = router.getCurrentRoute()?.params.id;
 
     el.innerHTML = `postId: ${postId}`;
   }
 
-  function unmount({ el, modules, router }) {
+  function unmount(el, { modules, router }) {
     el.innerHTML = '';
   }
 }
