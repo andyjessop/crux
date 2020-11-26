@@ -1,18 +1,18 @@
-# `crux`
+<div style="width: 100%; text-align: center;"><img src="./public/images/logo.png" style="width: 100px; margin: auto" /><p width="300px">`crux` is the framework for long-lived code in browser-based TypeScript/Javascript apps.</p></div>
 
-`crux` is the framework for long-lived code.
+# The Crux Framework
 
-The core concept is that you shouldn't be locked-into a single framework that determines the structure of your code and makes it difficult to change. Instead, the majority of your code should be framework-agnostic, written in the language of your domain, and should be able to simply plug-in to a minimal core. `crux` is that core.
+The core concept of `crux` is that you shouldn't be locked-into a single framework that defines the structure of your code and makes it difficult to change. Instead, the majority of your code should be framework-agnostic, written in the language of your domain, and should be able to simply plug-in to a minimal core. `crux` is that core.
 
 `crux` supports "micro-frontends", enabling large codebases to be split into smaller, more manageable, components. Small teams can work independently, allowing them to add code and deploy independently, focussing only on the parts of the site that are relevant to them.
 
-`crux` enables you to transition to a separate framework without doing a complete re-write of the code. Apps written in a single framework, and built around that framework, are essentially technical debt because the amount of work required to move off that framework at some point grows with every line of code added. `crux` encourages you to write code that doesn't rely on a framework and so can be more easily transitioned to a different framework as your business requirements dictate.
+`crux` enables you to transition to a separate framework without doing a complete re-write of the code. Apps written in a single framework, and built around that framework, are essentially technical debt because the amount of work required to move off that framework at some point grows with every line of code added. `crux` encourages you to write code that doesn't rely on a framework and so can be more easily transitioned as your business requirements change.
 
 In summary, `crux`:
 
-- is a web-app framework for the browser
+- is a Typescript/Javascript web-app framework for the browser
 - promotes highly-decoupled and long-lived code
-- provides simple integration of micro-frontends
+- provides simple integration for micro-frontends
 - lowers your level of technical debt.
 
 ## Usage
@@ -20,7 +20,7 @@ In summary, `crux`:
 ```ts
 import { createApp } from 'crux';
 import { layout } from 'my-app/layout';
-import { post, posts } from 'my-app/views';
+import { post } from 'my-app/views';
 import { posts, user } from 'my-app/modules';
 
 const app = createApp({
@@ -43,31 +43,41 @@ const app = createApp({
    * Modules define the business logic of the app. They can define
    * events that are called by "dispatch" and can emit events of their
    * own for views to consume.
-   **/
+   */
   modules:  {
-    posts,
+    /**
+     * Modules can be imported dynamically and lazily instantiated to save time
+     * on page load.
+     */
+    posts: () => import('my-app/modules/posts').then(mod => mod.posts()),
     user,
   },
 
   /**
    * A small and lightweight router is provided.
-   **/
+   */
   routes: {
     post: '/posts/:id',
-    posts: '/posts'
+    posts: {
+      path: '/posts',
+      /**
+       * If dynamically imported modules are required for a path, they can be referenced here.
+       */
+      modules: ['posts'],
+    },
   },
 
   /*
    * Views can be written independently in any framework, and are instantiated
    * individually on an element root provided by the layout. They can subscribe
    * to events emanating from the modules
-   **/
+   */
   views: {
+    post,
+
     /**
-     * Here the views are imported dynamically and lazily instantiated to save
-     * time on page load.
-     **/
-    post: () => import('my-app/views/post').then(mod => mod.post()),
+     * Views can also be imported dynamically.
+     */
     posts: () => import('my-app/views/posts').then(mod => mod.posts()),
   },
 });
