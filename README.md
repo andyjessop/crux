@@ -1,4 +1,4 @@
-<div style="width: 100%; text-align: center;"><img src="./public/images/logo.png" width="200px" /><p width="300px">`crux` is the framework for long-lived code in browser-based TypeScript/Javascript apps.</p></div>
+<div align="center"><img src="./public/images/logo.png" width="200px" /><p width="300px">The framework for long-lived code in browser-based TypeScript/Javascript apps.</p></div>
 
 # The Crux Framework
 
