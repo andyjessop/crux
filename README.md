@@ -1,14 +1,14 @@
-# `ll-cool-app`
+# `crux`
 
-`ll-cool-app` is the framework for long-lived code.
+`crux` is the framework for long-lived code.
 
-The core concept is that you shouldn't be locked-into a single framework that determines the structure of your code and makes it difficult to change. Instead, the majority of your code should be framework-agnostic, and should be able to simply plug-in to a minimal core. `ll-cool-app` is that core.
+The core concept is that you shouldn't be locked-into a single framework that determines the structure of your code and makes it difficult to change. Instead, the majority of your code should be framework-agnostic, written in the language of your domain, and should be able to simply plug-in to a minimal core. `crux` is that core.
 
-`ll-cool-app` supports "micro-frontends", enabling large codebases to be split into smaller, more manageable, components. Small teams can work independently, allowing them to add code and deploy independently, focussing only on the parts of the site that are relevant to them.
+`crux` supports "micro-frontends", enabling large codebases to be split into smaller, more manageable, components. Small teams can work independently, allowing them to add code and deploy independently, focussing only on the parts of the site that are relevant to them.
 
-`ll-cool-app` enables you to transition to a separate framework without doing a complete re-write of the code. Apps written in a single framework, and built around that framework, are essentially technical debt because the amount of work required to move off that framework at some point grows with every line of code added. `ll-cool-app` encourages you to write code that doesn't rely on a framework and so can be more easily transitioned to a different framework as your business requirements dictate.
+`crux` enables you to transition to a separate framework without doing a complete re-write of the code. Apps written in a single framework, and built around that framework, are essentially technical debt because the amount of work required to move off that framework at some point grows with every line of code added. `crux` encourages you to write code that doesn't rely on a framework and so can be more easily transitioned to a different framework as your business requirements dictate.
 
-In summary, `ll-cool-app`:
+In summary, `crux`:
 
 - is a web-app framework for the browser
 - promotes highly-decoupled and long-lived code
@@ -18,7 +18,7 @@ In summary, `ll-cool-app`:
 ## Usage
 
 ```ts
-import { createApp } from 'll-cool-app';
+import { createApp } from 'crux';
 import { layout } from 'my-app/layout';
 import { post, posts } from 'my-app/views';
 import { posts, user } from 'my-app/modules';
@@ -40,7 +40,7 @@ const app = createApp({
   layout,
 
   /**
-   * Modules hold all the business logic of the app. They can define
+   * Modules define the business logic of the app. They can define
    * events that are called by "dispatch" and can emit events of their
    * own for views to consume.
    **/
@@ -50,7 +50,7 @@ const app = createApp({
   },
 
   /**
-   * A small and lightweight router is available  
+   * A small and lightweight router is provided.
    **/
   routes: {
     post: '/posts/:id',
@@ -63,8 +63,12 @@ const app = createApp({
    * to events emanating from the modules
    **/
   views: {
-    post,
-    posts,
+    /**
+     * Here the views are imported dynamically and lazily instantiated to save
+     * time on page load.
+     **/
+    post: () => import('my-app/views/post').then(mod => mod.post()),
+    posts: () => import('my-app/views/posts').then(mod => mod.posts()),
   },
 });
 ```
@@ -104,30 +108,28 @@ export function layout({
 }
 ```
 
-`layout` adapters can be made for any framework.
-
-The `root` module (in this case) handles state changes to propagate to the layout, but modules can do other things in response to an action, such as fire events for views to consume.
-
-Let's take a look at a view. It's a simple object containing `mount` and `unmount`, so any framework can be used here.
+In the example above, the `layout` provides root elements for `post` and `posts`. These are the "views" that we defined earlier. After the template is rendered, `crux` will first `unmount` any views that no longer exist, and `mount` any new views defined by the `layout`. The views, therefore, hook into these lifecyle events by providing `mount` and `unmount` functions to enable the view to initialise and destroy itself:
 
 ```ts
-export function createSidebarView() {
+/**
+ * The view accepts the `context` as a parameter when instantiated, and also on both
+ * mount and unmount.
+ **/
+export function post({ el, modules, router }) {
   return {
     mount, unmount,
   };
 
-  function mount(el: Element, state: any) {
-    const span = document.createElement('span');
+  function mount({ el, modules, router }) {
+    const postId = router.getCurrentRoute()?.params.id;
 
-    span.innerText = 'sidebar';
-
-    el.appendChild(span);
+    el.innerHTML = `postId: ${postId}`;
   }
 
-  function unmount(el: Element, state: string) {
-    console.log('Unmounting sidebar...');
+  function unmount({ el, modules, router }) {
+    el.innerHTML = '';
   }
 }
 ```
 
-`mount` and `unmount` can also be asynchronous, if asynchronous setup work needs to be done.
+`mount` and `unmount` can also be asynchronous. If asynchronous setup work needs to be done in the views, `crux` will queue any further events until the `Promise` has returned.
