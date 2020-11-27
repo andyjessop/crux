@@ -31,14 +31,10 @@ const app = createApp({
   el: document.getElementById('app'),
 
   /*
-  * The job of the layout is to control the top-level HTML of the app.
-  * It is a function that returns an object with an `update` method,
-  * called on every "dispatch".
-  *
-  * The layout defines view roots, to which the app attaches and
+  * The layout defines root elements for views, to which crux attaches and
   * instantiates views as necessary.
   *
-  * The layout can use any view framework.
+  * The layout is free to use any view library.
   */
   layout,
 
@@ -52,7 +48,14 @@ const app = createApp({
      * Modules can be imported dynamically and lazily instantiated to save time
      * on page load.
      */
-    posts: () => import('my-app/modules/posts').then(mod => mod.posts()),
+    posts: {
+      module: () => import('my-app/modules/posts').then(mod => mod.posts()),
+
+      /**
+       * Modules can be loaded only for a specific route.
+       */
+      route: 'posts',
+    },
     user,
   },
 
@@ -61,13 +64,7 @@ const app = createApp({
    */
   routes: {
     post: '/posts/:id',
-    posts: {
-      path: '/posts',
-      /**
-       * If dynamically imported modules are required for a path, they can be referenced here.
-       */
-      modules: ['posts'],
-    },
+    posts: 'posts',
   },
 
   /*
@@ -85,6 +82,8 @@ const app = createApp({
   },
 });
 ```
+
+## Layout
 
 `layout` is a simple function that returns an object with an `update` method. When `update` is called, the template updates and renders the layout into the DOM.
 
@@ -119,6 +118,8 @@ export function layout(el, { modules, router }) {
 }
 ```
 
+## Views
+
 In the example above, the `layout` provides root elements for `post` and `posts`. These are the "views" that we defined earlier. After the template is rendered, `crux` will first `unmount` any views that no longer exist, and `mount` any new views defined by the `layout`. The views, therefore, hook into these lifecyle events by providing `mount` and `unmount` functions to enable the view to initialise and destroy itself:
 
 ```ts
@@ -144,3 +145,13 @@ export function post({ modules, router }) {
 ```
 
 `mount` and `unmount` can also be asynchronous. If asynchronous setup work needs to be done in the views, `crux` will queue any further events until the `Promise` has returned.
+
+## Modules
+
+Modules can be registered to and unregistered from the app programmatically:
+
+```ts
+app.modules.register('authors', authors);
+
+app.modules.unregister('authors');
+```
