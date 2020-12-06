@@ -1,3 +1,4 @@
+import { enableAllPlugins, produce } from 'immer';
 import { createEventEmitter } from '../event-emitter/event-emitter';
 import { createQueue } from '../queue/queue';
 import { Router } from '../router/router/types';
@@ -8,6 +9,8 @@ import type {
   Mounted,
   View,
 } from './types';
+
+enableAllPlugins();
 
 export function createApp<
   T extends Modules,
@@ -23,6 +26,7 @@ export function createApp<
   const modules = { ...initialModules };
   const views = { ...initialViews };
 
+  const state = getInitialState(modules);
   const emitter = createEventEmitter();
   const queue = createQueue();
   const mounts = createMounts();
@@ -41,14 +45,17 @@ export function createApp<
   }
 
   async function queuedDispatch(module?: string, action?: string, data?: any) {
+    let nextState;
+    let event;
+
     // Handle the action in the primary module.
     if (module && action) {
-      await modules[module].actions[action](data);
+      nextState = produce(state, function updateState(draft) {
+        event = modules[module].actions[action](draft, data);
+      });
     }
-    
-    const currentRoute = router.getCurrentRoute();
 
-    layout.update(currentRoute);
+    layout.update(event, nextState);
 
     const { mount, unmount } = mounts.get();
 
@@ -61,6 +68,8 @@ export function createApp<
         
       views[viewId]?.mount({ currentRoute, el, modules });
     }));
+
+
   }
 }
 
@@ -106,4 +115,10 @@ function createMounts() {
     };
   }
   
+}
+
+function getInitialState(obj: Modules) {
+  return Object.entries(obj).reduce((acc, [key, val]) => {
+    acc[key] = val.initialState;
+  }, <any>{});
 }
