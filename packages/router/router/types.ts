@@ -1,4 +1,4 @@
-import type { API as EventEmitter, Handler } from '../../event-emitter/event-emitter';
+import type { API as EventEmitter, Handler } from '../../utils/src/event-emitter/event-emitter';
 
 export namespace Router {
   export interface API extends EventEmitter {

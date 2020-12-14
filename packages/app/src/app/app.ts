@@ -1,7 +1,7 @@
 import { enableAllPlugins, produce } from 'immer';
-import { createEventEmitter } from '../event-emitter/event-emitter';
-import { createQueue } from '../queue/queue';
-import { Router } from '../router/router/types';
+import { createEventEmitter } from '../../../utils/src/event-emitter/event-emitter';
+import { createQueue } from '../../../utils/src/queue/queue';
+import { Router } from '../../../router/router/types';
 import type {
   Layout,
   Modules,
@@ -50,7 +50,7 @@ export function createApp<
 
     // Handle the action in the primary module.
     if (module && action) {
-      nextState = produce(state, function updateState(draft) {
+      nextState = produce(state, function updateState(draft: any) {
         event = modules[module].actions[action](draft, data);
       });
     }

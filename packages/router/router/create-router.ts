@@ -1,5 +1,5 @@
 import { Router } from './types';
-import { createEventEmitter, API as EventEmitter } from '../../event-emitter/event-emitter';
+import { createEventEmitter, API as EventEmitter } from '../../utils/src/event-emitter/event-emitter';
 import { parse, reverse } from '../parser';
 import { trimSlashes } from '../parser/trim-slashes';
 import { getRouteData } from './get-route-data';
