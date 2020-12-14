@@ -2,7 +2,6 @@
   "name": "@crux/state",
   "description": "Very simple state management for the browser",
   "version": "0.0.2",
-  "repository": "https://github.com/andyjessop/crux-state",
   "scripts": {
     "test": "./node_modules/.bin/jest",
     "lint": "./node_modules/.bin/eslint ./src/**/*.ts"
@@ -38,5 +37,5 @@
   "publishConfig": {
     "access": "public"
   },
-  "gitHead": "c2fd88a21fa90c2557b934b13b5cfab51ec9f06f"
+  "gitHead": "092c793ade544edafed8e48a9ebb2df3ba0a37a2"
 }
