@@ -1,0 +1,32 @@
+{
+	"compilerOptions": {
+		// target node v8+ (https://node.green/)
+		// the only missing feature is Array.prototype.values
+		"lib": ["es2017"],
+		"target": "esnext",
+
+		"declaration": true,
+    "outDir": "types",
+
+		"noEmitOnError": true,
+		"noErrorTruncation": true,
+
+		// rollup takes care of these
+		"module": "ESNext",
+		"moduleResolution": "node",
+		"resolveJsonModule": true,
+		"allowSyntheticDefaultImports": true,
+
+		// TODO: error all the things
+		//"strict": true,
+		"noImplicitThis": true,
+		"noUnusedLocals": true,
+		"noUnusedParameters": true,
+		"typeRoots": ["./node_modules/@types"]
+	},
+
+	"exclude": [
+		"node_modules",
+		"**/*.spec.ts"
+	]
+}
