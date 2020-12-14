@@ -18,5 +18,6 @@
   "dependencies": {
     "lit-html": "^1.3.0"
   },
-  "name": "crux"
+  "name": "crux",
+  "version": "0.0.1"
 }
