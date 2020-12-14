@@ -1,7 +1,7 @@
 {
   "name": "@crux/state",
   "description": "Very simple state management for the browser",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "scripts": {
     "test": "./node_modules/.bin/jest",
     "lint": "./node_modules/.bin/eslint ./src/**/*.ts"
