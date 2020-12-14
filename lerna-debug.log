@@ -1,4 +1,4 @@
-37 error Error: Command failed: git add -- packages/router/package.json packages/router/package-lock.json packages/app/package.json packages/app/package-lock.json packages/utils/package.json packages/utils/package-lock.json packages/state/package.json packages/state/package-lock.json lerna.json
+37 error Error: Command failed: git add -- packages/state/package.json packages/state/package-lock.json packages/utils/package.json packages/utils/package-lock.json packages/app/package.json packages/app/package-lock.json packages/router/package.json packages/router/package-lock.json lerna.json
 37 error fatal: Pathspec 'packages/state/package.json' is in submodule 'packages/state'
 37 error
 37 error     at makeError (/Users/andy/dev/crux/node_modules/@lerna/child-process/node_modules/execa/index.js:174:9)

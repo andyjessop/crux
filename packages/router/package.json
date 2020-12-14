@@ -1,6 +1,6 @@
 {
   "name": "@crux/router",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "repository": "https://github.com/andyjessop/crux-router",
   "scripts": {
     "test": "./node_modules/.bin/jest",
