@@ -1,4 +1,4 @@
-import { createEventEmitter, EventEmitter } from "@crux/utils";
+import { createEventEmitter, EventEmitter } from "../../";
 
 export function createFSM<T extends Config>(config: T, options: Options<T>) {
   const {
