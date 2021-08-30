@@ -1,5 +1,7 @@
 # Crux
 
+**NB: `crux` is still in alpha at the moment, so in no way should it be used for production as the API is almost certain to change very soon**
+
 `crux` aims to guide you into writing code that is long-lived. This means that the code is:
 
 * easy to change incrementally without losing structure and organisation
