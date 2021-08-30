@@ -1,0 +1,13 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "../../dist/out-tsc",
+    "declaration": true,
+    "paths": {
+      "@crux/*": ["dist/packages/*"]
+    },
+    "types": ["jest", "mocha"]
+  },
+  "include": ["**/*.ts"],
+  "exclude": ["**/*.spec.ts"],
+}

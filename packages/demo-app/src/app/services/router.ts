@@ -1,0 +1,1 @@
+export { createCruxRouter as createRouterService } from "src/lib/router";

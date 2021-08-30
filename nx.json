@@ -1,0 +1,35 @@
+{
+  "extends": "@nrwl/workspace/presets/npm.json",
+  "npmScope": "nx",
+  "affected": {
+    "defaultBase": "master"
+  },
+  "tasksRunnerOptions": {
+    "default": {
+      "runner": "@nrwl/workspace/tasks-runners/default",
+      "options": {
+        "cacheableOperations": ["build", "lint", "test", "e2e"]
+      }
+    }
+  },
+  "projects": {
+    "app": {
+      "tags": []
+    },
+    "demo-app": {
+      "tags": []
+    },
+    "di": {
+      "tags": []
+    },
+    "router": {
+      "tags": []
+    },
+    "store": {
+      "tags": []
+    },
+    "utils": {
+      "tags": []
+    }
+  }
+}

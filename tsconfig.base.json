@@ -1,0 +1,27 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "rootDirs": [".", "./packages"],
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "es2015",
+    "module": "esnext",
+    "lib": ["es2017", "dom", "dom.iterable"],
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "@crux/app": ["packages/app/src/index.ts"],
+      "@crux/di": ["packages/di/src/index.ts"],
+      "@crux/router": ["packages/router/src/index.ts"],
+      "@crux/store": ["packages/store/src/index.ts"],
+      "@crux/utils": ["packages/utils/src/index.ts"]
+    },
+    "types": ["jest", "mocha"]
+  },
+  "exclude": ["node_modules", "tmp"]
+}
