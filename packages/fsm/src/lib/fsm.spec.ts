@@ -1,5 +1,4 @@
-import { createFSM } from '@crux/utils';
-import { EventTypes } from '@crux/utils';
+import { createFSM } from './fsm';
 
 const lightSwitch = {
   off: {
@@ -34,11 +33,11 @@ describe('fsm', () => {
   test('listen to state changes', async () => {
     const fsm = createFSM(lightSwitch, { initialState: 'off' });
 
-    fsm.on(EventTypes.OnExit, () => {
+    fsm.onExit(() => {
       expect(fsm.getState()).toEqual('off');
     });
 
-    fsm.on(EventTypes.OnEnter, () => {
+    fsm.onEnter(() => {
       expect(fsm.getState()).toEqual('on');
     });
 
@@ -61,7 +60,7 @@ describe('fsm', () => {
     const fsm = createFSM(lightSwitch, { initialState: 'off' });
     let asyncWorkDone = false;
 
-    fsm.on(EventTypes.OnExit, async () => new Promise<void>(resolve => {
+    fsm.onExit(async () => new Promise<void>(resolve => {
       // Set a small delay before the `onExit` handler resolves.
       setTimeout(() => {
         // Check that state has not yet changed.
@@ -74,9 +73,10 @@ describe('fsm', () => {
 
     // OnEnter is fired immediately after calculating the next state, so if asyncWorkDone = true
     // here it means that the FSM waited for the previous promise
-    fsm.on(EventTypes.OnEnter, () => {
+    fsm.onEnter(({ current }) => {
       expect(asyncWorkDone).toEqual(true);
       expect(fsm.getState()).toEqual('on');
+      expect(current).toEqual('on');
     });
 
     await fsm.transition('switchOn');

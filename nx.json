@@ -28,7 +28,16 @@
     "store": {
       "tags": []
     },
-    "utils": {
+    "async-queue": {
+      "tags": []
+    },
+    "event-emitter": {
+      "tags": []
+    },
+    "fsm": {
+      "tags": []
+    },
+    "sync-queue": {
       "tags": []
     }
   }

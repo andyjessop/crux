@@ -1,4 +1,4 @@
-import { createEventEmitter, EventEmitter } from "../../";
+import { createEventEmitter, EventEmitter } from '@crux/event-emitter';
 
 export function createFSM<T extends Config>(config: T, options: Options<T>) {
   const {
@@ -13,12 +13,29 @@ export function createFSM<T extends Config>(config: T, options: Options<T>) {
   return {
     ...actions,
     getState,
+    onEnter,
+    onExit,
     transition,
-    ...emitter,
   };
 
   function getState() {
     return current;
+  }
+
+  function onEnter(handler: (data: Events<T>['onEnter']) => Promise<void> | void) {
+    emitter.on(EventTypes.OnEnter, handler);
+
+    return function offEnter() {
+      emitter.off(EventTypes.OnEnter, handler);
+    }
+  }
+
+  function onExit(handler: (data: Events<T>['onExit']) => Promise<void> | void) {
+    emitter.on(EventTypes.OnExit, handler);
+
+    return function offEnter() {
+      emitter.off(EventTypes.OnExit, handler);
+    }
   }
 
   async function transition(action: Actions<T>): Promise<keyof T & string> {
@@ -63,7 +80,6 @@ type Events<T> = {
 export const enum EventTypes {
   OnEnter = 'onEnter',
   OnExit = 'onExit',
-  Ready = 'ready',
 }
 
 type Options<T> = {

@@ -19,7 +19,10 @@
       "@crux/di": ["packages/di/src/index.ts"],
       "@crux/router": ["packages/router/src/index.ts"],
       "@crux/store": ["packages/store/src/index.ts"],
-      "@crux/utils": ["packages/utils/src/index.ts"]
+      "@crux/async-queue": ["packages/utils/async-queue/src/index.ts"],
+      "@crux/event-emitter": ["packages/utils/event-emitter/src/index.ts"],
+      "@crux/fsm": ["packages/utils/fsm/src/index.ts"],
+      "@crux/sync-queue": ["packages/utils/sync-queue/src/index.ts"]
     },
     "types": ["jest", "mocha"]
   },

@@ -1,5 +1,5 @@
-import { createEventEmitter } from '@crux/utils';
-import type { EventEmitter } from '@crux/utils';
+import { createEventEmitter } from '@crux/event-emitter';
+import type { EventEmitter } from '@crux/event-emitter';
 import { parse, reverse } from './parser';
 import { trimSlashes } from './parser/trim-slashes';
 import { getRouteData } from './helpers/get-route-data';

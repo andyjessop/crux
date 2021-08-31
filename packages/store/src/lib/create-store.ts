@@ -1,4 +1,4 @@
-import { createSyncQueue } from '@crux/utils';
+import { createSyncQueue } from '@crux/sync-queue';
 import { observable, observe, raw, unobserve } from '@nx-js/observer-util';
 
 type Callback<T> = (data: T) => void;

@@ -18,3 +18,25 @@ The key takeaways for crux are:
 * it provides simple integration for micro-frontends,
 * it lowers your level of technical debt,
 * it is fully-featured but is tiny (< 7KB all-in)
+
+## Contributing
+
+### Adding a new package
+
+```bash
+yarn nx g @nrwl/workspace:lib [name] --directory=[folder] --buildable --publishable --dryRun
+```
+
+### Building a package
+
+```bash
+yarn nx build http --prod
+```
+
+### Publishing a package
+
+```bash
+cd dist/packages/http
+
+npm publish --access public
+```
