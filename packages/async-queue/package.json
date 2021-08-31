@@ -1,4 +1,5 @@
 {
   "name": "@crux/async-queue",
+  "license": "MIT",
   "version": "0.0.2"
 }

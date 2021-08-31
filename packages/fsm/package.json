@@ -1,4 +1,5 @@
 {
   "name": "@crux/fsm",
+  "license": "MIT",
   "version": "0.0.3"
 }

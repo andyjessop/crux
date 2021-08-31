@@ -19,6 +19,18 @@ The key takeaways for crux are:
 * it lowers your level of technical debt,
 * it is fully-featured but is tiny (< 7KB all-in)
 
+## Packages
+
+`crux` uses various libraries, maintained in this repo, and free for you to use in your own projects.
+
+* [async-queue](packages/async-queue/README.md)
+* [di](packages/di/README.md)
+* [event-emitter](packages/event-emitter/README.md)
+* [fsm](packages/fsm/README.md)
+* [router](packages/router/README.md)
+* [store](packages/store/README.md)
+* [sync-queue](packages/sync-queue/README.md)
+
 ## Contributing
 
 ### Adding a new package
