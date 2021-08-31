@@ -5,7 +5,7 @@
 ## Installation
 
 ```bash
-npm install --save @crux/utils
+npm install --save @crux/fsm
 ```
 
 ## Usage
@@ -13,9 +13,9 @@ npm install --save @crux/utils
 The following example shows a very simple state machine. It has two states: `idle` and `running`, and two actions: `go` and `stop`.
 
 ```ts
-import { fsm } from '@crux/utils';
+import { createFSM } from '@crux/fsm';
 
-const machine = fsm({
+const machine = createFSM({
   idle: {
     go: () => 'running',
   },
@@ -53,12 +53,10 @@ machine.transition('go');
 Let's see how we can delay the transition of the machine to allow us to do some clean up work before the next state. Note that this time we're using the `OnExit` event:
 
 ```ts
-machine.onExit({ action, current )) => {
-  return new Promise(resolve => {
-    // do some clean up work, then...
-    resolve();
-  })
-});
+machine.onExit({ action, current )) => new Promise(resolve => {
+  // do some clean up work, then...
+  resolve();
+}));
 
 machine.transition('go');
 ```

@@ -19,6 +19,16 @@ The key takeaways for crux are:
 * it lowers your level of technical debt,
 * it is fully-featured but is tiny (< 7KB all-in)
 
+## Architecture
+
+`crux` is designed to decouple important aspects of your code. Firstly, it encourages you to put your business logic into a `domain`. This code is framework-agnostic and has any dependencies injected in. Its dependencies are going to be things like data, cache, routing, etc.
+
+Not only does it decopule your business logic, but it decouples your views too. You provide a `layout`, which defines mount roots for your views, which `crux` mounts them into. This means that your views can each be in different frameworks (if you so wish), becuse they're just functions that run to mount into a root when required.
+
+Let's take a look at the overview of the `crux` architecture:
+
+![crux architecture](assets/crux-architecture.png)
+
 ## Packages
 
 `crux` uses various libraries, maintained in this repo, and free for you to use in your own projects.
