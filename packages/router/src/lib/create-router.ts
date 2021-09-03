@@ -2,80 +2,89 @@ import { createEventEmitter } from '@crux/event-emitter';
 import type { EventEmitter } from '@crux/event-emitter';
 import { parse, reverse } from './parser';
 import { trimSlashes } from './parser/trim-slashes';
-import { getRouteData } from './helpers/get-route-data';
-import { buildEvent } from './helpers/build-event';
 import { paramsToStrings } from './helpers/params-to-strings';
 
 export type RouteParams = Record<string, string | null | string[]>;
 
-export interface Route {
-  decodeURL(url: string): null | RouteParams;
-  encodeURL(dict: RouteParams): string;
-  name: string;
+export interface Route<T> {
+  name: T;
+  params: RouteParams;
 }
 
-export interface Router extends EventEmitter<Events> {
+export type Routes<T> = Record<keyof T, Route<T>>;
+
+export type RoutesConfig<T> = Record<keyof T, string>;
+
+export type Constructor<T> = (baseRoute: string, config: RoutesConfig<T>) => Router<T>;
+
+export interface EncoderBase {
+  decodeURL(url: string): null | RouteParams;
+  encodeURL(dict: RouteParams): string;
+}
+
+export interface Encoder<N> extends EncoderBase {
+  name: N; 
+}
+
+export interface Router<T> extends EventEmitter<Events<T>> {
   back(): void;
   destroy(): void;
   forward(): void;
-  getCurrentRoute(): RouteData | null;
+  getCurrentRoute(): Route<keyof Encoders<T>> | null;
   go(num: number): void;
-  navigate(name: string, params?: RouteParams): void;
-  register(name: string, path: string): true | null;
-  replace(name: string, params?: RouteParams): void;
+  navigate(name: keyof Encoders<T>, params?: RouteParams): Promise<void>;
+  register(name: keyof Encoders<T>, path: string): Encoder<keyof Encoders<T>> | null;
+  replace(name: keyof Encoders<T>, params?: RouteParams): Promise<void>;
 }
 
-export interface CurrentRoute {
-  params: any;
-  route: Route;
+type Encoders<T> = Record<keyof T, Encoder<keyof T>> & {
+  root: Encoder<'root'>,
+  notFound: Encoder<'notFound'>
 }
 
-export interface TransitionEvent<T extends keyof Events> {
-  last: RouteData | null,
-  next: RouteData | null,
-  type: T,
+export interface TransitionEvent<T, U extends keyof Events<T>> {
+  last: Route<T> | null,
+  next: Route<T> | null,
+  type: U,
 }
 
-export type Events = {
-  afterTransition: TransitionEvent<'afterTransition'>,
-  beforeTransition: TransitionEvent<'beforeTransition'>,
-  didTransition: TransitionEvent<'didTransition'>,
-  transitionFailed: TransitionEvent<'transitionFailed'>,
-  willTransition: TransitionEvent<'willTransition'>,
+export interface PopStateEvent<T, U extends keyof Events<T>> {
+  current: Route<T> | null,
+  type: U,
+}
+
+export type Events<T> = {
+  afterTransition: PopStateEvent<T, 'afterTransition'>,
+  beforeTransition: TransitionEvent<T, 'beforeTransition'>,
+  didTransition: PopStateEvent<T, 'didTransition'>,
+  transitionFailed: TransitionEvent<T, 'transitionFailed'>,
+  willTransition: TransitionEvent<T, 'willTransition'>,
 };
-
-export interface RouteData {
-  name: string;
-  params: any;
-}
-
-export type Routes = Record<string, Route>;
-
-export type RoutesConfig = Record<string, string>;
-
-export type Constructor = (baseRoute: string, config: RoutesConfig) => Router;
 
 /**
  * Create a router.
  */
-export function createRouter(
+export function createRouter<T>(
   base: string,
-  initialRoutes: RoutesConfig,
-  emitter: EventEmitter<Events> = createEventEmitter(),
-): Router {
+  initialRoutes: RoutesConfig<T>,
+): Router<T> {
+  const emitter = createEventEmitter<Events<keyof Encoders<T>>>();
   const trimmedBase = trimSlashes(base);
-  const routes: Routes = {};
 
   // Register the initial routes, including the "root" route.
-  [['root', '/'], ['notFound', '/404'], ...Object.entries(initialRoutes)].forEach(([name, path]) =>
-    register(name, path),
-  );
+  const encoders: Encoders<T> = (<[string,string][]>[
+    ['root', '/'],
+    ['notFound', '/404'],
+    ...Object.entries(initialRoutes),
+  ]).reduce((acc, [name, path]) => {
+    acc[name] = register(<keyof Encoders<T>>name, path);
 
-  let currentRoute: CurrentRoute | null = getMatchingRoute(window.location.href);
+    return acc;
+  }, <Encoders<T>>{});
 
-  navigate(currentRoute.route.name, currentRoute.params);
+  window.addEventListener('popstate', onRouteChange);
 
-  window.addEventListener('popstate', refreshCurrentRoute);
+  onRouteChange();
 
   return {
     back,
@@ -93,58 +102,44 @@ export function createRouter(
    * Destroy the router.
    */
   function destroy() {
-    window.removeEventListener('popstate', refreshCurrentRoute);
+    window.removeEventListener('popstate', onRouteChange);
   }
 
   /**
    * Create a new route object on a given path.
    */
-  function createRoute(name: string, path: string): Route {
+  function createEncoderBase(path: string): EncoderBase | null {
+    if (typeof path === 'undefined') {
+      return null;
+    };
+
+    const fullPath = `${trimmedBase}${path}`;
+
     return {
-      decodeURL: parse(path),
-      encodeURL: reverse(path),
-      name,
+      decodeURL: parse(fullPath),
+      encodeURL: reverse(fullPath),
     };
   }
 
   /**
    * Get the current route.
    */
-  function getCurrentRoute(): RouteData | null {
-    return getRouteData(currentRoute);
+  function getCurrentRoute(): Route<keyof Encoders<T>> | null {
+    const { name, decodeURL } = getMatchingEncoder(window.location.href);
+
+    return {
+      name,
+      params: decodeURL(window.location.href),
+    }
   }
 
   /**
    * Get a route object matching a URL.
    */
-  function getMatchingRoute(url: string): CurrentRoute {
-    let params: any | null = null;
-
-    const route = Object.values(routes).find((route) => {
-      params = route.decodeURL(url);
-
-      return params !== null;
-    });
-
-    if (!route) {
-      return {
-        params: null,
-        route: routes.notFound,
-      };
-    }
-
-    return {
-      params,
-      route,
-    };
-  }
-
-  /**
-   * Refresh the current route.
-   */
-  function refreshCurrentRoute() {
-    const lastRoute = currentRoute;
-    currentRoute = getMatchingRoute(window.location.href);
+  function getMatchingEncoder(url: string): Encoder<keyof Encoders<T>> | null {
+    return Object.values(encoders).find((e) => {
+      return e.decodeURL(url);
+    }) ?? encoders.notFound;
   }
 
   /**
@@ -171,68 +166,79 @@ export function createRouter(
   /**
    * Push a new route into the history.
    */
-  async function navigate(name: string, params: RouteParams = {}): Promise<void> {
-    const route = routes[name];
+  async function navigate(name: keyof Encoders<T>, params: RouteParams = {}): Promise<void> {
+    const encoder = encoders[name];
 
-    if (!route) {
-      return transition(routes['404']);
+    if (!encoder) {
+      return transition('notFound');
     }
 
-    return transition(route, params);
+    return transition(name, params);
+  }
+
+  async function onRouteChange() {
+    let { name, decodeURL } = getMatchingEncoder(window.location.href);
+    const params = decodeURL(window.location.href);
+    const current = {
+      name, params
+    };
+
+    await emitter.emit('didTransition', { current, type: 'didTransition' });
+    
+    emitter.emit('afterTransition', { current, type: 'afterTransition' });
   }
 
   /**
    * Register a route.
    */
-  function register(name: string, path: string): true | null {
+  function register(name: keyof Encoders<T>, path: string): Encoder<keyof Encoders<T>> | null {
     if (typeof path === 'undefined' || typeof name === 'undefined') {
       return null;
     }
 
-    routes[name] = createRoute(name, `${trimmedBase}${path}`);
-
-    return true;
+    return {
+      ...createEncoderBase(path),
+      name,
+    };
   }
 
   /**
    * Replace the current location history.
    */
-  async function replace(name: string, params: RouteParams = {}): Promise<void> {
-    const route = routes[name];
+  async function replace(name: keyof Encoders<T>, params: RouteParams = {}): Promise<void> {
+    const encoder = encoders[name];
 
-    if (!route) {
-      return transition(routes['404']);
+    if (!encoder) {
+      return transition('notFound');
     }
 
-    return transition(route, params, true);
+    return transition(encoder.name, params, true);
   }
 
   /**
    * Transition to a new route.
    */
-  async function transition(route: Route, params: RouteParams = {}, replace = false): Promise<void> {
+  async function transition(name: keyof Encoders<T>, params: RouteParams = {}, replace = false): Promise<void> {
     let url: string;
     const last = { ...getCurrentRoute() };
-    const next = { name: route.name, params };
-
-    await emitter.emit('beforeTransition', { last, next, type: 'beforeTransition' });
+    const next = { name, params };
 
     try {
       // This is wrapped in a try/catch because encodeURL will throw if required parameters are not provided.
-      url = route.encodeURL(paramsToStrings(params));
+      const encoder = encoders[name];
+      
+      url = encoder.encodeURL(paramsToStrings(params));
     } catch (e) {
       emitter.emit('transitionFailed', { last, next, type: 'transitionFailed' });
 
-      return transition(routes.notFound);
+      return transition('notFound');
     }
 
     if (!url) {
       emitter.emit('transitionFailed', { last, next, type: 'transitionFailed' });
 
-      return transition(routes.notFound);
+      return transition('notFound');
     }
-
-    emitter.emit('willTransition', { last, next, type: 'willTransition' });
 
     const fullURL = `${window.location.origin}${url}`;
 
@@ -240,16 +246,14 @@ export function createRouter(
       return;
     }
 
-    currentRoute = { params, route };
+    await emitter.emit('beforeTransition', { last, next, type: 'beforeTransition' });
+
+    emitter.emit('willTransition', { last, next, type: 'willTransition' });
 
     if (replace) {
-      window.history.replaceState({ name: route.name, params }, '', fullURL);
+      window.history.replaceState({ name, params }, '', fullURL);
     } else {
-      window.history.pushState({ name: route.name, params }, '', fullURL);
+      window.history.pushState({ name, params }, '', fullURL);
     }
-
-    await emitter.emit('didTransition', { last, next, type: 'didTransition' });
-    
-    emitter.emit('afterTransition', { last, next, type: 'afterTransition' });
   }
 }
