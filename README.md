@@ -46,7 +46,7 @@ Let's take a look at the overview of the `crux` architecture:
 ### Adding a new package
 
 ```bash
-yarn nx g @nrwl/workspace:lib [name] --directory=[folder] --buildable --publishable --dryRun
+yarn nx g @nrwl/workspace:lib [name] --buildable --publishable --dryRun
 ```
 
 ### Building a package

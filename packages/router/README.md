@@ -13,21 +13,34 @@ npm install --save @crux/router
 ```ts
 import { createRouter } from '@crux/router';
 
-const router = createRouter('', {
-  users: '/users',
-  user: '/users/:id',
+const router = createRouter({
+  users: '/users', // example.com/users
+  user: '/users/:id', //ex
 });
 ```
 
-This creates a router with a base route of `''` (i.e. the root of the domain), and two user routes, one for getting a list of users (e.g. users) and one for getting a single user by id (e.g. `users/1`).
+This creates a router with two user routes, one for getting a list of users (e.g. users) and one for getting a single user by id (e.g. `users/1`).
+
+### Setting the base route
+
+`createRouter` takes a second parameter, which is a `string` that defaults to `''`. Use this to set your base route:
+
+```ts
+const router = createRouter({
+  users: '/users',
+  user: '/users/:id',
+}, 'api/v2');
+```
+
+Note that leading and trailing slashes are removed from the base, so any of these are valid: `/api/v2`, `api/v2/`, `/api/v2/`.
 
 ### Transitioning between routes
 
 ```ts
-// Navigate to /users
+// Navigate to example.com/users
 router.navigate('users');
 
-// Navigate to /users/1
+// Navigate to example.com/users/1
 router.navigate('user', { id: 1 });
 ```
 

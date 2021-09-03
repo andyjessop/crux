@@ -32,6 +32,40 @@
         }
       }
     },
+    "async-queue": {
+      "root": "packages/async-queue",
+      "sourceRoot": "packages/async-queue/src",
+      "projectType": "library",
+      "targets": {
+        "build": {
+          "configurations": {
+            "production": {}
+          },
+          "executor": "@nrwl/workspace:tsc",
+          "outputs": ["{options.outputPath}"],
+          "options": {
+            "outputPath": "dist/packages/async-queue",
+            "main": "packages/async-queue/src/index.ts",
+            "tsConfig": "packages/async-queue/tsconfig.lib.json",
+            "assets": ["packages/async-queue/*.md"]
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["packages/async-queue/**/*.ts"]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/packages/async-queue"],
+          "options": {
+            "jestConfig": "packages/async-queue/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
     "demo-app": {
       "projectType": "application",
       "root": "packages/demo-app",
@@ -164,108 +198,6 @@
         }
       }
     },
-    "router": {
-      "root": "packages/router",
-      "sourceRoot": "packages/router/src",
-      "projectType": "library",
-      "targets": {
-        "build": {
-          "configurations": {
-            "production": {}
-          },
-          "executor": "@nrwl/workspace:tsc",
-          "outputs": ["{options.outputPath}"],
-          "options": {
-            "outputPath": "dist/packages/router",
-            "main": "packages/router/src/index.ts",
-            "tsConfig": "packages/router/tsconfig.lib.json",
-            "assets": ["packages/router/*.md"]
-          }
-        },
-        "lint": {
-          "executor": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": ["packages/router/**/*.ts"]
-          }
-        },
-        "test": {
-          "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/packages/router"],
-          "options": {
-            "jestConfig": "packages/router/jest.config.js",
-            "passWithNoTests": true
-          }
-        }
-      }
-    },
-    "store": {
-      "root": "packages/store",
-      "sourceRoot": "packages/store/src",
-      "projectType": "library",
-      "targets": {
-        "build": {
-          "configurations": {
-            "production": {}
-          },
-          "executor": "@nrwl/workspace:tsc",
-          "outputs": ["{options.outputPath}"],
-          "options": {
-            "outputPath": "dist/packages/store",
-            "main": "packages/store/src/index.ts",
-            "tsConfig": "packages/store/tsconfig.lib.json",
-            "assets": ["packages/store/*.md"]
-          }
-        },
-        "lint": {
-          "executor": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": ["packages/store/**/*.ts"]
-          }
-        },
-        "test": {
-          "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/packages/store"],
-          "options": {
-            "jestConfig": "packages/store/jest.config.js",
-            "passWithNoTests": true
-          }
-        }
-      }
-    },
-    "async-queue": {
-      "root": "packages/async-queue",
-      "sourceRoot": "packages/async-queue/src",
-      "projectType": "library",
-      "targets": {
-        "build": {
-          "configurations": {
-            "production": {}
-          },
-          "executor": "@nrwl/workspace:tsc",
-          "outputs": ["{options.outputPath}"],
-          "options": {
-            "outputPath": "dist/packages/async-queue",
-            "main": "packages/async-queue/src/index.ts",
-            "tsConfig": "packages/async-queue/tsconfig.lib.json",
-            "assets": ["packages/async-queue/*.md"]
-          }
-        },
-        "lint": {
-          "executor": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": ["packages/async-queue/**/*.ts"]
-          }
-        },
-        "test": {
-          "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/packages/async-queue"],
-          "options": {
-            "jestConfig": "packages/async-queue/jest.config.js",
-            "passWithNoTests": true
-          }
-        }
-      }
-    },
     "event-emitter": {
       "root": "packages/event-emitter",
       "sourceRoot": "packages/event-emitter/src",
@@ -329,6 +261,74 @@
           "outputs": ["coverage/packages/fsm"],
           "options": {
             "jestConfig": "packages/fsm/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "router": {
+      "root": "packages/router",
+      "sourceRoot": "packages/router/src",
+      "projectType": "library",
+      "targets": {
+        "build": {
+          "configurations": {
+            "production": {}
+          },
+          "executor": "@nrwl/workspace:tsc",
+          "outputs": ["{options.outputPath}"],
+          "options": {
+            "outputPath": "dist/packages/router",
+            "main": "packages/router/src/index.ts",
+            "tsConfig": "packages/router/tsconfig.lib.json",
+            "assets": ["packages/router/*.md"]
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["packages/router/**/*.ts"]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/packages/router"],
+          "options": {
+            "jestConfig": "packages/router/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "store": {
+      "root": "packages/store",
+      "sourceRoot": "packages/store/src",
+      "projectType": "library",
+      "targets": {
+        "build": {
+          "configurations": {
+            "production": {}
+          },
+          "executor": "@nrwl/workspace:tsc",
+          "outputs": ["{options.outputPath}"],
+          "options": {
+            "outputPath": "dist/packages/store",
+            "main": "packages/store/src/index.ts",
+            "tsConfig": "packages/store/tsconfig.lib.json",
+            "assets": ["packages/store/*.md"]
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["packages/store/**/*.ts"]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/packages/store"],
+          "options": {
+            "jestConfig": "packages/store/jest.config.js",
             "passWithNoTests": true
           }
         }

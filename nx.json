@@ -16,25 +16,25 @@
     "app": {
       "tags": []
     },
+    "async-queue": {
+      "tags": []
+    },
     "demo-app": {
       "tags": []
     },
     "di": {
       "tags": []
     },
-    "router": {
-      "tags": []
-    },
-    "store": {
-      "tags": []
-    },
-    "async-queue": {
-      "tags": []
-    },
     "event-emitter": {
       "tags": []
     },
     "fsm": {
+      "tags": []
+    },
+    "router": {
+      "tags": []
+    },
+    "store": {
       "tags": []
     },
     "sync-queue": {
