@@ -48,32 +48,19 @@ router.navigate('user', { id: 1 });
 
 `@crux/router` emits events during the route transition. Use `router.on(eventType, callback)` to register listeners to those events:
 
-| Event Name         | Description                                                                                      |
-|--------------------|--------------------------------------------------------------------------------------------------|
-| `beforeTransition` | Runs before the transition has begun. A great time to do any clean up or start page transitions. |
-| `willTransition`   | Runs after any Promises returned from the beforeTransition hook have resolved.                   |
-| `didTransition`    | Runs immediately after the URL has changed. This is the time to start page-in transitions.       |
-| `afterTransition`  | Runs after any Promises returned from the didTransition hook have resolved                       |
+| Event Name         | Description                                                                                  |
+|--------------------|----------------------------------------------------------------------------------------------|
+| `routeDidChange`    | Runs immediately as soon as the URL changes. This is the time to start page-in transitions. |
+| `ready`             | Runs after any Promises returned from the routeDidChange hook have resolved.                |
+| `routeChangeFailed` | Runs if there is an error during route transition.                                          |
 
-For example, let's assume we want to run a fadeOut for the old route and a fadeIn for the new route, and we want to log when each of those animations has happened:
+For example, let's assume we want to add a fadeIn for the new route, and we want to log when each of those animations has happened:
 
 ```ts
-router.on('beforeTransition', ({ last }) => fadeOut(last));
 
-router.on('willTransition', () => console.log('Fade out finished'));
+router.on('routeDidChange', ({ next }) => fadeIn(next));
 
-router.on('beforeTransition', ({ next }) => fadeIn(next));
-
-router.on('afterTransition', () => console.log('Fade in finished'));
-
-function fadeOut() {
-  return new Promise(resolve => {
-    document.body.classList.add('fadeOut'); // Fades out for 1000ms
-    
-    // Resolve the promise after 1000ms
-    setTimeout(() => resolve(), 1000);
-  });
-}
+router.on('ready', () => console.log('Fade in finished'));
 
 function fadeIn() {
   return new Promise(resolve => {

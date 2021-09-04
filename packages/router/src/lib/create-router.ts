@@ -42,8 +42,8 @@ type Encoders<T> = Record<keyof T, Encoder<keyof T>> & {
   notFound: Encoder<'notFound'>
 }
 
-export interface TransitionEvent<T, U extends keyof Events<T>> {
-  last: Route<T> | null,
+export interface FailedEvent<T, U extends keyof Events<T>> {
+  current: Route<T> | null,
   next: Route<T> | null,
   type: U,
 }
@@ -54,19 +54,17 @@ export interface PopStateEvent<T, U extends keyof Events<T>> {
 }
 
 export type Events<T> = {
-  afterTransition: PopStateEvent<T, 'afterTransition'>,
-  beforeTransition: TransitionEvent<T, 'beforeTransition'>,
-  didTransition: PopStateEvent<T, 'didTransition'>,
-  transitionFailed: TransitionEvent<T, 'transitionFailed'>,
-  willTransition: TransitionEvent<T, 'willTransition'>,
+  ready: PopStateEvent<T, 'ready'>,
+  routeDidChange: PopStateEvent<T, 'routeDidChange'>,
+  routeChangeFailed: FailedEvent<T, 'routeChangeFailed'>,
 };
 
 /**
  * Create a router.
  */
 export function createRouter<T>(
-  base: string,
   initialRoutes: RoutesConfig<T>,
+  base: string = '',
 ): Router<T> {
   const emitter = createEventEmitter<Events<keyof Encoders<T>>>();
   const trimmedBase = trimSlashes(base);
@@ -183,9 +181,9 @@ export function createRouter<T>(
       name, params
     };
 
-    await emitter.emit('didTransition', { current, type: 'didTransition' });
+    await emitter.emit('routeDidChange', { current, type: 'routeDidChange' });
     
-    emitter.emit('afterTransition', { current, type: 'afterTransition' });
+    emitter.emit('ready', { current, type: 'ready' });
   }
 
   /**
@@ -220,22 +218,21 @@ export function createRouter<T>(
    */
   async function transition(name: keyof Encoders<T>, params: RouteParams = {}, replace = false): Promise<void> {
     let url: string;
-    const last = { ...getCurrentRoute() };
+    const current = { ...getCurrentRoute() };
     const next = { name, params };
 
     try {
-      // This is wrapped in a try/catch because encodeURL will throw if required parameters are not provided.
       const encoder = encoders[name];
       
       url = encoder.encodeURL(paramsToStrings(params));
     } catch (e) {
-      emitter.emit('transitionFailed', { last, next, type: 'transitionFailed' });
+      emitter.emit('routeChangeFailed', { current, next, type: 'routeChangeFailed' });
 
       return transition('notFound');
     }
 
     if (!url) {
-      emitter.emit('transitionFailed', { last, next, type: 'transitionFailed' });
+      emitter.emit('routeChangeFailed', { current, next, type: 'routeChangeFailed' });
 
       return transition('notFound');
     }
@@ -246,14 +243,12 @@ export function createRouter<T>(
       return;
     }
 
-    await emitter.emit('beforeTransition', { last, next, type: 'beforeTransition' });
-
-    emitter.emit('willTransition', { last, next, type: 'willTransition' });
-
     if (replace) {
       window.history.replaceState({ name, params }, '', fullURL);
     } else {
       window.history.pushState({ name, params }, '', fullURL);
     }
+
+    onRouteChange();
   }
 }
