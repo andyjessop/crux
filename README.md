@@ -15,16 +15,22 @@
 
 ## Contributing
 
+### Running the dev server
+
+```bash
+npx nx serve dev
+```
+
 ### Adding a new package
 
 ```bash
-yarn nx g @nrwl/js:library [name] --buildable --dryRun
+npx nx g @nrwl/js:library [name] --buildable --dryRun
 ```
 
 ### Building a package
 
 ```bash
-yarn nx build [name]
+npx nx build [name]
 ```
 
 ### Publishing a package

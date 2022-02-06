@@ -37,6 +37,7 @@ const actions: ActionCreators = {
 export interface State<T = any> {
   route: Route<keyof T>;
 }
+
 export interface ReduxRouter<T extends RoutesConfig<T>> {
   actions: ActionCreators;
   Link: Link<T>;
@@ -44,8 +45,8 @@ export interface ReduxRouter<T extends RoutesConfig<T>> {
   reducer: Reducer<State<keyof T | "root" | "notFound">, AnyAction>;
 }
 
-export function createReduxRouter<T extends RoutesConfig<T>>(config: RoutesConfig<T>): ReduxRouter<T> {
-  const router = createRouter(config);
+export function createReduxRouter<T extends RoutesConfig<T>>(config: RoutesConfig<T>, existingRouter?: Router<T>): ReduxRouter<T> {
+  const router = existingRouter ?? createRouter(config);
 
   const currentRoute = router.getCurrentRoute();
 

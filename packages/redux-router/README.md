@@ -26,7 +26,7 @@ The route patterns are really powerful, see [the tests](../router/src/lib/parser
 
 ### Connecting to the Redux store
 
-The middleware and reducer are required to be hooked into your Redux store. The reducer manages the state, and the middleware connects the router itself to Redux.
+Next you need to hook the reducer and middleware into your Redux store. The reducer manages the state, and the middleware connects Redux to the router itself.
 
 ```ts
 import { configureStore } from '@reduxjs/toolkit';
@@ -42,7 +42,7 @@ const store = configureStore({
 
 ### Navigating to a route
 
-That's all you need to be able to modify the routes from within your app. To navigate to a route, just dispatch the `navigate` action:
+To navigate to a route, just dispatch the `navigate` action:
 
 ```ts
 import { actions } from './router';
