@@ -22,7 +22,7 @@ export const { actions, Link, middleware, reducer } = createReduxRouter({
 });
 ```
 
-The route patters are really powerful, see [the tests](../router/src/lib/parser/index.spec.ts) for more examples.
+The route patterns are really powerful, see [the tests](../router/src/lib/parser/index.spec.ts) for more examples. Suffice it to say that you can match pretty much any route you can dream up.
 
 ### Connecting to the Redux store
 
@@ -50,6 +50,20 @@ import { actions } from './router';
 dispatch(actions.navigate('user', { id: '1' }));
 
 // Route changes to /users/1
+```
+
+Or build the action manually:
+
+```ts
+import { EventType } from 'redux-router';
+
+dispatch({
+  type: EventType.Navigate,
+  payload: {
+    name: 'user',
+    params: { id: '1' }
+  }
+});
 ```
 
 You can also use the provided `Link` component:
