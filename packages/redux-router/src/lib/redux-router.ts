@@ -34,8 +34,8 @@ const actions: ActionCreators = {
   }
 }
 
-export interface State<T> {
-  route: Route<T>;
+export interface State<T = any> {
+  route: Route<keyof T>;
 }
 export interface ReduxRouter<T extends RoutesConfig<T>> {
   actions: ActionCreators;
@@ -100,7 +100,7 @@ export function createReduxRouterMiddleware<T>(router: Router<T>) {
   }
 }
 
-export function createReducer<T>(initialState: State<T>) {
+export function createReducer<T>(initialState: State) {
   return function reducer(state = initialState, action: AnyAction) {
     switch(action.type) {
       case 'router/_navigated':
