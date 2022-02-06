@@ -1,6 +1,6 @@
 # @crux/redux-router
 
-`@crux/redux-router` is a lightweight router that hooks into Redux.
+`@crux/redux-router` is a lightweight router that hooks into Redux, saving routing changes to state and enabling route navigation by dispatching Redux actions.
 
 ## Installation
 
