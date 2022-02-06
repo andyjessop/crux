@@ -31,7 +31,7 @@ let initialServices: ConstructorCollection<Services>;
 let container: DI<Services>;
 
 describe('di', () => {
-  beforeEach(() => { 
+  beforeEach(() => {
     initialServices = {
       a: createA,
       b: createB,

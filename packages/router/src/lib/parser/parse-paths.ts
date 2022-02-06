@@ -1,4 +1,4 @@
-import { RouteParams } from '../create-router';
+import { RouteParams } from '../router';
 import { parseSegment } from './parse-segment';
 
 /**

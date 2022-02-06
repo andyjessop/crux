@@ -1,8 +1,8 @@
-import { ConstructorCollectionTuple } from "./di";
+import { ConstructorCollectionTuple } from './di';
 
 export function byDependency<T>(
   a: ConstructorCollectionTuple<T>,
-  b: ConstructorCollectionTuple<T>,
+  b: ConstructorCollectionTuple<T>
 ) {
   const [aKey, aService] = a;
   const [bKey, bService] = b;

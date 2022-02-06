@@ -1,4 +1,4 @@
-import { RouteParams } from '../create-router';
+import { RouteParams } from '../router';
 import { escapeRegexes } from './escape-regexes';
 import { isList } from './is-list';
 import { isOptional } from './is-optional';

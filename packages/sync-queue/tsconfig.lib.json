@@ -3,9 +3,6 @@
   "compilerOptions": {
     "outDir": "../../dist/out-tsc",
     "declaration": true,
-    "paths": {
-      "@crux/*": ["dist/packages/*"]
-    },
     "types": []
   },
   "include": ["**/*.ts"],

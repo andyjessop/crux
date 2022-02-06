@@ -1,0 +1,33 @@
+{
+  "root": "packages/async-queue",
+  "sourceRoot": "packages/async-queue/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/async-queue",
+        "main": "packages/async-queue/src/index.ts",
+        "tsConfig": "packages/async-queue/tsconfig.lib.json",
+        "assets": ["packages/async-queue/*.md"]
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["packages/async-queue/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/packages/async-queue"],
+      "options": {
+        "jestConfig": "packages/async-queue/jest.config.js",
+        "passWithNoTests": true
+      }
+    }
+  },
+  "tags": []
+}

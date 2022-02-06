@@ -1,8 +1,10 @@
 export interface EventEmitter<T extends Record<string, unknown>> {
   emit<K extends keyof T>(type: K, data: T[K]): Promise<unknown[]>;
-  on<K extends keyof T>(type: K, handler: EventHandler<T[K]>): void;
-  once<K extends keyof T>(type: K, handler: EventHandler<T[K]>): void
   off<K extends keyof T>(type: K, handler: EventHandler<T[K]>): void;
+  offAll(handler: EventHandler<T[keyof T]>): void;
+  on<K extends keyof T>(type: K, handler: EventHandler<T[K]>): void;
+  onAll(handler: EventHandler<T[keyof T]>): void;
+  once<K extends keyof T>(type: K, handler: EventHandler<T[K]>): void;
 }
 
 export type EventHandler<T> = (data: T) => unknown;
@@ -15,14 +17,18 @@ export interface EventListener<T, K extends keyof T> {
 /**
  * Create an event emitter.
  */
-export function createEventEmitter<T extends Record<string, unknown>>(): EventEmitter<T> {
-  const listeners: EventListener<T, keyof T>[] = [];
+export function createEventEmitter<
+  T extends Record<string, unknown>
+>(): EventEmitter<T> {
+  const listeners: EventListener<T, any>[] = [];
 
   return {
     emit,
     on,
+    onAll,
     once,
     off,
+    offAll,
   };
 
   /**
@@ -35,6 +41,15 @@ export function createEventEmitter<T extends Record<string, unknown>>(): EventEm
   }
 
   /**
+   * Subscribe to an event.
+   */
+  function onAll(handler: EventHandler<T[keyof T]>): void {
+    const listener = <EventListener<T, keyof T>>{ handler, type: 'all' };
+
+    listeners.push(listener);
+  }
+
+  /**
    * Emit an event.
    */
   function emit<K extends keyof T>(type: K, data: T[K]): Promise<unknown[]> {
@@ -42,7 +57,7 @@ export function createEventEmitter<T extends Record<string, unknown>>(): EventEm
     const promises: Promise<unknown>[] = [];
 
     for (listener of listeners) {
-      if (listener.type !== type) {
+      if (listener.type !== type && listener.type !== 'all') {
         continue;
       }
 
@@ -60,7 +75,23 @@ export function createEventEmitter<T extends Record<string, unknown>>(): EventEm
    * Remove a listener.
    */
   function off<K extends keyof T>(type: K, handler: EventHandler<T[K]>): void {
-    const ndx = listeners.findIndex((l: EventListener<T, K>) => type === l.type && handler === l.handler);
+    const ndx = listeners.findIndex(
+      (l: EventListener<T, K>) => type === l.type && handler === l.handler
+    );
+
+    if (ndx !== -1) {
+      listeners.splice(ndx, 1);
+    }
+  }
+
+  /**
+   * Remove a listener.
+   */
+  function offAll(handler: EventHandler<T[keyof T]>): void {
+    const ndx = listeners.findIndex(
+      (l: EventListener<T, keyof T>) =>
+        'all' === l.type && handler === l.handler
+    );
 
     if (ndx !== -1) {
       listeners.splice(ndx, 1);
@@ -70,7 +101,7 @@ export function createEventEmitter<T extends Record<string, unknown>>(): EventEm
   /**
    * Subscribe to an event.
    */
-   function once<K extends keyof T>(type: K, handler: EventHandler<T[K]>): void {
+  function once<K extends keyof T>(type: K, handler: EventHandler<T[K]>): void {
     const listener: EventListener<T, K> = {
       handler: (...args) => {
         off(type, handler);

@@ -1,0 +1,33 @@
+{
+  "root": "packages/event-emitter",
+  "sourceRoot": "packages/event-emitter/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/event-emitter",
+        "main": "packages/event-emitter/src/index.ts",
+        "tsConfig": "packages/event-emitter/tsconfig.lib.json",
+        "assets": ["packages/event-emitter/*.md"]
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["packages/event-emitter/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/packages/event-emitter"],
+      "options": {
+        "jestConfig": "packages/event-emitter/jest.config.js",
+        "passWithNoTests": true
+      }
+    }
+  },
+  "tags": []
+}

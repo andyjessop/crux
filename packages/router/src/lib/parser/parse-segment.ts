@@ -1,4 +1,4 @@
-import { RouteParams } from "../create-router";
+import { RouteParams } from '../router';
 
 /**
  * Parse a segment, returning a decodeURL function.
@@ -26,7 +26,7 @@ export function parseSegment(seg: string) {
     return function curriedParseSegment(
       str: string,
       paths: RouteParams,
-      array = false,
+      array = false
     ): boolean {
       if (array) {
         paths[name] = [].concat((paths[name] as any) || [], str as any);

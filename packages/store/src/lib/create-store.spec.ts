@@ -7,7 +7,7 @@ type State = {
     c: boolean;
   };
   d: string;
-}
+};
 
 let initialState: State;
 let callback: jest.Mock;
@@ -35,7 +35,7 @@ describe('@crux/state', () => {
 
     expect(typeof unsubscribe).toEqual('function');
   });
-  
+
   test('should call callback immediately upon subscription', () => {
     const getA = (state: State) => state.a;
 
@@ -86,7 +86,8 @@ describe('@crux/state', () => {
   });
 
   test('should be able to pass multiple parameters to selector', () => {
-    const getMultiple = (state: State, a: string, b: boolean) => `${state.d}, a, b`;
+    const getMultiple = (state: State, a: string, b: boolean) =>
+      `${state.d}, a, b`;
 
     store.subscribe(getMultiple, callback);
 

@@ -1,21 +1,25 @@
 import { allDependenciesExist } from './all-dependencies-exist';
 import { byDependency } from './by-dependency';
 import { getDependents } from './get-dependents';
+import { createEventEmitter, EventEmitter } from '@crux/event-emitter';
 
 export type Constructor<T> = (...args: any[]) => T;
 
 export type ConstructorTuple<T, U> = [Constructor<T>, ...U[]];
 
-export type ConstructorCollection<T> = Partial<Record<
-  keyof T,
-  Constructor<T[keyof T]> | ConstructorTuple<T[keyof T], keyof T | SingletonDefinition<T>>
->>;
+export type ConstructorCollection<T> = Partial<
+  Record<
+    keyof T,
+    | Constructor<T[keyof T]>
+    | ConstructorTuple<T[keyof T], keyof T | SingletonDefinition<T>>
+  >
+>;
 
-export type SingletonDefinition<T> = { constructor: keyof T, singleton: true };
+export type SingletonDefinition<T> = { constructor: keyof T; singleton: true };
 
 export type ConstructorCollectionTuple<T> = [
   keyof T,
-  Constructor<T[keyof T]> | ConstructorTuple<T[keyof T], keyof T>,
+  Constructor<T[keyof T]> | ConstructorTuple<T[keyof T], keyof T>
 ];
 
 export type Model<T> = {
@@ -28,19 +32,22 @@ export type Model<T> = {
 
 export type Collection<T> = Partial<Record<keyof T, Model<T>>>;
 
+export type Events = {
+  InstanceCreated: unknown;
+};
+
 export type DI<T> = {
   add: (
     name: keyof T,
-    constructor: Constructor<T[keyof T]> | ConstructorTuple<T[keyof T], keyof T>,
+    constructor: Constructor<T[keyof T]> | ConstructorTuple<T[keyof T], keyof T>
   ) => boolean;
   get<V extends keyof T>(name: V): T[V];
   getSingleton<V extends keyof T>(name: V): T[V];
   remove: (name: keyof T) => true | null;
-};
+} & EventEmitter<Events>;
 
-export function di<T>(
-  initialServices?: ConstructorCollection<T>,
-): DI<T> {
+export function di<T>(initialServices?: ConstructorCollection<T>): DI<T> {
+  const emitter = createEventEmitter<Events>();
   const services: Collection<T> = {};
 
   if (initialServices) {
@@ -54,6 +61,7 @@ export function di<T>(
 
   return {
     add,
+    ...emitter,
     get,
     getSingleton,
     remove,
@@ -61,9 +69,7 @@ export function di<T>(
 
   function add(
     name: keyof T,
-    constructor:
-      | Constructor<T[keyof T]>
-      | ConstructorTuple<T[keyof T], keyof T>,
+    constructor: Constructor<T[keyof T]> | ConstructorTuple<T[keyof T], keyof T>
   ): boolean {
     if (services[name]) {
       return false;
@@ -122,20 +128,26 @@ export function di<T>(
     }
 
     if ((<Model<T>>services[name]).instance && !singleton) {
-      return <T[U]>services[name].instance;
+      return <T[U]>services[name]?.instance;
     }
 
     const dependencies = services[name]?.dependencies;
 
     const instantiatedDependencies = dependencies
-      ? <T[keyof T][]>services[name]?.dependencies?.map(toInstantiatedDependency)
+      ? <T[keyof T][]>(
+          services[name]?.dependencies?.map(toInstantiatedDependency)
+        )
       : [];
 
-    const instance = (<Model<T>>services[name]).constructor(...instantiatedDependencies);
+    const instance = (<Model<T>>services[name]).constructor(
+      ...instantiatedDependencies
+    );
 
     if (!singleton) {
       (<Model<T>>services[name]).instance = instance;
     }
+
+    emitter.emit('InstanceCreated', instance);
 
     return <T[U]>instance;
   }
@@ -156,7 +168,9 @@ export function di<T>(
     return true;
   }
 
-  function toInstantiatedDependency(dependency: keyof T | SingletonDefinition<T>) {
+  function toInstantiatedDependency(
+    dependency: keyof T | SingletonDefinition<T>
+  ) {
     if (typeof (<keyof T>dependency) === 'string') {
       return instantiate(<keyof T>dependency);
     }

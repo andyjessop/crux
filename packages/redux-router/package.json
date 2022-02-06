@@ -1,0 +1,8 @@
+{
+  "name": "@crux/redux-router",
+  "version": "0.1.0-alpha",
+  "type": "commonjs",
+  "dependencies": {
+    "redux": "^4.1.2"
+  }
+}

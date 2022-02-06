@@ -1,44 +1,47 @@
 {
-  "extends": "@nrwl/workspace/presets/npm.json",
-  "npmScope": "nx",
+  "extends": "@nrwl/workspace/presets/core.json",
+  "npmScope": "crux",
   "affected": {
-    "defaultBase": "master"
+    "defaultBase": "main"
+  },
+  "cli": {
+    "defaultCollection": "@nrwl/react"
   },
   "tasksRunnerOptions": {
     "default": {
-      "runner": "@nrwl/workspace/tasks-runners/default",
+      "runner": "@nrwl/nx-cloud",
       "options": {
-        "cacheableOperations": ["build", "lint", "test", "e2e"]
+        "cacheableOperations": ["build", "lint", "test", "e2e"],
+        "accessToken": "MmViNmI0MjAtNWQ4OS00ZGU2LWE0MzgtYWZlYWVhODJhNzUxfHJlYWQtd3JpdGU="
       }
     }
   },
-  "projects": {
-    "app": {
-      "tags": []
+  "generators": {
+    "@nrwl/react": {
+      "application": {
+        "style": "scss",
+        "linter": "eslint",
+        "babel": true
+      },
+      "component": {
+        "style": "scss"
+      },
+      "library": {
+        "style": "scss",
+        "linter": "eslint"
+      }
     },
-    "async-queue": {
-      "tags": []
+    "@nrwl/web:application": {
+      "style": "scss",
+      "linter": "eslint",
+      "unitTestRunner": "jest",
+      "e2eTestRunner": "cypress"
     },
-    "demo-app": {
-      "tags": []
-    },
-    "di": {
-      "tags": []
-    },
-    "event-emitter": {
-      "tags": []
-    },
-    "fsm": {
-      "tags": []
-    },
-    "router": {
-      "tags": []
-    },
-    "store": {
-      "tags": []
-    },
-    "sync-queue": {
-      "tags": []
+    "@nrwl/web:library": {
+      "style": "scss",
+      "linter": "eslint",
+      "unitTestRunner": "jest"
     }
-  }
+  },
+  "defaultProject": "dev"
 }

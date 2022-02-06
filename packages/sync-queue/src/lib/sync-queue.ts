@@ -1,10 +1,12 @@
+type AnyFunction = (...args: any[]) => void;
+
 export interface SyncQueue {
-  add(fn: Function, ...params: unknown[]): void;
+  add(fn: AnyFunction, ...params: unknown[]): void;
   flush(): void;
 }
 
 export interface SyncQueueEntry {
-  fn: Function;
+  fn: AnyFunction;
   params: any[];
 }
 
@@ -17,7 +19,7 @@ export function createSyncQueue(): SyncQueue {
     flush,
   };
 
-  function add(fn: Function, ...params: unknown[]): void {
+  function add(fn: AnyFunction, ...params: unknown[]): void {
     entries.push({
       fn,
       params,

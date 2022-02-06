@@ -1,7 +1,7 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "rootDirs": [".", "./packages"],
+    "rootDir": ".",
     "sourceMap": true,
     "declaration": false,
     "moduleResolution": "node",
@@ -10,22 +10,20 @@
     "importHelpers": true,
     "target": "es2015",
     "module": "esnext",
-    "lib": ["es2017", "dom", "dom.iterable"],
+    "lib": ["es2017", "dom"],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@crux/app": ["packages/app/src/index.ts"],
-      "@crux/async-queue": ["packages/utils/async-queue/src/index.ts"],
+      "@crux/async-queue": ["packages/async-queue/src/index.ts"],
       "@crux/di": ["packages/di/src/index.ts"],
-      "@crux/event-emitter": ["packages/utils/event-emitter/src/index.ts"],
-      "@crux/fsm": ["packages/utils/fsm/src/index.ts"],
+      "@crux/event-emitter": ["packages/event-emitter/src/index.ts"],
+      "@crux/fsm": ["packages/fsm/src/index.ts"],
+      "@crux/redux-router": ["packages/redux-router/src/index.ts"],
       "@crux/router": ["packages/router/src/index.ts"],
       "@crux/store": ["packages/store/src/index.ts"],
-      "@crux/sync-queue": ["packages/utils/sync-queue/src/index.ts"],
-      "@nx/router-e2e": ["packages/router-e2e/src/index.ts"]
-    },
-    "types": ["jest", "mocha"]
+      "@crux/sync-queue": ["packages/sync-queue/src/index.ts"]
+    }
   },
   "exclude": ["node_modules", "tmp"]
 }

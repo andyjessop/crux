@@ -1,0 +1,33 @@
+{
+  "root": "packages/fsm",
+  "sourceRoot": "packages/fsm/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/fsm",
+        "main": "packages/fsm/src/index.ts",
+        "tsConfig": "packages/fsm/tsconfig.lib.json",
+        "assets": ["packages/fsm/*.md"]
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["packages/fsm/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/packages/fsm"],
+      "options": {
+        "jestConfig": "packages/fsm/jest.config.js",
+        "passWithNoTests": true
+      }
+    }
+  },
+  "tags": []
+}

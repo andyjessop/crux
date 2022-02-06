@@ -1,4 +1,4 @@
-import { RouteParams } from '../create-router';
+import { RouteParams } from '../router';
 import { escapeRegexes } from './escape-regexes';
 import { getHash } from './get-hash';
 import { parsePaths } from './parse-paths';
@@ -7,6 +7,7 @@ import { parseSegment } from './parse-segment';
 import { pathToURL } from './path-to-url';
 import { splitPath } from './split-path';
 import { trimSlashes } from './trim-slashes';
+import { SearchParams } from './types';
 
 /**
  * Parse a pattern, returning a decodeURL function.
@@ -22,7 +23,7 @@ export function parse(pattern: string) {
 
   const targetHash = getHash(target.hash);
 
-  const pq = parseQueries(target.searchParams);
+  const pq = parseQueries(<SearchParams><unknown>target.searchParams);
 
   const pp = parsePaths(targetSegments);
 
@@ -35,7 +36,7 @@ export function parse(pattern: string) {
 
     if (
       pp(splitPath(trimSlashes(route.pathname)), params) &&
-      pq(route.searchParams, params) &&
+      pq(<SearchParams><unknown>route.searchParams, params) &&
       ph(getHash(route.hash), params)
     ) {
       return params;

@@ -1,5 +1,8 @@
 {
   "name": "@crux/store",
-  "license": "MIT",
-  "version": "0.0.1"
+  "version": "0.1.0-alpha",
+  "type": "commonjs",
+  "dependencies": {
+    "@nx-js/observer-util": "^4.2.2"
+  }
 }

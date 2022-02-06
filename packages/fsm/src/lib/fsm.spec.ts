@@ -8,7 +8,7 @@ const lightSwitch = {
   on: {
     switchOff: () => 'off',
     switchOffAsync: () => Promise.resolve('on'),
-  }
+  },
 };
 
 describe('fsm', () => {
@@ -60,16 +60,19 @@ describe('fsm', () => {
     const fsm = createFSM(lightSwitch, { initialState: 'off' });
     let asyncWorkDone = false;
 
-    fsm.onExit(async () => new Promise<void>(resolve => {
-      // Set a small delay before the `onExit` handler resolves.
-      setTimeout(() => {
-        // Check that state has not yet changed.
-        expect(fsm.getState()).toEqual('off');
+    fsm.onExit(
+      async () =>
+        new Promise<void>((resolve) => {
+          // Set a small delay before the `onExit` handler resolves.
+          setTimeout(() => {
+            // Check that state has not yet changed.
+            expect(fsm.getState()).toEqual('off');
 
-        asyncWorkDone = true;
-        resolve();
-      }, 400);
-    }));
+            asyncWorkDone = true;
+            resolve();
+          }, 400);
+        })
+    );
 
     // OnEnter is fired immediately after calculating the next state, so if asyncWorkDone = true
     // here it means that the FSM waited for the previous promise

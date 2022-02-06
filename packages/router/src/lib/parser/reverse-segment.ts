@@ -1,7 +1,7 @@
 import { isList } from './is-list';
 import { isOptional } from './is-optional';
 import { namedParamRegex } from './constants';
-import { RouteParams } from '../create-router';
+import { RouteParams } from '../router';
 
 /**
  * Reverse-parse a segment.

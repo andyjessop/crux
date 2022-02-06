@@ -1,14 +1,16 @@
+type AnyFunction = (...args: any[]) => void;
+
 export interface AsyncQueue {
-  add(fn: Function, ...params: unknown[]): Promise<unknown>;
+  add(fn: AnyFunction, ...params: unknown[]): Promise<unknown>;
   clear(): void;
   flush(): Promise<unknown>;
 }
 
 export interface AsyncQueueEntry {
-  fn: Function;
+  fn: AnyFunction;
   params: unknown[];
-  reject: Function;
-  resolve: Function;
+  reject: AnyFunction;
+  resolve: AnyFunction;
 }
 
 export function createAsyncQueue(): AsyncQueue {
@@ -21,9 +23,9 @@ export function createAsyncQueue(): AsyncQueue {
     flush,
   };
 
-  function add(fn: Function, ...params: unknown[]): Promise<unknown> {
-    let rej: Function = () => {};
-    let res: Function = () => {};
+  function add(fn: AnyFunction, ...params: unknown[]): Promise<unknown> {
+    let rej: AnyFunction = () => {}; // eslint-disable-line @typescript-eslint/no-empty-function
+    let res: AnyFunction = () => {}; // eslint-disable-line @typescript-eslint/no-empty-function
 
     const promise = new Promise((resolve, reject) => {
       res = resolve;
@@ -46,7 +48,7 @@ export function createAsyncQueue(): AsyncQueue {
     entries.length = 0;
   }
 
-  async function flush(): Promise<unknown> {
+  async function flush(): Promise<void> {
     if (flushing) {
       return;
     }

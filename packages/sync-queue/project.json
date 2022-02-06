@@ -1,0 +1,33 @@
+{
+  "root": "packages/sync-queue",
+  "sourceRoot": "packages/sync-queue/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/sync-queue",
+        "main": "packages/sync-queue/src/index.ts",
+        "tsConfig": "packages/sync-queue/tsconfig.lib.json",
+        "assets": ["packages/sync-queue/*.md"]
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["packages/sync-queue/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/packages/sync-queue"],
+      "options": {
+        "jestConfig": "packages/sync-queue/jest.config.js",
+        "passWithNoTests": true
+      }
+    }
+  },
+  "tags": []
+}

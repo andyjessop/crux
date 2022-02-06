@@ -1,1 +1,1 @@
-export * from './lib/create-store';
+export * from './lib/store';

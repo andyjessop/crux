@@ -3,11 +3,8 @@
   "compilerOptions": {
     "outDir": "../../dist/out-tsc",
     "declaration": true,
-    "paths": {
-      "@crux/*": ["dist/packages/*"]
-    },
-    "types": ["jest", "mocha"]
+    "types": [],
   },
   "include": ["**/*.ts"],
-  "exclude": ["**/*.spec.ts"],
+  "exclude": ["**/*.spec.ts"]
 }

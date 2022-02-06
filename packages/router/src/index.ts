@@ -1,1 +1,1 @@
-export * from './lib/create-router';
+export * from './lib/router';
