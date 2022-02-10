@@ -13,6 +13,21 @@
         "assets": ["packages/redux-router/*.md"]
       }
     },
+    "build:prod": {
+      "executor": "@nrwl/web:rollup",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/redux-router",
+        "tsConfig": "packages/redux-router/tsconfig.lib.json",
+        "project": "packages/redux-router/package.json",
+        "entryFile": "packages/redux-router/src/index.ts",
+        "format": [
+          "esm",
+          "cjs"
+        ],
+        "rollupConfig": ["rollup.lib.js"]
+      }
+    },
     "lint": {
       "executor": "@nrwl/linter:eslint",
       "outputs": ["{options.outputFile}"],

@@ -13,6 +13,21 @@
         "assets": ["packages/event-emitter/*.md"]
       }
     },
+    "build:prod": {
+      "executor": "@nrwl/web:rollup",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/event-emitter",
+        "tsConfig": "packages/event-emitter/tsconfig.lib.json",
+        "project": "packages/event-emitter/package.json",
+        "entryFile": "packages/event-emitter/src/index.ts",
+        "format": [
+          "esm",
+          "cjs"
+        ],
+        "rollupConfig": ["rollup.lib.js"]
+      }
+    },
     "lint": {
       "executor": "@nrwl/linter:eslint",
       "outputs": ["{options.outputFile}"],

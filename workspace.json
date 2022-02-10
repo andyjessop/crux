@@ -3,6 +3,7 @@
   "projects": {
     "async-queue": "packages/async-queue",
     "cli": "packages/cli",
+    "core": "packages/core",
     "dev": "packages/dev",
     "dev-e2e": "packages/dev-e2e",
     "di": "packages/di",

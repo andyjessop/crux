@@ -13,6 +13,21 @@
         "assets": ["packages/store/*.md"]
       }
     },
+    "build:prod": {
+      "executor": "@nrwl/web:rollup",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/store",
+        "tsConfig": "packages/store/tsconfig.lib.json",
+        "project": "packages/store/package.json",
+        "entryFile": "packages/store/src/index.ts",
+        "format": [
+          "esm",
+          "cjs"
+        ],
+        "rollupConfig": ["rollup.lib.js"]
+      }
+    },
     "lint": {
       "executor": "@nrwl/linter:eslint",
       "outputs": ["{options.outputFile}"],

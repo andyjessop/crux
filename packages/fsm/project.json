@@ -13,6 +13,21 @@
         "assets": ["packages/fsm/*.md"]
       }
     },
+    "build:prod": {
+      "executor": "@nrwl/web:rollup",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/fsm",
+        "tsConfig": "packages/fsm/tsconfig.lib.json",
+        "project": "packages/fsm/package.json",
+        "entryFile": "packages/fsm/src/index.ts",
+        "format": [
+          "esm",
+          "cjs"
+        ],
+        "rollupConfig": ["rollup.lib.js"]
+      }
+    },
     "lint": {
       "executor": "@nrwl/linter:eslint",
       "outputs": ["{options.outputFile}"],

@@ -16,6 +16,7 @@
     "baseUrl": ".",
     "paths": {
       "@crux/async-queue": ["packages/async-queue/src/index.ts"],
+      "@crux/core": ["packages/core/src/index.ts"],
       "@crux/di": ["packages/di/src/index.ts"],
       "@crux/event-emitter": ["packages/event-emitter/src/index.ts"],
       "@crux/fsm": ["packages/fsm/src/index.ts"],
