@@ -5,9 +5,11 @@
     "outDir": "../../dist/out-tsc",
     "types": ["node"],
     "paths": {
+      "@crux/core": ["packages/core/src/index.ts"],
       "@crux/event-emitter": ["packages/event-emitter/src/index.ts"],
       "@crux/redux-router": ["packages/redux-router/src/index.ts"],
       "@crux/router": ["packages/router/src/index.ts"],
+      "@crux/sync-queue": ["packages/sync-queue/src/index.ts"],
     }
   },
   "files": [

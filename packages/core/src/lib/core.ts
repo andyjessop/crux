@@ -2,9 +2,9 @@ import { createEventEmitter, EventEmitter } from "@crux/event-emitter";
 
 interface Store<T> {
   getState(): T;
-  pause(): boolean;
-  resume(): boolean;
-  subscribe(callback: () => void): () => boolean;
+  pause(): void;
+  resume(): void;
+  subscribe(callback: () => void): () => void;
 }
 
 export interface Layout<T, U> {
@@ -29,7 +29,8 @@ export enum Event {
   OnModulesCreated = 'onModulesCreated',
   OnModulesDestroyed = 'onModulesDestroyed',
   onNewState = 'onNewState',
-  onNewRegions = 'onNewRegions'
+  onNewRegions = 'onNewRegions',
+  OnRenderLayout = 'onRenderLayout'
 }
 
 export type Events<T, U> = {
@@ -38,7 +39,8 @@ export type Events<T, U> = {
   [Event.OnModulesCreated]: { core: Core<T, U>, modules: Module<T>[] },
   [Event.OnModulesDestroyed]: { core: Core<T, U>, modules: Module<T>[] },
   [Event.onNewState]: { state: T, core: Core<T, U> },
-  [Event.onNewRegions]: { regions: U[], core: Core<T, U> }
+  [Event.onNewRegions]: { regions: U[], core: Core<T, U> },
+  [Event.OnRenderLayout]: {core: Core<T, U> },
 }
 
 export interface Core<T, U> {
@@ -49,9 +51,9 @@ export interface Core<T, U> {
 
 export function createCore<T, U = unknown>(store: Store<T>, layout: Layout<T, U>, root: HTMLElement, eventEmitter?: EventEmitter<Events<T, U>>) {
   const emitter = eventEmitter || createEventEmitter<Events<T, U>>();
-  const unsubscribe = store.subscribe(onStateUpdate);
   const modules = new Map<U, Module<T>>();
   const currentRegions: U[] = [];
+  const unsubscribe = store.subscribe(onStateUpdate);
 
   const core = {
     destroy,
@@ -74,7 +76,9 @@ export function createCore<T, U = unknown>(store: Store<T>, layout: Layout<T, U>
 
     emitter.emit(Event.onNewState, { state: newState, core });
 
-    // call layout with state to get regions.
+    // Define Regions
+    // ======================================================
+
     const { regions, render } = layout.update(newState);
 
     // get difference between regions.
@@ -83,7 +87,7 @@ export function createCore<T, U = unknown>(store: Store<T>, layout: Layout<T, U>
       extraInSecond: newRegionsToAdd
     } = difference(currentRegions, regions);
 
-    // if newRegions is same as oldRegions, do nothing.
+    // if regions haven't changed, do nothing.
     if (currentRegionsToRemove.length === 0 && newRegionsToAdd.length === 0) {
       return false;
     }
@@ -92,27 +96,32 @@ export function createCore<T, U = unknown>(store: Store<T>, layout: Layout<T, U>
     currentRegions.push(...regions);
 
     emitter.emit(Event.onNewRegions, { core, regions });
+    
+    // Destroy/Create modules
+    // ======================================================
 
     const modulesToDestroy = getMany(modules, currentRegionsToRemove);
 
-    // destroy modules whose region no longer exists
     await Promise.all(
       modulesToDestroy.map(mod => mod.destroy?.(newState))
     );
 
     emitter.emit(Event.OnModulesDestroyed, { core, modules: modulesToDestroy });
 
-    // call layout render function
-    render(root);
-
     const modulesToCreate = getMany(modules, newRegionsToAdd);
 
-    // Initialise new modules
     await Promise.all(
       modulesToCreate.map(mod => mod.create?.(newState))
     );
 
     emitter.emit(Event.OnModulesCreated, { core, modules: modulesToCreate });
+    
+    // Render layout
+    // ======================================================
+
+    render(root);
+
+    emitter.emit(Event.OnRenderLayout, { core });
 
     return true;
   }

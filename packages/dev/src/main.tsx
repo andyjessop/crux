@@ -1,9 +1,10 @@
-import { StrictMode } from 'react';
-import * as ReactDOM from 'react-dom';
 import { configureStore } from '@reduxjs/toolkit';
-import App from './modules/app/app';
-import { middleware, reducer as routerReducer } from './modules/router';
-import { Provider } from 'react-redux';
+import { middleware, reducer as routerReducer } from './app/modules/router';
+import { createCore } from '@crux/core';
+import { createLayout } from './app/layout';
+import { withPauseResume } from './app/store';
+
+const root = document.getElementById('root');
 
 const store = configureStore({
   reducer: {
@@ -12,11 +13,6 @@ const store = configureStore({
   middleware: [middleware]
 });
 
-ReactDOM.render(
-  <StrictMode>
-    <Provider store={store}>
-      <App />
-    </Provider>  
-  </StrictMode>,
-  document.getElementById('root')
-);
+const layout = createLayout();
+
+const core = createCore(withPauseResume(store), layout, root);

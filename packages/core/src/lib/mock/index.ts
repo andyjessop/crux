@@ -13,7 +13,7 @@ export function createMock() {
     el:  {} as HTMLElement,
     emitter: createMockEventEmitter(),
     layout: createMockLayout(),
-    module: createMockModule(),
+    module: createMockModule<State>(),
     store: createMockStore(initialState),
   }
 }
