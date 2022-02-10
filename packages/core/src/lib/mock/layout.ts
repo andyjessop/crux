@@ -1,14 +1,5 @@
-import { Layout } from './core';
-
-export enum Region {
-  Sidebar = 'sidebar',
-  Nav = 'nav',
-  Main = 'main',
-}
-
-export interface State {
-  sidebarIsOpen: boolean;
-}
+import { Layout } from '../core';
+import { Region, State } from './types';
 
 export function createMockLayout(): Layout<State, Region> {
   return {

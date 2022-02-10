@@ -1,4 +1,4 @@
-interface Store<T> {
+export interface Store<T> {
   getState(): T;
   pause(): boolean;
   resume(): boolean;

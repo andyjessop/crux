@@ -1,4 +1,4 @@
-import { Module } from "..";
+import { Module } from "../core";
 
 export function createMockModule<T>(): Module<T> {
   return {
