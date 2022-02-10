@@ -51,7 +51,9 @@ describe('core', () => {
       el, emitter, layout, module, store
     } = createMock();
 
-    const { modules, onStateUpdate } = createCore(store, layout, el, emitter);
+    const core = createCore(store, layout, el, emitter);
+
+    const { modules, onStateUpdate } = core;
 
     // Define module for a the sidebar region
     modules.set(Region.Sidebar, module);
@@ -67,5 +69,8 @@ describe('core', () => {
     await onStateUpdate();
 
     expect(module.destroy).toBeCalledTimes(1);
+    expect(emitter.emit.mock.calls.filter(
+      call => call[0] === Event.OnModulesDestroyed
+    )[1]).toEqual([Event.OnModulesDestroyed, { core, modules: [module] }]);
   });
 });
