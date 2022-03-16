@@ -1,6 +1,5 @@
 import { createEventEmitter, EventEmitter } from '@crux/event-emitter';
-import { parse, reverse } from './parser';
-import { trimSlashes } from './parser/trim-slashes';
+import { parse, reverse, trimSlashes } from '@crux/url-parser';
 import { paramsToStrings } from './helpers/params-to-strings';
 
 export type RouteParams = Record<string, string | null | string[]>;

@@ -1,9 +1,5 @@
-export enum Region {
-  Sidebar = 'sidebar',
-  Nav = 'nav',
-  Main = 'main',
-}
+import { Layout } from "../modules/layout/slice";
 
 export interface State {
-  sidebarIsOpen: boolean;
+  layout: Layout;
 }

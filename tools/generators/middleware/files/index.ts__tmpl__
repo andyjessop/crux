@@ -1,0 +1,18 @@
+import { AnyAction, Dispatch, MiddlewareAPI } from "@reduxjs/toolkit";
+
+export function create<%= names.className %>Middlware() {
+  return (api: MiddlewareAPI) => (next: Dispatch<AnyAction>) => (action: AnyAction) => {
+    if (action.type === '') {
+
+    }
+
+    switch (action.type) {
+      case '':
+        break;
+      default:
+        break;
+    }
+
+    next(action);
+  };
+}

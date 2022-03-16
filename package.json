@@ -7,6 +7,7 @@
   "dependencies": {
     "@nrwl/js": "^13.7.3",
     "@reduxjs/toolkit": "^1.7.2",
+    "classnames": "^2.3.1",
     "core-js": "^3.6.5",
     "react": "17.0.2",
     "react-dom": "17.0.2",
@@ -17,6 +18,7 @@
   "devDependencies": {
     "@nrwl/cli": "13.7.3",
     "@nrwl/cypress": "13.7.3",
+    "@nrwl/devkit": "13.7.3",
     "@nrwl/eslint-plugin-nx": "13.7.3",
     "@nrwl/jest": "13.7.3",
     "@nrwl/js": "13.7.3",

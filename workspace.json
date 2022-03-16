@@ -9,9 +9,13 @@
     "di": "packages/di",
     "event-emitter": "packages/event-emitter",
     "fsm": "packages/fsm",
+    "redux-query": "packages/redux-query",
     "redux-router": "packages/redux-router",
+    "redux-utils": "packages/redux-utils",
     "router": "packages/router",
     "store": "packages/store",
-    "sync-queue": "packages/sync-queue"
+    "string-utils": "packages/string-utils",
+    "sync-queue": "packages/sync-queue",
+    "url-parser": "packages/url-parser"
   }
 }

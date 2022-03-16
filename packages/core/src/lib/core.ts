@@ -7,9 +7,9 @@ interface Store<T> {
   subscribe(callback: () => void): () => void;
 }
 
-export interface Layout<T, U> {
+export interface Layout<T, U extends string> {
   update(state: T): {
-    regions: U[];
+    regions: Record<U, boolean>;
     render(root: HTMLElement): boolean;
   };
 }

@@ -1,0 +1,31 @@
+.layout {
+  height: 100vh;
+  display: grid; 
+  grid-template-columns: var(--dimension-sidebar-width) 1.3fr; 
+  grid-template-rows: var(--dimension-nav-height) 1.6fr; 
+  gap: 0px 0px; 
+  grid-template-areas: 
+    "nav nav"
+    "sidebar main";
+
+  &.sidebar-closed {
+    grid-template-areas: 
+      "nav nav"
+      "main main";
+  }
+}
+
+.nav {
+  grid-area: nav;
+  background-color: var(--color-bg-1);
+}
+
+.sidebar {
+  grid-area: sidebar;
+  background-color: var(--color-bg-2);
+}
+
+.main {
+  grid-area: main;
+  background-color: var(--color-bg-3);
+}

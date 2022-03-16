@@ -28,7 +28,11 @@
       "program": "${workspaceRoot}/node_modules/jest/bin/jest.js",
       "args": ["--verbose", "-i", "--no-cache", "--testPathPattern", "${fileBasename}"],
       "console": "integratedTerminal",
-      "internalConsoleOptions": "neverOpen"
+      "internalConsoleOptions": "neverOpen",
+      "skipFiles": [
+        "${workspaceFolder}/node_modules/**/*.js",
+        "<node_internals>/**/*.js"
+      ]
     }
   ]
 }

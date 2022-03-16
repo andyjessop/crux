@@ -1,0 +1,33 @@
+{
+  "root": "packages/redux-utils",
+  "sourceRoot": "packages/redux-utils/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/redux-utils",
+        "main": "packages/redux-utils/src/index.ts",
+        "tsConfig": "packages/redux-utils/tsconfig.lib.json",
+        "assets": ["packages/redux-utils/*.md"]
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["packages/redux-utils/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/packages/redux-utils"],
+      "options": {
+        "jestConfig": "packages/redux-utils/jest.config.js",
+        "passWithNoTests": true
+      }
+    }
+  },
+  "tags": []
+}

@@ -12,6 +12,7 @@
 - [router](packages/router/README.md) - a lightweight and decoupled router
 - [store](packages/store/README.md) - a framework-agnostic store that provides immutable updates and observers by default
 - [sync-queue](packages/sync-queue/README.md) - a synchronous queue utility.
+- [url-parser](packages/url-parser/README.md) - a url parser/generator.
 
 ## Contributing
 

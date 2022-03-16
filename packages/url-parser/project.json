@@ -1,0 +1,48 @@
+{
+  "root": "packages/url-parser",
+  "sourceRoot": "packages/url-parser/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/url-parser",
+        "main": "packages/url-parser/src/index.ts",
+        "tsConfig": "packages/url-parser/tsconfig.lib.json",
+        "assets": ["packages/url-parser/*.md"]
+      }
+    },
+    "build:prod": {
+      "executor": "@nrwl/web:rollup",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/router",
+        "tsConfig": "packages/url-parser/tsconfig.lib.json",
+        "project": "packages/url-parser/package.json",
+        "entryFile": "packages/url-parser/src/index.ts",
+        "format": [
+          "esm",
+          "cjs"
+        ],
+        "rollupConfig": ["rollup.lib.prod.js"]
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["packages/url-parser/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/packages/url-parser"],
+      "options": {
+        "jestConfig": "packages/url-parser/jest.config.js",
+        "passWithNoTests": true
+      }
+    }
+  },
+  "tags": []
+}

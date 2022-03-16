@@ -1,7 +1,6 @@
 import { createRouter, Route, Router, RoutesConfig } from '@crux/router';
 import { Dispatch } from 'react';
 import { AnyAction, MiddlewareAPI, Reducer } from 'redux';
-import { createLink, Link } from './Link';
 
 interface ActionCreators {
   navigate: <T>(route: Route<T>) => {
@@ -40,7 +39,6 @@ export interface State<T = any> {
 
 export interface ReduxRouter<T extends RoutesConfig<T>> {
   actions: ActionCreators;
-  Link: Link<T>;
   middleware: (api: MiddlewareAPI) => (next: Dispatch<AnyAction>) => (action: AnyAction) => void;
   reducer: Reducer<State<keyof T | "root" | "notFound">, AnyAction>;
 }
@@ -60,11 +58,8 @@ export function createReduxRouter<T extends RoutesConfig<T>>(config: RoutesConfi
 
   const reducer = createReducer(initialState);
 
-  const Link = createLink(router);
-
   return {
     actions,
-    Link,
     middleware: createReduxRouterMiddleware(router),
     reducer,
   };
@@ -101,7 +96,7 @@ export function createReduxRouterMiddleware<T>(router: Router<T>) {
   }
 }
 
-export function createReducer<T>(initialState: State) {
+export function createReducer(initialState: State) {
   return function reducer(state = initialState, action: AnyAction) {
     switch(action.type) {
       case 'router/_navigated':

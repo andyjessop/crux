@@ -1,7 +1,7 @@
-import { router } from './router';
+import { createRouter } from './router';
 
 describe('router', () => {
   it('should work', () => {
-    expect(router()).toEqual('router');
+    expect(createRouter({})).toEqual('router');
   });
 });

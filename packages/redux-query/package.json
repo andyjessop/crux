@@ -1,0 +1,8 @@
+{
+  "name": "@crux/redux-query",
+  "version": "0.0.1",
+  "type": "commonjs",
+  "dependencies": {
+    "@crux/string-utils": "0.0.1"
+  }
+}
