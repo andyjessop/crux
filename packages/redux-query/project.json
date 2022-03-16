@@ -13,6 +13,21 @@
         "assets": ["packages/redux-query/*.md"]
       }
     },
+    "build:prod": {
+      "executor": "@nrwl/web:rollup",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/redux-query",
+        "tsConfig": "packages/redux-query/tsconfig.lib.json",
+        "project": "packages/redux-query/package.json",
+        "entryFile": "packages/redux-query/src/index.ts",
+        "format": [
+          "esm",
+          "cjs"
+        ],
+        "rollupConfig": ["rollup.lib.prod.js"]
+      }
+    },
     "lint": {
       "executor": "@nrwl/linter:eslint",
       "outputs": ["{options.outputFile}"],

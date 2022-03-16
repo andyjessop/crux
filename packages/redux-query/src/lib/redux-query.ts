@@ -1,7 +1,7 @@
 import { generateRandomId } from "@crux/string-utils";
 import { AnyAction } from "@reduxjs/toolkit";
 
-export function createSlice<T extends Record<string, (...args: any[]) => S>, S>(config: T, { initialState, name }: { initialState: S, name?: string; }) {
+export function createSlice<T extends Record<string, (state: S, payload?: any) => S>, S>(config: T, { initialState, name }: { initialState: S, name?: string; }) {
   const keys = Object.keys(config) as unknown as (keyof typeof config)[];
   const id = name || generateRandomId(20);
 
