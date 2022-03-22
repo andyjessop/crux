@@ -44,8 +44,38 @@ describe('fsm', () => {
     await fsm.transition('switchOn');
   });
 
-  test('create shorthand methods', async () => {
+  test('create shorthand methods for actions', async () => {
     const fsm = createFSM(lightSwitch, { initialState: 'off' });
+
+    await fsm.switchOn();
+
+    expect(fsm.getState()).toEqual('on');
+
+    await fsm.switchOff();
+
+    expect(fsm.getState()).toEqual('off');
+  });
+
+  test('create shorthand methods for events', async () => {
+    const fsm = createFSM(lightSwitch, { initialState: 'off' });
+
+    fsm.onOn((data) => {
+      const { action, current, last } = data;
+
+      expect(fsm.getState()).toEqual('on');
+      expect(action).toEqual('switchOn');
+      expect(current).toEqual('on');
+      expect(last).toEqual('off');
+    });
+
+    fsm.onOff((data) => {
+      const { action, current, last } = data;
+
+      expect(fsm.getState()).toEqual('off');
+      expect(action).toEqual('switchOff');
+      expect(current).toEqual('off');
+      expect(last).toEqual('on');
+    });
 
     await fsm.switchOn();
 

@@ -83,6 +83,13 @@ machine.go(); // new state is 'running'
 machine.stop(); // new state is 'idle'
 ```
 
+`fsm` doesn't just build shorthand methods for transitions, but also for state changes:
+
+```ts
+machine.onIdle((data) => {});
+machine.onRunning((data) => {});
+```
+
 ### TypeScript support
 
 `fsm` knows which are your states and which are your actions, and will throw TS errors when you try to transition with an action that doesn't exist. This applies to both `transition` and the shorthand methods:
@@ -96,5 +103,5 @@ machine.transition('goForth'); // Argument of type '"goForth"' is not assignable
 `fsm` also types the `data` of emitted events
 
 ```ts
-machine.onEnter(data => console.log(data)); // data type is { action: keyof Actions, current: string, last: string )
+machine.onEnter(data => console.log(data)); // data type is { action: keyof Actions, current: keyof State, last: keyof State )
 ```

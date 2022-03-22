@@ -1,15 +1,18 @@
-import { createEventEmitter, EventEmitter } from '@crux/event-emitter';
+import { createEventEmitter, EventEmitter, EventHandler } from '@crux/event-emitter';
 
 export function createFSM<T extends Config>(config: T, options: Options<T>) {
   const { emitter = createEventEmitter<Events<T>>(), initialState } = options;
+  const secEmitter = createEventEmitter<StateEvents<T>>();
 
   let current = initialState;
 
-  const actions = buildActionMethods(config, transition);
+  const actions = buildActions(config, transition);
+  const handlers = buildHandlers(config, secEmitter);
 
   return {
     ...actions,
     getState,
+    ...handlers,
     onEnter,
     onExit,
     transition,
@@ -51,12 +54,13 @@ export function createFSM<T extends Config>(config: T, options: Options<T>) {
     current = await config[current][action]();
 
     await emitter.emit(EventTypes.OnEnter, { action, current, last });
+    await secEmitter.emit(current, { action, current, last: last as Exclude<keyof T, keyof T & string> });
 
     return current;
   }
 }
 
-function buildActionMethods<T extends Config>(
+function buildActions<T extends Config>(
   config: T,
   transition: Transition<T>
 ) {
@@ -75,14 +79,39 @@ function buildActionMethods<T extends Config>(
   }, <Record<Actions<T>, () => Promise<keyof T & string | undefined>>>{});
 }
 
+function buildHandlers<T extends Config>(
+  config: T,
+  emitter: EventEmitter<StateEvents<T>>
+) {
+  const keys = Object.keys(config) as (keyof T)[];
+
+  return keys.reduce((acc, cur) => {
+    const [first, ...rest] = cur as string;
+
+    const k = `on${first.toUpperCase()}${rest.join('')}` as `on${Capitalize<Extract<keyof T, string>>}`;
+
+    acc[k] = (handler: EventHandler<StateEvents<T>[keyof T]>) => {
+      emitter.on(cur, data => handler(data));
+
+      return () => emitter.off(cur, handler);
+    };
+
+    return acc;
+  }, <Record<`on${Capitalize<keyof T & string>}`, (handler: EventHandler<StateEvents<T>[keyof T]>) => () => void>>{});
+}
+
 type Config = {
   [key: string]: Record<string, () => Promise<string> | string>;
 };
 
 type Events<T> = {
-  onEnter: { action: Actions<T>; current: string; last: string };
-  onExit: { action: Actions<T>; current: string };
+  onEnter: { action: Actions<T>; current: keyof T; last: keyof T };
+  onExit: { action: Actions<T>; current: keyof T };
 };
+
+type StateEvents<T> = {
+  [K in keyof T]: { action: Actions<T>; current: K; last: Exclude<keyof T, K> }
+}
 
 export const enum EventTypes {
   OnEnter = 'onEnter',
