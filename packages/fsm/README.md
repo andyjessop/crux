@@ -87,7 +87,11 @@ machine.stop(); // new state is 'idle'
 
 ```ts
 machine.onIdle((data) => {});
-machine.onRunning((data) => {});
+
+// You can also unsubscribe as with the onEnter and onExit handlers.
+const unsubscribe = machine.onRunning((data) => {});
+
+unsubscribe();
 ```
 
 ### TypeScript support
