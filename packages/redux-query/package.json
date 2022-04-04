@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "type": "commonjs",
   "dependencies": {
-    "@crux/string-utils": "0.0.1"
+    "@crux/string-utils": "0.0.1",
+    "@crux/redux-utils": "0.0.1"
   }
 }

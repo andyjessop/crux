@@ -1,4 +1,4 @@
-import { createSlice } from './redux-query';
+import { createSlice } from './create-slice';
 
 describe('reduxQuery', () => {
   it('should work', () => {

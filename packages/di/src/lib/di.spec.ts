@@ -27,6 +27,7 @@ interface Services {
     set: (str: 'b') => string;
   };
 }
+
 let initialServices: ConstructorCollection<Services>;
 let container: DI<Services>;
 

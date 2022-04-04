@@ -19,7 +19,11 @@
       "program": "${workspaceFolder}/node_modules/.bin/jest",
       "windows": {
         "program": "${workspaceFolder}/node_modules/jest/bin/jest"
-      }
+      },
+      "skipFiles": [
+        "${workspaceFolder}/node_modules/**/*.js",
+        "<node_internals>/**"
+      ]
     },
     {
       "type": "node",
@@ -31,7 +35,7 @@
       "internalConsoleOptions": "neverOpen",
       "skipFiles": [
         "${workspaceFolder}/node_modules/**/*.js",
-        "<node_internals>/**/*.js"
+        "<node_internals>/**"
       ]
     }
   ]
