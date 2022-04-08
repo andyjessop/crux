@@ -1,16 +1,16 @@
 import { Dispatch } from '@reduxjs/toolkit';
 import { createSlice } from '..';
 import { deserialize as defaultDeserialize } from './helpers/serializer';
-import { APICall, OptimisticUpdate, Options, State, Type } from './types';
+import { APICall, OperationType, OptimisticUpdate, Options, State } from './types';
 
 const reducerMap = {
-  create: createPOSTSlice,
-  read: createGETSlice,
-  update: createPUTSlice,
-  delete: createDELETESlice,
+  [OperationType.Create]: createPOSTSlice,
+  [OperationType.Read]: createGETSlice,
+  [OperationType.Update]: createPUTSlice,
+  [OperationType.Delete]: createDELETESlice,
 }
 
-export function createDataSlice<D, E>({
+export function createDataSlice<D, E, P extends unknown[] = unknown[]>({
   api, deserialize = defaultDeserialize, dispatch, endpointId, getState, name, optimisticUpdate, options = {}, resource, type,
 }: {
   deserialize?: <T>(str: string) => T;
@@ -22,7 +22,7 @@ export function createDataSlice<D, E>({
   optimisticUpdate?: OptimisticUpdate<D, E>;
   options?: Options<D, E>;
   resource: string;
-  type: Type;
+  type: OperationType;
 }) {
 
   const initialState: State<D, E> = {
@@ -32,9 +32,11 @@ export function createDataSlice<D, E>({
     updating: false,
   };
 
-  const { actions, reducer } = reducerMap[type](initialState, resource, name, options?.clearDataOnError, optimisticUpdate);
+  const { actions, reducer } = reducerMap[type](
+    initialState, resource, name, options?.clearDataOnError, optimisticUpdate,
+  );
 
-  const call = async (...params: unknown[]) => {    
+  const call = async (...params: P) => {    
     // if the pending action takes a parameter, it's always a single parameter of type D.
     const action = actions[`${name}/pending`](<D>params[0]);
 

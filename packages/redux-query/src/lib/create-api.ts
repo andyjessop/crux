@@ -2,17 +2,28 @@ import { mergeReducers } from "@crux/redux-utils";
 import { generateRandomId } from "@crux/string-utils";
 import { combineReducers, AnyAction, MiddlewareAPI, Dispatch, Reducer } from "redux";
 import { createDataSlice } from "./create-data-slice";
-import { Resource, State } from "./types";
+import { createUseQuery } from "./create-use-query";
+import { Endpoint, LoaderConig, OperationType, Options, Resource, State } from "./types";
 
-type ReturnPromiseType<T extends (...args: any) => Promise<any>> = T extends (...args: any) => Promise<infer R> ? R : any;
+export type FinalReturnType<T> = {
+  0: T;
+  1: T extends (...args: any) => infer R ? FinalReturnType<R> : T;
+}[T extends (...args: any) => infer _ ? 1 : 0];
 
-type ReadParams<T> = T extends { api: ((...params: infer R) => (state: any) => Promise<any>) | ((...params: infer R) => Promise<any>) } ? R : any;
+export type TypeOfReturnedPromise<T extends (...args: any) => Promise<any>> = T extends (...args: any) => Promise<infer R> ? R : any;
+export type Params<T> = T extends ((...params: infer R) => Promise<any>) ? R : any[];
+export type Data<T extends LoaderConig, Key extends keyof T & string> = TypeOfReturnedPromise<T[Key]> extends Resource<infer R, any> ? R : any;
+export type Err<T extends LoaderConig, Key extends keyof T & string> = TypeOfReturnedPromise<T[Key]> extends Resource<any, infer R> ? R : any;
 
-export function createAPI<T extends Record<string, () => Promise<Resource<any, any>>>>(resources: T) {
-  const endpoints: Record<string, any> = {};
+export function createAPI<T extends LoaderConig>(resources: T) {
+  const endpoints: Record<string, Endpoint<any, any>> = {};
   const reducers = new Map<string, Reducer>();
   let cachedReducer: Reducer;
   const reducerId = generateRandomId();
+
+  type FetchParams<Key extends keyof T & string> = Params<TypeOfReturnedPromise<T[Key]>['api']>;
+  type Data<Key extends keyof T & string> = TypeOfReturnedPromise<T[Key]> extends Resource<infer R, any> ? R : any;
+  type Err<Key extends keyof T & string> = TypeOfReturnedPromise<T[Key]> extends Resource<any, infer R> ? R : any;
 
   registerReducer('placeholder', <S>(state?: S) => !state ? {} : state);
 
@@ -20,14 +31,28 @@ export function createAPI<T extends Record<string, () => Promise<Resource<any, a
   let getState: () => any;
 
   return {
-    getResourceConfig,
     middleware,
     resource,
     reducer,
     reducerId,
+    resources: endpoints,
+    useQuery,
   }
 
-  function middleware(api: MiddlewareAPI<Dispatch, any>) {
+  /**
+   * const { data, error, isLoading } = useQuery('users', { lazy: true }).subscribe(1); 
+  */
+  function useQuery<K extends keyof T & string>(key: K, opts: Options<Data<K>, Err<K>> = {}) {
+    return {
+      subscribe,
+    };
+
+    function subscribe(...params: FetchParams<K>) {
+      return createUseQuery(resource, key, opts, params);
+    }
+  }
+
+  function middleware(api: MiddlewareAPI<Dispatch, unknown>) {
     // Capture reference to dispatch and getState from store
     dispatch = api.dispatch;
     getState = api.getState;
@@ -69,96 +94,80 @@ export function createAPI<T extends Record<string, () => Promise<Resource<any, a
     }
   }
 
-  function getEndpointState(id: string) {
-    return function state() {
-      return getState()[reducerId][id] as State<any, any>;
-    }
+  async function getResource<K extends keyof T & string>(key: K) {
+    return (await resources[key]()) as TypeOfReturnedPromise<T[K]>;
   }
 
-  async function getResourceConfig<K extends keyof T & string>(key: K) {
-    const res = await resources[key]() as ReturnPromiseType<T[K]>;
+  async function resource<K extends keyof T & string>(key: K, opts: Options<Data<K>, Err<K>> = {}) {
+    const res = await getResource(key);
 
-    type Data<T> = T extends Resource<infer R, any> ? R : any;
-    type Error<T> = T extends Resource<any, infer R> ? R : any;
+    const options = Object.assign({}, res.options || {}, opts);
 
-    return {
-      res,
-      data: {data: true} as Data<typeof res>,
-      error: {error: true} as Error<typeof res>,
-      params,
-    }
-
-    function params(...p: ReadParams<ReturnPromiseType<T[K]>>) {
-      return p;
-    }
-  }
-
-  async function resource<K extends keyof T & string>(key: K) {
-    const res = (await resources[key]()) as ReturnPromiseType<T[K]>;
-
-    type Data = typeof res extends Resource<infer R, any> ? R : any;
-    type Error = typeof res extends Resource<any, infer R> ? R : any;
-
-    return {
-      [res.name]: register,
+    // Type inference for mutations and their params
+    type Mutations = TypeOfReturnedPromise<T[K]>['mutations'];
+    type MutationsObj = {
+      [P in keyof Mutations]: (
+        ...params: Params<Mutations[P]['api']>
+      ) => FinalReturnType<Mutations[P]['api']>;
     };
 
-    function register(...params: ReadParams<ReturnPromiseType<T[K]>>) {
-      // get unique ID for this read endpoint.
-      const id = JSON.stringify([key, ...params]);
-      
+    return {
+      subscribe,
+    };
+
+    function subscribe(...params: FetchParams<K>) {
+      const id = createEndpointId(key, params);
+
       if (!endpoints[id]) {
         endpoints[id] = {
           destroyEndpoint,
+          fetch,
           manualUpdate,
+          mutations: {},
+          select,
           startSelfDestructTimeout,
           subscriptions: new Set(),
-        }
+        } as Endpoint<Data<K>, Err<K>>
       } else {
         // Clear the self destruct timer if it exists because we're adding
         // a new subscription
         endpoints[id]?.clearSelfDestructTimeout?.();
       }
 
-      const endpoint = endpoints[id];
+      const endpoint = endpoints[id] as Endpoint<Data<K> ,Err<K>>;
 
       endpoint.subscriptions.add(unsubscribe);
       
-      // Holds mutation calls
-      endpoint.mutations = {};
-      
-      const mutateReducers: Record<string, Reducer> = {};
       const mutateReducersArr = [];
 
       if (res.mutations) {
         for (const mutateMethodName of Object.keys(res.mutations)) {
-          const mutationSlice = createDataSlice<Data, Error>({
+          const mutationSlice = createDataSlice<Data<K>, Err<K>>({
             api: res.mutations[mutateMethodName]['api'],
             dispatch,
             endpointId: id,
-            getState: getEndpointState(id),
+            getState: () => endpoint.select(getState()),
             name: mutateMethodName,
             optimisticUpdate: res.mutations[mutateMethodName].optimisticUpdate,
-            options: res['options'], // use options from GET config
+            options,
             resource: key,
             type: res.mutations[mutateMethodName]['type']
           });
 
           endpoint.mutations[mutateMethodName] = mutationSlice.call;
-          mutateReducers[mutateMethodName] = mutationSlice.reducer;
           mutateReducersArr.push(mutationSlice.reducer);
         }
       }
       
-      const fetchSlice = createDataSlice<Data, Error>({
+      const fetchSlice = createDataSlice<Data<K>, Err<K>, FetchParams<K>>({
         api: res['api'],
         dispatch,
         endpointId: id,
-        getState: getEndpointState(id),
+        getState: () => endpoint.select(getState()),
         name: 'get',
-        options: res['options'],
+        options,
         resource: key,
-        type: 'read',
+        type: OperationType.Read,
       });
 
       endpoint.reducer = mergeReducers([
@@ -169,7 +178,20 @@ export function createAPI<T extends Record<string, () => Promise<Resource<any, a
       // register reducer
       endpoint.unregisterReducer = registerReducer(key, endpoint.reducer);
 
-      endpoint.fetch = () => {
+      // Fetch immediately if not lazy
+      if (!res.options?.lazy) {
+        endpoint.fetch();
+      }
+
+      return {
+        unsubscribe,
+        fetch: endpoint.fetch,
+        manualUpdate: endpoint.manualUpdate,
+        mutations: endpoint.mutations as MutationsObj,
+        select: endpoint.select
+      };
+
+      function fetch() {
         if (res.options?.pollingInterval && endpoint?.pollingInterval === undefined) {
           endpoint.pollingInterval = setInterval(() => {
             fetchSlice.call(...params);
@@ -180,20 +202,7 @@ export function createAPI<T extends Record<string, () => Promise<Resource<any, a
         }
         
         return fetchSlice.call(...params);
-      };
-
-      // Fetch immediately if not lazy
-      if (!res.options?.lazy) {
-        endpoint.fetch();
       }
-
-      return {
-        unsubscribe,
-        fetch: endpoint.fetch,
-        getState: getEndpointState(id),
-        manualUpdate: endpoint.manualUpdate,
-        mutations: endpoint.mutations,
-      };
 
       function unsubscribe() {
         endpoint.subscriptions.delete(unsubscribe);
@@ -206,16 +215,20 @@ export function createAPI<T extends Record<string, () => Promise<Resource<any, a
 
       function destroyEndpoint() {
         clearInterval(endpoint.pollingInterval);
-        endpoint.clearSelfDestructTimeout();
+        endpoint.clearSelfDestructTimeout?.();
         endpoint.unregisterReducer?.();
         delete endpoints[id];
       }
 
-      function manualUpdate(data: Data) {
+      function manualUpdate(state: State<Data<K>, Err<K>>) {
         dispatch({
-          type: `${[res.name]}/get/manual`,
-          payload: data,
+          type: `${key}/get/manual`,
+          payload: state,
         });
+      }
+
+      function select(state: unknown): State<Data<K>, Err<K>> {
+        return state[reducerId][id] as State<Data<K>, Err<K>>;
       }
 
       function startSelfDestructTimeout(timeInSeconds = 0) {
@@ -233,4 +246,8 @@ export function createAPI<T extends Record<string, () => Promise<Resource<any, a
 
 function isFulfilled(type: string) {
   return type.endsWith('fulfilled');
+}
+
+function createEndpointId(key, params) {
+  return `${key}|${JSON.stringify(params)}`;
 }

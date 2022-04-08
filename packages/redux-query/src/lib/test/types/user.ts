@@ -3,7 +3,7 @@ export interface User {
   name: string;
 }
 
-export interface Error {
+export interface Err {
   code: number;
   message: string;
 }

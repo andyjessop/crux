@@ -1,7 +1,7 @@
 import { serialize } from "../../../helpers/serializer";
 import { State } from "../../../types";
 import { ErrorResponse, PutUser, Response } from "../../api/user";
-import { Error, User } from "../../types/user";
+import { Err, User } from "../../types/user";
 
 export function toError(response: ErrorResponse): string {
   throw new Error(serialize(response.error));
@@ -19,14 +19,14 @@ export function toUndefined() {
   return undefined;
 }
 
-export function postResponseToData(state: State<User[], Error>, response: Response<User>) {
+export function postResponseToData(state: State<User[], Err>, response: Response<User>) {
   return [
     ...state.data || [],
     response.data,
   ];
 }
 
-export function mergeUser(state: State<User[], Error>, user: PutUser) {
+export function mergeUser(state: State<User[], Err>, user: PutUser) {
   const data = state.data;
 
   if (data === null) {
