@@ -1,7 +1,6 @@
 import { Dispatch } from '@reduxjs/toolkit';
 import { createSlice } from '..';
-import { deserialize as defaultDeserialize } from './helpers/serializer';
-import { APICall, OperationType, OptimisticUpdate, Options, State } from './types';
+import { OperationType, OptimisticUpdate, Options, ResourceConfig, State } from './types';
 
 const reducerMap = {
   [OperationType.Create]: createPOSTSlice,
@@ -11,16 +10,30 @@ const reducerMap = {
 }
 
 export function createDataSlice<D, E, P extends unknown[] = unknown[]>({
-  api, deserialize = defaultDeserialize, dispatch, endpointId, getState, name, optimisticUpdate, options = {}, resource, type,
+  dispatch,
+  endpointId,
+  getState, 
+  name,
+  onError,
+  onFetch,
+  onSuccess,
+  optimisticUpdate,
+  options = {},
+  query,
+  resource,
+  type,
 }: {
   deserialize?: <T>(str: string) => T;
-  api: APICall<D, E>;
   dispatch: Dispatch;
   endpointId: string;
   getState: () => State<D, E>;
   name: string;
-  optimisticUpdate?: OptimisticUpdate<D, E>;
-  options?: Options<D, E>;
+  onError: (actionType: string, error: E) => void;
+  onFetch: (actionType: string, ...params: P) => void;
+  onSuccess: (actionType: string, data: D) => void;
+  optimisticUpdate?: OptimisticUpdate<D>;
+  options?: Options;
+  query: ResourceConfig['query'];
   resource: string;
   type: OperationType;
 }) {
@@ -33,12 +46,16 @@ export function createDataSlice<D, E, P extends unknown[] = unknown[]>({
   };
 
   const { actions, reducer } = reducerMap[type](
-    initialState, resource, name, options?.clearDataOnError, optimisticUpdate,
+    initialState, resource, name, optimisticUpdate,
   );
 
-  const call = async (...params: P) => {    
+  const call = async (...params: P) => {  
+    const pendingType = `${name}/pending`;
+    const fulfilledType = `${name}/fulfilled`;
+    const rejectedType = `${name}/rejected`;
+
     // if the pending action takes a parameter, it's always a single parameter of type D.
-    const action = actions[`${name}/pending`](<D>params[0]);
+    const action = actions[pendingType](<D>params[0]);
 
     dispatch({
       ...action,
@@ -47,13 +64,15 @@ export function createDataSlice<D, E, P extends unknown[] = unknown[]>({
       }
     });
 
-    const initialCall = api(...params);
+    onFetch(name, ...params);
 
-    const apiResponse = isPromise(initialCall) ? initialCall : initialCall(getState());
+    const initialCall = query(...params);
+
+    const response = isPromise(initialCall) ? initialCall : initialCall(getState().data);
     
-    return apiResponse
-      .then(res => {
-        const action = actions[`${name}/fulfilled`](<D>res);
+    return response
+      .then((res: D) => {
+        const action = actions[fulfilledType](res);
 
         dispatch({
           ...action,
@@ -61,13 +80,13 @@ export function createDataSlice<D, E, P extends unknown[] = unknown[]>({
             endpointId,
           }
         });
+
+        onSuccess(name, res);
 
         return res;
       })
-      .catch(err => {
-        const deserialized = deserialize<E>(err.message);
-
-        const action = actions[`${name}/rejected`](deserialized);
+      .catch((err: E) => {
+        const action = actions[rejectedType](err);
 
         dispatch({
           ...action,
@@ -75,6 +94,8 @@ export function createDataSlice<D, E, P extends unknown[] = unknown[]>({
             endpointId,
           }
         });
+
+        onError(name, err);
 
         throw err;
       });
@@ -85,7 +106,7 @@ export function createDataSlice<D, E, P extends unknown[] = unknown[]>({
   };
 }
 
-function createGETSlice<Data, E>(initialState: State<Data, E>, resource: string, name: string, clearDataOnError = false) {
+function createGETSlice<Data, E>(initialState: State<Data, E>, resource: string, name: string) {
   return createSlice({
     [`${name}/pending`]: (state: State<Data, E>) => ({
       ...state,
@@ -101,19 +122,18 @@ function createGETSlice<Data, E>(initialState: State<Data, E>, resource: string,
     }),
     [`${name}/rejected`]: (state: State<Data, E>, payload: E) => ({
       ...state,
-      data: clearDataOnError ? null : state.data,
       error: payload,
       loading: false,
       updating: false,
     }),
     [`${name}/manual`]: (state: State<Data, E>, payload: Data) => ({
       ...state,
-      data: payload
+      data: payload,
     }),
   }, { initialState, name: resource })
 }
 
-function createPOSTSlice<Data, E>(initialState: State<Data, E>, resource: string, name: string, clearDataOnError = false, optimisticUpdate?: OptimisticUpdate<Data, E>) {
+function createPOSTSlice<Data, E>(initialState: State<Data, E>, resource: string, name: string, optimisticUpdate?: OptimisticUpdate<Data>) {
   let cached: Data | null;
   
   return createSlice({
@@ -124,7 +144,7 @@ function createPOSTSlice<Data, E>(initialState: State<Data, E>, resource: string
       
       return {
         ...state,
-        data: optimisticUpdate ? getOptimisticData<Data, E>(optimisticUpdate, state, payload) : state.data,
+        data: optimisticUpdate ? getOptimisticData<Data>(optimisticUpdate, state.data, payload) : state.data,
         loading: true,
         updating: state.data !== null,
       };
@@ -138,7 +158,7 @@ function createPOSTSlice<Data, E>(initialState: State<Data, E>, resource: string
     }),
     [`${name}/rejected`]: (state: State<Data, E>, payload: E) => ({
       ...state,
-      data: clearDataOnError ? null : (optimisticUpdate ? cached : state.data),
+      data: optimisticUpdate ? cached : state.data,
       error: payload,
       loading: false,
       updating: false,
@@ -146,7 +166,7 @@ function createPOSTSlice<Data, E>(initialState: State<Data, E>, resource: string
   }, { initialState, name: resource })
 }
 
-function createPUTSlice<Data, E>(initialState: State<Data, E>, resource: string, name: string, clearDataOnError = false, optimisticUpdate?: OptimisticUpdate<Data, E>) {
+function createPUTSlice<Data, E>(initialState: State<Data, E>, resource: string, name: string, optimisticUpdate?: OptimisticUpdate<Data>) {
   let cached: Data | null;
   
   return createSlice({
@@ -157,7 +177,7 @@ function createPUTSlice<Data, E>(initialState: State<Data, E>, resource: string,
 
       return {
         ...state,
-        data: optimisticUpdate ? getOptimisticData<Data, E>(optimisticUpdate, state, payload) : state.data,
+        data: optimisticUpdate ? getOptimisticData<Data>(optimisticUpdate, state.data, payload) : state.data,
         loading: true,
         updating: state.data !== null,
       };
@@ -171,7 +191,7 @@ function createPUTSlice<Data, E>(initialState: State<Data, E>, resource: string,
     }),
     [`${name}/rejected`]: (state: State<Data, E>, payload: E) => ({
       ...state,
-      data: clearDataOnError ? null : (optimisticUpdate ? cached : state.data),
+      data: optimisticUpdate ? cached : state.data,
       error: payload,
       loading: false,
       updating: false,
@@ -179,7 +199,7 @@ function createPUTSlice<Data, E>(initialState: State<Data, E>, resource: string,
   }, { initialState, name: resource })
 }
 
-function createDELETESlice<Data, E>(initialState: State<Data, E>, resource: string, name: string, clearDataOnError = false, optimisticUpdate?: OptimisticUpdate<Data, E>) {
+function createDELETESlice<Data, E>(initialState: State<Data, E>, resource: string, name: string, optimisticUpdate?: OptimisticUpdate<Data>) {
   let cached: Data | null;
   
   return createSlice({
@@ -190,7 +210,7 @@ function createDELETESlice<Data, E>(initialState: State<Data, E>, resource: stri
       
       return {
         ...state,
-        data: optimisticUpdate ? getOptimisticData<Data, E>(optimisticUpdate, state) : state.data,
+        data: optimisticUpdate ? getOptimisticData<Data>(optimisticUpdate, state.data) : state.data,
         loading: true,
         updating: state.data !== null,
       };
@@ -204,7 +224,7 @@ function createDELETESlice<Data, E>(initialState: State<Data, E>, resource: stri
     }),
     [`${name}/rejected`]: (state: State<Data, E>, payload: E) => ({
       ...state,
-      data: clearDataOnError ? null : (optimisticUpdate ? cached : null),
+      data: optimisticUpdate ? cached : null,
       error: payload,
       loading: false,
       updating: false,
@@ -217,15 +237,15 @@ function isPromise<T>(obj: unknown): obj is Promise<T> {
   return (<any>obj).then !== undefined;
 }
 
-function isSimpleCall<D, E>(obj: D | ((state: State<D, E>) => D | null) | null): obj is ((state: State<D, E>) => D | null) {
-  return typeof (<(state: State<D, E>) => D>obj) === 'function';
+function isSimpleCall<D>(obj: D | ((data: D | null) => D | null) | null): obj is ((data: D | null) => D | null) {
+  return typeof (<(data: D) => D>obj) === 'function';
 }
 
-function getOptimisticData<D, E>(optimisticUpdate: OptimisticUpdate<D, E>, state: State<D, E>, payload?: any): D | null {
+function getOptimisticData<D>(optimisticUpdate: OptimisticUpdate<D>, data: D | null, payload?: any): D | null {
   const initialCall = optimisticUpdate(payload);
 
-  if (isSimpleCall<D, E>(initialCall)) {
-    return initialCall(state);
+  if (isSimpleCall<D>(initialCall)) {
+    return initialCall(data);
   }
 
   return initialCall;

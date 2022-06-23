@@ -7,42 +7,62 @@ export interface State<D, E> {
   updating: boolean;
 }
 
-export interface Options<D, E> {
-  clearDataOnError?: boolean, // default false
-  lazy?: boolean,  // conditional fetching (https://redux-toolkit.js.org/rtk-query/usage/conditional-fetching)
-  keepUnusedDataFor?: number;
+export type ResourceConfig<Data = any> = {
+  query: ((...params: any[]) => (data: Data) => Promise<Data>) | ((...params: any[]) => Promise<Data>),
+  mutations: {
+    [key: string]: {
+      query: ((...params: any[]) => (data: Data) => any) | ((...params: any[]) => any),
+      options?: {
+        optimisticUpdate?: ((...params: any[]) => (data: Data) => any) | ((...params: any[]) => any),
+        refetchOnSuccess?: boolean,
+      }
+    }
+  },
+  options?: Options,
+}
+
+export type Options = {
+  lazy?: boolean,
+  keepUnusedDataFor?: number,
   pollingInterval?: number,
+  refetchOnError?: boolean,
 }
 
-export type APICall<D, E> = ((...params: any[]) => (state: State<D, E>) => Promise<any>) | ((...params: any[]) => Promise<any>);
+export type Resource<T extends ResourceConfig> = {
+  onError: <K extends 'get' | (keyof Mutations<T>) >(
+    method: K,
+    callback: ({ state }: { state: State<Data<T>, Err> }, error: Err) => void,
+  ) => void;
 
-export type OptimisticUpdate<D, E> = ((...params: any[]) => (state: State<D, E>) => D | null) | ((...params: any[]) => D | null);
+  onFetch: <K extends 'get' | (keyof Mutations<T>) >(
+    method: K,
+    callback: ({ state }: { state: State<Data<T>, Err> }, ...params: T extends keyof Mutations<T> ? MutationParams<T, K> : QueryParams<T>) => void,
+  ) => void;
 
-export type Mutation<D, E> = {
-  api: APICall<D, E>;
-  optimisticUpdate?: OptimisticUpdate<D, E>;
-  type: OperationType,
+  onSuccess: <K extends 'get' | (keyof Mutations<T>) >(
+    method: K,
+    callback: ({ state }: { state: State<Data<T>, Err> }, data: T extends keyof Mutations<T> ? FinalReturnType<T['mutations'][K]['query']> : Data<T>) => void,
+  ) => void;
+
+  subscribe: (...params: QueryParams<T>) => {
+    getState: () => Data<T>;
+    unsubscribe: () => void,
+    refetch: () => Promise<void>,
+    manualUpdate: (data: Data<T>) => void,
+    mutations: Mutations<T>,
+    select: (state: unknown) => State<Data<T>, Err> | undefined;
+  }
 }
 
-export type Resource<D, E> = {
-  api: APICall<D, E>,
-  mutations?: Record<string, Mutation<D, E>>;
-  options?: Options<D, E>,
-}
-
-export type Subscription<Data, Err> = {
-  unsubscribe: () => void
-} & Pick<Endpoint<Data, Err>, 'fetch' | 'manualUpdate' | 'mutations' | 'select'>;
-
-export type Subscribe<Params extends any[], Data, Err> = (...params: Params) => Subscription<Data, Err>;
+export type OptimisticUpdate<Data> =  ((...params: any[]) => (data: Data) => any) | ((...params: any[]) => any);
 
 export type Endpoint<Data, Err> = {
   clearSelfDestructTimeout?: () => void;
   destroyEndpoint: () => void;
-  fetch: () => void;
-  manualUpdate: (state: State<Data, Err>) => void;
-  mutations: Record<string, Mutation<Data, Err>['api']>;
-  pollingInterval?: number;
+  refetch: () => Promise<void>;
+  manualUpdate: (data: Data) => void;
+  mutations: Record<string, ((...params: any[]) => (data: Data) => any) | ((...params: any[]) => any)>;
+  pollingInterval?: ReturnType<typeof setInterval>;
   reducer?: Reducer;
   select: (state: any) => State<Data, Err>;
   startSelfDestructTimeout: (timeInSeconds?: number) => void;
@@ -57,6 +77,27 @@ export enum OperationType {
   Update = 'update',
 }
 
-export type ResourceFn<T, Params extends any[], Data, Err> = <K extends keyof T & string>(key: K, opts?: Options<Data, Err>) => Promise<{ subscribe: Subscribe<Params, Data, Err> }>
+/**
+ * UTILITY TYPES
+ * =============
+ */
+ export type FinalReturnType<T> = {
+  0: T;
+  1: T extends (...args: any) => infer R ? FinalReturnType<R> : T;
+}[T extends (...args: any) => infer _ ? 1 : 0];
 
-export type LoaderConig = Record<string, () => Promise<Resource<any, any>>>;
+export type Params<T> = T extends ((...params: infer R) => Promise<any>) ? R : any[];
+
+export type QueryParams<T> = T extends ((...params: infer R) => any) ? R : any[];
+
+type MutationParams<T extends ResourceConfig, K extends keyof T['mutations']> = T['mutations'][K]['query'] extends ((...params: infer R) => any) ? R : any[];
+
+type Mutations<T extends ResourceConfig> = {
+  [P in keyof T['mutations']]: (
+    ...params: MutationParams<T, P>
+    ) => FinalReturnType<T['mutations'][P]['query']>;
+  };
+
+// To get the data param, first infer from the query. If not, infer from the mutations
+type Data<T extends ResourceConfig> = T['query'] extends ((...params: any[]) => (data: any) => Promise<infer R>) | ((...params: any[]) => Promise<infer R>) ? R : any;
+type Err = any;

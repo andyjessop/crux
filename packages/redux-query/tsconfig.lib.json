@@ -3,7 +3,12 @@
   "compilerOptions": {
     "outDir": "../../dist/out-tsc",
     "declaration": true,
-    "types": []
+    "types": [],
+    "paths": {
+      "@crux/event-emitter": ["packages/event-emitter/src/index.ts"],
+      "@crux/redux-utils": ["packages/redux-utils/src/index.ts"],
+      "@crux/string-utils": ["packages/string-utils/src/index.ts"],
+    }
   },
   "include": ["**/*.ts"],
   "exclude": ["**/*.spec.ts"]

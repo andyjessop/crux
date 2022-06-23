@@ -10,6 +10,8 @@
     "event-emitter": "packages/event-emitter",
     "fsm": "packages/fsm",
     "redux-query": "packages/redux-query",
+    "redux-query-dev": "packages/redux-query-dev",
+    "redux-query-dev-e2e": "packages/redux-query-dev-e2e",
     "redux-router": "packages/redux-router",
     "redux-utils": "packages/redux-utils",
     "router": "packages/router",

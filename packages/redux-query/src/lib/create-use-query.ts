@@ -1,51 +1,38 @@
-import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { Data, Err } from "./create-api";
-import { APICall, LoaderConig, Options, ResourceFn, State } from "./types";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useStore } from "react-redux";
+import { Params, Resource, ResourceConfig, State } from "./types";
 
-export function createUseQuery<
-  T extends LoaderConig, Params extends any[], K extends keyof T & string
->(
-  resource: ResourceFn<T, Params, Data<T, K>, Err<T, K>>,
-  key: K,
-  opts: Options<Data<T, K>, Err<T, K>>,
-  params: Params,
-) {
-  const [select, setSelect] = useState<(state: any) => State<Data<T, K>, Err<T, K>>>();
-  const [unsubscribe, setUnsubscribe] = useState<() => void>();
-  const [fetch, setFetch] = useState<() => void>();
-  const [mutations, setMutations] = useState<Record<string, APICall<Data<T, K>, Err<T, K>>>>();
+/* @refresh reset */
 
-  const state = useSelector(select);
+export function createUseResource<T extends ResourceConfig>(resource: Resource<T>) {
+  type QueryParams = Params<T['query']>;
 
-  useEffect(() => {
-    resource(key, opts).then(res => {
-      const { fetch, mutations, select, unsubscribe } = res.subscribe(...params);
+  return function useResource(...params: QueryParams) {
+    const subscription = useRef(resource.subscribe(...params));
+    const store = useStore();
+    const [state, setState] = useState<State<any, any>>();
 
-      setSelect(select);
-      setUnsubscribe(unsubscribe);
-      setFetch(fetch);
-      setMutations(mutations);
-    });
+    useEffect(() => {
+      setState(subscription.current.select(store.getState()));
+    }, []);
 
-    return function cleanUp() {
-      unsubscribe?.();
+    const refetch = useCallback(async () => {
+      await subscription.current.refetch();
+
+      setState(subscription.current.select(store.getState()));
+    }, [subscription.current]);
+
+    return {
+      isLoading: state?.loading,
+      isUninitialized: state && !state.loading && !state.updating,
+      isUpdating: state?.updating,
+      error: state?.error,
+      data: state?.data,
+      // mutations: subscription.current.mutations,
+      // onError: subscription.current.onError,
+      // onFetch: subscription.current.onFetch,
+      // onSuccess: subscription.current.onSuccess,
+      refetch,
     }
-  }, [resource, key, opts, unsubscribe]);
-
-  if (!state) {
-    return;
-  }
-
-  const { data, error, loading, updating } = state;
-
-  return {
-    isLoading: loading,
-    isUninitialized: !loading && !updating,
-    isUpdating: updating,
-    error,
-    data,
-    mutations,
-    fetch,
-  }
+  };
 }

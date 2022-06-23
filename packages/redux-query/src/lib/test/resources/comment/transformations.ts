@@ -1,11 +1,11 @@
 import { serialize } from "../../../helpers/serializer";
-import { ErrorResponse, PutUser, Response, User } from "../../api";
+import { ErrorResponse, Comment, PutComment, Response } from "../../api";
 
 export function toError(response: ErrorResponse): string {
   throw new Error(serialize(response.error));
 }
 
-export function toData(response: Response<User[]>) {
+export function toData(response: Response<Comment[]>) {
   return response.data;
 }
 
@@ -17,28 +17,28 @@ export function toUndefined() {
   return undefined;
 }
 
-export function postResponseToData(data: User[] | null, response: Response<User>) {
+export function postResponseToData(data: Comment[] | null, response: Response<Comment>) {
   return [
     ...data || [],
     response.data,
   ];
 }
 
-export function deleteUser(data: User[] | null, user: User) {
+export function deleteComment(data: Comment[] | null, comment: Comment) {
   if (data === null) {
     return data;
   }
 
 
-  return data.filter(u => user.id !== u.id);
+  return data.filter(c => comment.id !== c.id);
 }
 
-export function mergeUser(data: User[] | null, user: PutUser) {
+export function mergeComment(data: Comment[] | null, comment: PutComment) {
   if (data === null) {
     return data;
   }
 
-  const ndx = data?.findIndex(u => u.id === user.id);
+  const ndx = data?.findIndex(c => c.id === comment.id);
 
   if (ndx === -1) {
     return data;
@@ -46,7 +46,7 @@ export function mergeUser(data: User[] | null, user: PutUser) {
 
   data[ndx] = {
     ...data[ndx],
-    ...user
+    ...comment
   };
 
   return data;

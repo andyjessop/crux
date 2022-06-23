@@ -2,54 +2,23 @@ import { mergeReducers } from "@crux/redux-utils";
 import { generateRandomId } from "@crux/string-utils";
 import { combineReducers, AnyAction, MiddlewareAPI, Dispatch, Reducer } from "redux";
 import { createDataSlice } from "./create-data-slice";
-import { createUseQuery } from "./create-use-query";
-import { Endpoint, LoaderConig, OperationType, Options, Resource, State } from "./types";
+import { Endpoint, FinalReturnType, OperationType, ResourceConfig, State } from "./types";
 
-export type FinalReturnType<T> = {
-  0: T;
-  1: T extends (...args: any) => infer R ? FinalReturnType<R> : T;
-}[T extends (...args: any) => infer _ ? 1 : 0];
-
-export type TypeOfReturnedPromise<T extends (...args: any) => Promise<any>> = T extends (...args: any) => Promise<infer R> ? R : any;
-export type Params<T> = T extends ((...params: infer R) => Promise<any>) ? R : any[];
-export type Data<T extends LoaderConig, Key extends keyof T & string> = TypeOfReturnedPromise<T[Key]> extends Resource<infer R, any> ? R : any;
-export type Err<T extends LoaderConig, Key extends keyof T & string> = TypeOfReturnedPromise<T[Key]> extends Resource<any, infer R> ? R : any;
-
-export function createAPI<T extends LoaderConig>(resources: T) {
+export function createAPI(rId?: string) {
   const endpoints: Record<string, Endpoint<any, any>> = {};
   const reducers = new Map<string, Reducer>();
-  let cachedReducer: Reducer;
-  const reducerId = generateRandomId();
-
-  type FetchParams<Key extends keyof T & string> = Params<TypeOfReturnedPromise<T[Key]>['api']>;
-  type Data<Key extends keyof T & string> = TypeOfReturnedPromise<T[Key]> extends Resource<infer R, any> ? R : any;
-  type Err<Key extends keyof T & string> = TypeOfReturnedPromise<T[Key]> extends Resource<any, infer R> ? R : any;
-
-  registerReducer('placeholder', <S>(state?: S) => !state ? {} : state);
+  let currentReducer: Reducer;
+  const reducerId = rId || generateRandomId();
 
   let dispatch: Dispatch;
   let getState: () => any;
 
   return {
+    createResource,
     middleware,
-    resource,
     reducer,
     reducerId,
     resources: endpoints,
-    useQuery,
-  }
-
-  /**
-   * const { data, error, isLoading } = useQuery('users', { lazy: true }).subscribe(1); 
-  */
-  function useQuery<K extends keyof T & string>(key: K, opts: Options<Data<K>, Err<K>> = {}) {
-    return {
-      subscribe,
-    };
-
-    function subscribe(...params: FetchParams<K>) {
-      return createUseQuery(resource, key, opts, params);
-    }
   }
 
   function middleware(api: MiddlewareAPI<Dispatch, unknown>) {
@@ -68,134 +37,227 @@ export function createAPI<T extends LoaderConig>(resources: T) {
             // fetch the read endpoint again
           const id = action['meta']?.endpointId;
 
-          endpoints[id]?.fetch?.();
+          endpoints[id]?.refetch?.();
         }
       }
     }
   }
 
   function reducer<S>(state: S, action: AnyAction) {
-    return cachedReducer(state, action);
+    if (!currentReducer) {
+      return state ?? {};
+    }
+
+    return currentReducer(state, action);
   }
 
   function registerReducer(id: string, newReducer: Reducer) {
     reducers.set(id, newReducer);
 
-    if (reducers.has('placeholder') && id !== 'placeholder') {
-      reducers.delete('placeholder');
-    }
-
-    cachedReducer = combineReducers(Object.fromEntries(reducers));
+    currentReducer = combineReducers(Object.fromEntries(reducers));
 
     return function unregisterReducer() {
       reducers.delete(id);
 
-      cachedReducer = combineReducers(Object.fromEntries(reducers));
+      currentReducer = combineReducers(Object.fromEntries(reducers));
     }
   }
 
-  async function getResource<K extends keyof T & string>(key: K) {
-    return (await resources[key]()) as TypeOfReturnedPromise<T[K]>;
-  }
-
-  async function resource<K extends keyof T & string>(key: K, opts: Options<Data<K>, Err<K>> = {}) {
-    const res = await getResource(key);
-
-    const options = Object.assign({}, res.options || {}, opts);
-
+  function createResource<Config extends ResourceConfig>(key: string, config: Config) {
     // Type inference for mutations and their params
-    type Mutations = TypeOfReturnedPromise<T[K]>['mutations'];
-    type MutationsObj = {
-      [P in keyof Mutations]: (
-        ...params: Params<Mutations[P]['api']>
-      ) => FinalReturnType<Mutations[P]['api']>;
+    type QueryParams = typeof config['query'] extends ((...params: infer R) => any) ? R : any[];
+
+    type MutationParams<K extends keyof typeof config['mutations']> = typeof config['mutations'][K]['query'] extends ((...params: infer R) => any) ? R : any[];
+
+    type Mutations = {
+      [P in keyof typeof config['mutations']]: (
+        ...params: MutationParams<P>
+        ) => FinalReturnType<typeof config['mutations'][P]['query']>;
+      };
+
+    // To get the data param, first infer from the query. If not, infer from the mutations
+    type Data = typeof config['query'] extends ((...params: any[]) => (data: any) => Promise<infer R>) | ((...params: any[]) => Promise<infer R>) ? R : any;
+    type Err = any;
+
+    const listeners = {
+      onError: [],
+      onFetch: [],
+      onSuccess: []
     };
 
     return {
+      onError,
+      onFetch,
+      onSuccess,
       subscribe,
     };
 
-    function subscribe(...params: FetchParams<K>) {
+    function createNotifyError(id: string) {
+      return function notifyError(name: string, error: Err) {
+        notify(id, listeners.onError, name, [error]);
+      }
+    }
+
+    function createNotifyFetch(id: string) {
+      return function notifyFetch(name: string, ...params: QueryParams) {
+        notify(id, listeners.onFetch, name, params);
+      }
+    }
+
+    function createNotifySuccess(id: string) {
+      return function notifySuccess(name: string, data: Data) {
+        notify(id, listeners.onSuccess, name, [data]);
+      }
+    }
+
+    function notify<T extends any[]>(id: string, lists: any[], name: string, params: T) {
+      const endpoint = endpoints[id];
+
+      if (!endpoint || !lists.length) {
+        return;
+      }
+      const state = endpoint.select(getState());
+
+      for (const listener of lists) {
+        if (listener.method === name) {
+          listener.callback({ state }, ...params);
+        }
+      }
+    }
+
+    function onError<T extends 'get' | (keyof Mutations) >(
+      method: T,
+      callback: ({ state }: { state: State<Data, Err> }, error: Err) => void,
+    ) {
+      listeners.onError.push({ method, callback });
+    }
+
+    function onFetch<T extends 'get' | (keyof Mutations)>(
+      method: T,
+      callback: ({ state }: { state: State<Data, Err> }, ...params: T extends keyof Mutations ? MutationParams<T> : QueryParams) => void,
+    ) {
+      listeners.onFetch.push({ method, callback });
+    }
+
+    function onSuccess<T extends 'get' | (keyof Mutations) >(
+      method: T,
+      callback: ({ state }: { state: State<Data, Err> }, data: T extends keyof Mutations ? FinalReturnType<typeof config['mutations'][T]['query']> : Data) => void,
+    ) {
+      listeners.onSuccess.push({ method, callback });
+    }
+
+    function subscribe(...params: QueryParams) {
       const id = createEndpointId(key, params);
+      const notifyError = createNotifyError(id);
+      const notifyFetch = createNotifyFetch(id);
+      const notifySuccess = createNotifySuccess(id);
 
       if (!endpoints[id]) {
         endpoints[id] = {
           destroyEndpoint,
-          fetch,
           manualUpdate,
           mutations: {},
+          refetch,
           select,
           startSelfDestructTimeout,
           subscriptions: new Set(),
-        } as Endpoint<Data<K>, Err<K>>
+        } as Endpoint<Data, Err>
       } else {
         // Clear the self destruct timer if it exists because we're adding
         // a new subscription
         endpoints[id]?.clearSelfDestructTimeout?.();
       }
 
-      const endpoint = endpoints[id] as Endpoint<Data<K> ,Err<K>>;
+      const endpoint = endpoints[id] as Endpoint<Data, Err>;
 
       endpoint.subscriptions.add(unsubscribe);
+
+      const handleError = (name: string, error: Err) => {
+        if (config['options'].refetchOnError) {
+          refetch();
+        }
+
+        notifyError(name, error);
+      }
+
+      const fetchSlice = createDataSlice<Data, Err, QueryParams>({
+        dispatch,
+        endpointId: id,
+        getState: () => endpoint.select(getState()),
+        name: 'get',
+        onError: handleError,
+        onFetch: notifyFetch,
+        onSuccess: notifySuccess,
+        options: config.options,
+        query: config['query'],
+        resource: key,
+        type: OperationType.Read,
+      });
       
       const mutateReducersArr = [];
 
-      if (res.mutations) {
-        for (const mutateMethodName of Object.keys(res.mutations)) {
-          const mutationSlice = createDataSlice<Data<K>, Err<K>>({
-            api: res.mutations[mutateMethodName]['api'],
+      if (config.mutations) {
+        for (const mutateMethodName of Object.keys(config.mutations)) {
+          const handleSuccess = (name: string, data: Data) => {
+            if (config.mutations[mutateMethodName]['options'].refetchOnSuccess) {
+              refetch();
+            }
+
+            notifySuccess(name, data);
+          }
+
+          const mutationSlice = createDataSlice<Data, Err, MutationParams<typeof mutateMethodName>>({
             dispatch,
             endpointId: id,
             getState: () => endpoint.select(getState()),
             name: mutateMethodName,
-            optimisticUpdate: res.mutations[mutateMethodName].optimisticUpdate,
-            options,
+            onError: notifyError,
+            onFetch: notifyFetch,
+            onSuccess: handleSuccess,
+            optimisticUpdate: config.mutations[mutateMethodName]['options']?.optimisticUpdate,
+            options: config.options,
+            query: config.mutations[mutateMethodName]['query'],
             resource: key,
-            type: res.mutations[mutateMethodName]['type']
+            type: config.mutations[mutateMethodName]['type'] || mutateMethodName as OperationType,
           });
 
           endpoint.mutations[mutateMethodName] = mutationSlice.call;
           mutateReducersArr.push(mutationSlice.reducer);
         }
       }
-      
-      const fetchSlice = createDataSlice<Data<K>, Err<K>, FetchParams<K>>({
-        api: res['api'],
-        dispatch,
-        endpointId: id,
-        getState: () => endpoint.select(getState()),
-        name: 'get',
-        options,
-        resource: key,
-        type: OperationType.Read,
-      });
 
       endpoint.reducer = mergeReducers([
-        ...mutateReducersArr,
         fetchSlice.reducer,
+        ...mutateReducersArr,
       ]);
 
       // register reducer
-      endpoint.unregisterReducer = registerReducer(key, endpoint.reducer);
+      endpoint.unregisterReducer = registerReducer(id, endpoint.reducer);
+
+      dispatch({
+        payload: { id },
+        type: `${reducerId}/initSubscription`
+      });
 
       // Fetch immediately if not lazy
-      if (!res.options?.lazy) {
-        endpoint.fetch();
+      if (!config.options?.lazy) {
+        endpoint.refetch();
       }
 
       return {
+        getState: () => select(getState()),
         unsubscribe,
-        fetch: endpoint.fetch,
+        refetch: endpoint.refetch,
         manualUpdate: endpoint.manualUpdate,
-        mutations: endpoint.mutations as MutationsObj,
+        mutations: endpoint.mutations as Mutations,
         select: endpoint.select
       };
 
-      function fetch() {
-        if (res.options?.pollingInterval && endpoint?.pollingInterval === undefined) {
+      async function refetch() {
+        if (config.options?.pollingInterval && endpoint?.pollingInterval === undefined) {
           endpoint.pollingInterval = setInterval(() => {
             fetchSlice.call(...params);
-          }, <number>res.options?.pollingInterval * 1000);
+          }, <number>config.options?.pollingInterval * 1000);
 
           // Polling interval doesn't start immediately,
           // so we still fetch immediately below.
@@ -209,7 +271,7 @@ export function createAPI<T extends LoaderConig>(resources: T) {
 
         // If there are no more subscriptions, then we want to remove the reducer and endpoint.
         if (endpoint.subscriptions.size === 0) {
-          startSelfDestructTimeout(res.options?.keepUnusedDataFor);
+          startSelfDestructTimeout(config.options?.keepUnusedDataFor);
         }
       }
 
@@ -220,15 +282,15 @@ export function createAPI<T extends LoaderConig>(resources: T) {
         delete endpoints[id];
       }
 
-      function manualUpdate(state: State<Data<K>, Err<K>>) {
+      function manualUpdate(data: Data) {
         dispatch({
           type: `${key}/get/manual`,
-          payload: state,
+          payload: data,
         });
       }
 
-      function select(state: unknown): State<Data<K>, Err<K>> {
-        return state[reducerId][id] as State<Data<K>, Err<K>>;
+      function select(state: unknown): State<Data, Err> | undefined {
+        return state[reducerId]?.[id] as State<Data, Err> | undefined;
       }
 
       function startSelfDestructTimeout(timeInSeconds = 0) {
