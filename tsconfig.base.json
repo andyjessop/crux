@@ -20,13 +20,16 @@
       "@crux/di": ["packages/di/src/index.ts"],
       "@crux/event-emitter": ["packages/event-emitter/src/index.ts"],
       "@crux/fsm": ["packages/fsm/src/index.ts"],
-      "@crux/redux-query": ["packages/redux-query/src/index.ts"],
+      "@crux/query": ["packages/query/src/index.ts"],
+      "@crux/reducer-registry": ["packages/reducer-registry/src/index.ts"],
       "@crux/redux-router": ["packages/redux-router/src/index.ts"],
       "@crux/redux-utils": ["packages/redux-utils/src/index.ts"],
       "@crux/router": ["packages/router/src/index.ts"],
       "@crux/store": ["packages/store/src/index.ts"],
       "@crux/string-utils": ["packages/string-utils/src/index.ts"],
       "@crux/sync-queue": ["packages/sync-queue/src/index.ts"],
+      "@crux/test": ["packages/test/src/index.ts"],
+      "@crux/test2": ["packages/test2/src/index.ts"],
       "@crux/url-parser": ["packages/url-parser/src/index.ts"]
     }
   },

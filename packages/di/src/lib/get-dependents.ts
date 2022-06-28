@@ -1,7 +1,14 @@
-import { Collection, Model } from './di';
+import { Model } from './di';
 
-export function getDependents<T>(name: keyof T, services: Collection<T>) {
-  return Object.values(services)
-    .filter((service) => (<Model<T>>service).dependencies.includes(name))
-    .map((service) => (<Model<T>>service).name);
+export function getDependents(name: string, services: Map<string, Model<any>>) {
+  const entries = services.entries();
+  const dependents: string[] = [];
+
+  for (const [_, model] of entries) {
+    if (model.deps.includes(name)) {
+      dependents.push(name);
+    }
+  }
+
+  return dependents;
 }

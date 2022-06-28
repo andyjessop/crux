@@ -1,16 +1,10 @@
-import { Collection } from './di';
+import { Model } from './di';
 
 export function allDependenciesExist<T>(
-  services: Collection<T>,
-  dependencies: (keyof T | { constructor: keyof T; singleton: boolean })[]
+  services: Map<string, Model<any>>,
+  dependencies: (keyof T & string)[]
 ) {
-  const servicesKeys = <(keyof T)[]>Object.keys(services);
+  const keys = [...services.keys()];
 
-  return dependencies.every((dependency) => {
-    if (typeof dependency === 'object') {
-      return servicesKeys.includes(<keyof T>dependency.constructor);
-    }
-
-    return servicesKeys.includes(<keyof T>dependency);
-  });
+  return dependencies.every((dependency) => keys.includes(dependency));
 }

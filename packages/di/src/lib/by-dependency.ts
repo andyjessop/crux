@@ -1,25 +1,17 @@
-import { ConstructorCollectionTuple } from './di';
+import { Service } from "./di";
 
-export function byDependency<T>(
-  a: ConstructorCollectionTuple<T>,
-  b: ConstructorCollectionTuple<T>
+export function byDependency(
+  a: [string, Service<unknown>],
+  b: [string, Service<unknown>],
 ) {
   const [aKey, aService] = a;
   const [bKey, bService] = b;
 
-  if (typeof aService === 'function') {
-    return -1;
-  }
-
-  if (typeof bService === 'function') {
+  if ((aService.deps || [] as string[]).includes(bKey)) {
     return 1;
   }
 
-  if (aService.includes(bKey)) {
-    return 1;
-  }
-
-  if (bService.includes(aKey)) {
+  if ((bService.deps || [] as string[]).includes(aKey)) {
     return -1;
   }
 

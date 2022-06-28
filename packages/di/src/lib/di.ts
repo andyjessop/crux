@@ -1,180 +1,139 @@
 import { allDependenciesExist } from './all-dependencies-exist';
 import { byDependency } from './by-dependency';
 import { getDependents } from './get-dependents';
-import { createEventEmitter, EventEmitter } from '@crux/event-emitter';
 
-export type Constructor<T> = (...args: any[]) => T;
+export type Options<T> = { service: keyof T; singleton: true };
 
-export type ConstructorTuple<T, U> = [Constructor<T>, ...U[]];
+export type Service<T> = { factory: Factory, deps?: (keyof T & string)[] };
+export type ServiceCollection = {
+  [key: string]: { factory: Factory, deps?: string[] }
+};
 
-export type ConstructorCollection<T> = Partial<
-  Record<
-    keyof T,
-    | Constructor<T[keyof T]>
-    | ConstructorTuple<T[keyof T], keyof T | SingletonDefinition<T>>
-  >
->;
-
-export type SingletonDefinition<T> = { constructor: keyof T; singleton: true };
-
-export type ConstructorCollectionTuple<T> = [
-  keyof T,
-  Constructor<T[keyof T]> | ConstructorTuple<T[keyof T], keyof T>
-];
+type Constructor = (...args: any[]) => any;
+type Factory = () => Promise<Constructor>;
 
 export type Model<T> = {
-  constructor: Constructor<T[keyof T]>;
-  dependencies: (keyof T)[];
-  instance?: T[keyof T] & { destroy?: () => void };
-  name: keyof T;
-  order: number;
-};
+  factory: Factory,
+  deps: (keyof T)[],
+  instance?: any;
+  name: keyof T,
+  order: number,
+}
 
-export type Collection<T> = Partial<Record<keyof T, Model<T>>>;
-
-export type Events = {
-  InstanceCreated: unknown;
-};
-
-export type DI<T> = {
-  add: (
-    name: keyof T,
-    constructor: Constructor<T[keyof T]> | ConstructorTuple<T[keyof T], keyof T>
-  ) => boolean;
-  get<V extends keyof T>(name: V): T[V];
-  getSingleton<V extends keyof T>(name: V): T[V];
-  remove: (name: keyof T) => true | null;
-} & EventEmitter<Events>;
-
-export function di<T>(initialServices?: ConstructorCollection<T>): DI<T> {
-  const emitter = createEventEmitter<Events>();
-  const services: Collection<T> = {};
+export function di<T>(initialServices: T) {
+  type Instance<K extends keyof T> = T[K] extends {factory: (() => Promise<(...args: any[]) => infer R>), deps?: string[] }
+  ? R : any;
+  const services = new Map<string, Model<T>>();
 
   if (initialServices) {
-    (<ConstructorCollectionTuple<T>[]>Object.entries(initialServices))
+    Object.entries(initialServices)
       // ensure dependent constructors are added after independent constructors
       .sort(byDependency)
       .forEach(([key, service]) => {
-        add(key, service);
+        register(key as (keyof T & string), service);
       });
   }
 
   return {
-    add,
-    ...emitter,
     get,
     getSingleton,
+    register,
     remove,
   };
 
-  function add(
+  function register(
     name: keyof T,
-    constructor: Constructor<T[keyof T]> | ConstructorTuple<T[keyof T], keyof T>
+    service: Service<T>
   ): boolean {
-    if (services[name]) {
+    if (services.get(name as string)) {
       return false;
     }
 
     const order = Object.keys(services).length;
 
-    if (typeof constructor === 'function') {
-      services[name] = {
-        constructor,
-        dependencies: [],
-        name,
-        order,
-      };
-    } else {
-      const [constructorFn, ...dependencies] = constructor;
+    const { factory, deps = [] } = service;
 
-      if (!allDependenciesExist(services, dependencies)) {
+      if (!allDependenciesExist<T>(services, deps)) {
         return false;
       }
 
-      services[name] = {
-        constructor: constructorFn,
-        dependencies,
+      services.set(name as string, {
+        factory,
+        deps,
         name,
         order,
-      };
-    }
+      });
 
     return true;
   }
 
-  function get<U extends keyof T>(name: U): T[U] {
-    if (!services[name]) {
-      throw new Error(`Service ${name} does not exist.`);
+  async function get<Key extends keyof T & string>(name: Key): Promise<Instance<Key>> {
+    if (!services.has(name)) {
+      throw `Service ${name} does not exist.`;
     }
 
-    if (!services[name]?.instance) {
-      instantiate(name);
+    if (!services.get(name)?.instance) {
+      await instantiate(name);
     }
 
-    return <T[U]>services[name]?.instance;
+    return services.get(name)?.instance as Instance<Key>;
   }
 
-  function getSingleton<U extends keyof T>(name: U): T[U] {
-    if (!services[name]) {
+  async function getSingleton<Key extends keyof T & string>(name: Key) {
+    if (!services.get(name)) {
       throw new Error(`Service ${name} does not exist.`);
     }
 
     return instantiate(name, true);
   }
 
-  function instantiate<U extends keyof T>(name: U, singleton = false): T[U] {
-    if (!services[name]) {
+  async function instantiate<Key extends keyof T>(name: Key, singleton = false): Promise<Instance<Key>> {
+    if (!services.get(name as string)) {
       throw new Error('Service does not exist');
     }
 
-    if ((<Model<T>>services[name]).instance && !singleton) {
-      return <T[U]>services[name]?.instance;
+    const service = services.get(name as string) as Model<T>;
+
+    if (service.instance && !singleton) {
+      return service.instance;
     }
 
-    const dependencies = services[name]?.dependencies;
+    const deps = service.deps;
 
-    const instantiatedDependencies = dependencies
-      ? <T[keyof T][]>(
-          services[name]?.dependencies?.map(toInstantiatedDependency)
-        )
-      : [];
+    const instantiatedDependencies = await Promise.all(
+      deps.map(dep => instantiate(dep))
+    );
 
-    const instance = (<Model<T>>services[name]).constructor(
+    // All services are defined with a Promise.
+    const constuctor = await service.factory();
+
+    const instance = await constuctor(
       ...instantiatedDependencies
     );
 
     if (!singleton) {
-      (<Model<T>>services[name]).instance = instance;
+      service.instance = instance;
     }
 
-    emitter.emit('InstanceCreated', instance);
-
-    return <T[U]>instance;
+    return instance as Instance<Key>;
   }
 
-  function remove(name: keyof T): true | null {
-    if (!services[name]) {
+  function remove(name: keyof T & string): true | null {
+    if (!services.has(name)) {
       return null;
     }
 
+    // Do not remove if service has dependents.
     if (getDependents(name, services).length) {
       return null;
     }
 
-    services[name]?.instance?.destroy?.();
+    const service = services.get(name) as Model<T>;
 
-    delete services[name];
+    service.instance?.destroy?.();
+
+    services.delete(name);
 
     return true;
-  }
-
-  function toInstantiatedDependency(
-    dependency: keyof T | SingletonDefinition<T>
-  ) {
-    if (typeof (<keyof T>dependency) === 'string') {
-      return instantiate(<keyof T>dependency);
-    }
-
-    return instantiate((<SingletonDefinition<T>>dependency).constructor, true);
   }
 }

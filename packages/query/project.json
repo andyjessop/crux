@@ -1,0 +1,48 @@
+{
+  "root": "packages/query",
+  "sourceRoot": "packages/query/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/query",
+        "main": "packages/query/src/index.ts",
+        "tsConfig": "packages/query/tsconfig.lib.json",
+        "assets": ["packages/query/*.md"]
+      }
+    },
+    "build:prod": {
+      "executor": "@nrwl/web:rollup",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/query",
+        "tsConfig": "packages/query/tsconfig.lib.json",
+        "project": "packages/query/package.json",
+        "entryFile": "packages/query/src/index.ts",
+        "format": [
+          "esm",
+          "cjs"
+        ],
+        "rollupConfig": ["rollup.lib.prod.js"]
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["packages/query/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/packages/query"],
+      "options": {
+        "jestConfig": "packages/query/jest.config.js",
+        "passWithNoTests": true
+      }
+    }
+  },
+  "tags": []
+}

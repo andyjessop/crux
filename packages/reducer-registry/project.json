@@ -1,0 +1,33 @@
+{
+  "root": "packages/reducer-registry",
+  "sourceRoot": "packages/reducer-registry/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/reducer-registry",
+        "main": "packages/reducer-registry/src/index.ts",
+        "tsConfig": "packages/reducer-registry/tsconfig.lib.json",
+        "assets": ["packages/reducer-registry/*.md"]
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["packages/reducer-registry/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/packages/reducer-registry"],
+      "options": {
+        "jestConfig": "packages/reducer-registry/jest.config.js",
+        "passWithNoTests": true
+      }
+    }
+  },
+  "tags": []
+}
