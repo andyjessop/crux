@@ -43,5 +43,5 @@
       "unitTestRunner": "jest"
     }
   },
-  "defaultProject": "dev"
+  "defaultProject": "cli"
 }

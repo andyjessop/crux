@@ -1,5 +1,5 @@
 import { Dispatch } from '@reduxjs/toolkit';
-import { createSlice } from '..';
+import { createSlice } from './create-slice';
 import { OperationType, Transform, Options, ResourceConfig, State } from './types';
 
 const reducerMap = {

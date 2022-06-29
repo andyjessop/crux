@@ -2,8 +2,6 @@
   "version": 2,
   "projects": {
     "async-queue": "packages/async-queue",
-    "cli": "packages/cli",
-    "core": "packages/core",
     "di": "packages/di",
     "event-emitter": "packages/event-emitter",
     "fsm": "packages/fsm",

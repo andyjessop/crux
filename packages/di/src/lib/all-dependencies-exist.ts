@@ -4,7 +4,7 @@ export function allDependenciesExist<T>(
   services: Map<string, Model<any>>,
   dependencies: (keyof T & string)[]
 ) {
-  const keys = [...services.keys()];
+  const keys = Array.from(services.keys());
 
   return dependencies.every((dependency) => keys.includes(dependency));
 }

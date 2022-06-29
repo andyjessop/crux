@@ -23,6 +23,31 @@
                 ]
               }
             },
+            "prod": {
+              "executor": "@nrwl/web:rollup",
+              "outputs": [
+                "{options.outputPath}"
+              ],
+              "options": {
+                "outputPath": "dist/packages/reducer-registry",
+                "tsConfig": "packages/reducer-registry/tsconfig.lib.json",
+                "project": "packages/reducer-registry/package.json",
+                "entryFile": "packages/reducer-registry/src/index.ts",
+                "format": [
+                  "esm",
+                  "cjs"
+                ],
+                "rollupConfig": [
+                  "rollup.lib.prod.js"
+                ]
+              }
+            },
+            "publish": {
+              "executor": "@nrwl/workspace:run-commands",
+              "options": {
+                "command": "./node_modules/.bin/ts-node tools/scripts/publish/publish-single.ts reducer-registry"
+              }
+            },
             "lint": {
               "executor": "@nrwl/linter:eslint",
               "outputs": [
@@ -57,11 +82,11 @@
             },
             {
               "file": "packages/reducer-registry/package.json",
-              "hash": "d21eecc0b0edb18f27d807b6a14a179d251edb58"
+              "hash": "1792cd88a60f87bc804b4c829a5e981f6c7c6a35"
             },
             {
               "file": "packages/reducer-registry/project.json",
-              "hash": "359686e8ff9a19e9d0835e5bc203836cd9df8f30"
+              "hash": "06fe3929b8459af099e111fb2a471ec24781aae8"
             },
             {
               "file": "packages/reducer-registry/README.md",
@@ -81,7 +106,7 @@
             },
             {
               "file": "packages/reducer-registry/tsconfig.json",
-              "hash": "592e5cc4ece3f124dc38f6444bb6dade798b71ac"
+              "hash": "27847903877abbdf65d7e168465084d52054d1e0"
             },
             {
               "file": "packages/reducer-registry/tsconfig.lib.json",
@@ -116,7 +141,7 @@
                 ]
               }
             },
-            "build:prod": {
+            "prod": {
               "executor": "@nrwl/web:rollup",
               "outputs": [
                 "{options.outputPath}"
@@ -131,8 +156,14 @@
                   "cjs"
                 ],
                 "rollupConfig": [
-                  "rollup.lib.js"
+                  "rollup.lib.prod.js"
                 ]
+              }
+            },
+            "publish": {
+              "executor": "@nrwl/workspace:run-commands",
+              "options": {
+                "command": "./node_modules/.bin/ts-node tools/scripts/publish/publish-single.ts event-emitter"
               }
             },
             "lint": {
@@ -177,11 +208,11 @@
             },
             {
               "file": "packages/event-emitter/package.json",
-              "hash": "c1c81ae93773d5dccad8f5d90b4b203beb0580af"
+              "hash": "35d350e295576218e693c8cf43c5f41229290903"
             },
             {
               "file": "packages/event-emitter/project.json",
-              "hash": "37a1dd3cf7c5f703dc5e643d189673c8041d93e0"
+              "hash": "2413a8da900dde8cbe5127f72eb6f36f48939afe"
             },
             {
               "file": "packages/event-emitter/README.md",
@@ -236,7 +267,7 @@
                 ]
               }
             },
-            "build:prod": {
+            "prod": {
               "executor": "@nrwl/web:rollup",
               "outputs": [
                 "{options.outputPath}"
@@ -251,8 +282,14 @@
                   "cjs"
                 ],
                 "rollupConfig": [
-                  "rollup.lib.js"
+                  "rollup.lib.prod.js"
                 ]
+              }
+            },
+            "publish": {
+              "executor": "@nrwl/workspace:run-commands",
+              "options": {
+                "command": "./node_modules/.bin/ts-node tools/scripts/publish/publish-single.ts redux-router"
               }
             },
             "lint": {
@@ -305,15 +342,14 @@
             },
             {
               "file": "packages/redux-router/package.json",
-              "hash": "64f73c8fe2d15251bd893114225a91ca3d5116b5",
+              "hash": "ae8a5e6462f2fd1637d5bfe83bded1c1c8c10ff7",
               "deps": [
-                "router",
                 "npm:react"
               ]
             },
             {
               "file": "packages/redux-router/project.json",
-              "hash": "aa7741297729b9e0b67e427948df392e6d7cd001"
+              "hash": "86b855d8735a5bb635e37e02c40a2e6bc78e7a3c"
             },
             {
               "file": "packages/redux-router/README.md",
@@ -372,7 +408,7 @@
                 ]
               }
             },
-            "build:prod": {
+            "prod": {
               "executor": "@nrwl/web:rollup",
               "outputs": [
                 "{options.outputPath}"
@@ -389,6 +425,12 @@
                 "rollupConfig": [
                   "rollup.lib.prod.js"
                 ]
+              }
+            },
+            "publish": {
+              "executor": "@nrwl/workspace:run-commands",
+              "options": {
+                "command": "./node_modules/.bin/ts-node tools/scripts/publish/publish-single.ts string-utils"
               }
             },
             "lint": {
@@ -429,11 +471,11 @@
             },
             {
               "file": "packages/string-utils/package.json",
-              "hash": "dca5e814a1d33798deead239dfd1fce5789ebd15"
+              "hash": "c9026d3215744a889dee24df2d539cc9cbd7c88b"
             },
             {
               "file": "packages/string-utils/project.json",
-              "hash": "b758ec02808c772a9a9870602f88f560718e5519"
+              "hash": "ba24ac5c6a44ec0a3b1086da3eb8f1d33678f3fc"
             },
             {
               "file": "packages/string-utils/README.md",
@@ -488,7 +530,7 @@
                 ]
               }
             },
-            "build:prod": {
+            "prod": {
               "executor": "@nrwl/web:rollup",
               "outputs": [
                 "{options.outputPath}"
@@ -503,8 +545,14 @@
                   "cjs"
                 ],
                 "rollupConfig": [
-                  "rollup.lib.js"
+                  "rollup.lib.prod.js"
                 ]
+              }
+            },
+            "publish": {
+              "executor": "@nrwl/workspace:run-commands",
+              "options": {
+                "command": "./node_modules/.bin/ts-node tools/scripts/publish/publish-single.ts async-queue"
               }
             },
             "lint": {
@@ -549,11 +597,11 @@
             },
             {
               "file": "packages/async-queue/package.json",
-              "hash": "7c456658b9c11dcdce7eb481858b32d05e3f3fc2"
+              "hash": "91aaac5f853792391be4c6a64d7d22dda67581ba"
             },
             {
               "file": "packages/async-queue/project.json",
-              "hash": "3897bf9e9e607fe9fb32eee55e727b0867772ce9"
+              "hash": "15e53ac6d40a6f329e04262002bd49fc6c61ea8d"
             },
             {
               "file": "packages/async-queue/README.md",
@@ -608,6 +656,31 @@
                 ]
               }
             },
+            "prod": {
+              "executor": "@nrwl/web:rollup",
+              "outputs": [
+                "{options.outputPath}"
+              ],
+              "options": {
+                "outputPath": "dist/packages/redux-utils",
+                "tsConfig": "packages/redux-utils/tsconfig.lib.json",
+                "project": "packages/redux-utils/package.json",
+                "entryFile": "packages/redux-utils/src/index.ts",
+                "format": [
+                  "esm",
+                  "cjs"
+                ],
+                "rollupConfig": [
+                  "rollup.lib.prod.js"
+                ]
+              }
+            },
+            "publish": {
+              "executor": "@nrwl/workspace:run-commands",
+              "options": {
+                "command": "./node_modules/.bin/ts-node tools/scripts/publish/publish-single.ts redux-utils"
+              }
+            },
             "lint": {
               "executor": "@nrwl/linter:eslint",
               "outputs": [
@@ -646,11 +719,11 @@
             },
             {
               "file": "packages/redux-utils/package.json",
-              "hash": "b70a097a15f670b7f7d64ee40e8fdb88f6e27bff"
+              "hash": "aa12b516b825b31d2a1a077ec018942afa5d9276"
             },
             {
               "file": "packages/redux-utils/project.json",
-              "hash": "58a27c351513a2ed9bb84f9202ff832c6015dfbb"
+              "hash": "1afdf2bad444aac684be08aea4401b5fca016275"
             },
             {
               "file": "packages/redux-utils/README.md",
@@ -666,7 +739,7 @@
             },
             {
               "file": "packages/redux-utils/tsconfig.json",
-              "hash": "592e5cc4ece3f124dc38f6444bb6dade798b71ac"
+              "hash": "27847903877abbdf65d7e168465084d52054d1e0"
             },
             {
               "file": "packages/redux-utils/tsconfig.lib.json",
@@ -701,7 +774,7 @@
                 ]
               }
             },
-            "build:prod": {
+            "prod": {
               "executor": "@nrwl/web:rollup",
               "outputs": [
                 "{options.outputPath}"
@@ -716,8 +789,14 @@
                   "cjs"
                 ],
                 "rollupConfig": [
-                  "rollup.lib.js"
+                  "rollup.lib.prod.js"
                 ]
+              }
+            },
+            "publish": {
+              "executor": "@nrwl/workspace:run-commands",
+              "options": {
+                "command": "./node_modules/.bin/ts-node tools/scripts/publish/publish-single.ts sync-queue"
               }
             },
             "lint": {
@@ -762,11 +841,11 @@
             },
             {
               "file": "packages/sync-queue/package.json",
-              "hash": "1e5a931def6528b1f16e904c02d632bc51c4389d"
+              "hash": "408b03a7fb4814b75dabc555b44e6e0c8198380e"
             },
             {
               "file": "packages/sync-queue/project.json",
-              "hash": "97b0a0956acf03b41cd543c67fe73206c9080a2d"
+              "hash": "5753269af30ffcffed89b42ee0e5414db478b2b2"
             },
             {
               "file": "packages/sync-queue/README.md",
@@ -821,13 +900,13 @@
                 ]
               }
             },
-            "build:prod": {
+            "prod": {
               "executor": "@nrwl/web:rollup",
               "outputs": [
                 "{options.outputPath}"
               ],
               "options": {
-                "outputPath": "dist/packages/router",
+                "outputPath": "dist/packages/url-parser",
                 "tsConfig": "packages/url-parser/tsconfig.lib.json",
                 "project": "packages/url-parser/package.json",
                 "entryFile": "packages/url-parser/src/index.ts",
@@ -851,6 +930,12 @@
                 ]
               }
             },
+            "publish": {
+              "executor": "@nrwl/workspace:run-commands",
+              "options": {
+                "command": "./node_modules/.bin/ts-node tools/scripts/publish/publish-single.ts url-parser"
+              }
+            },
             "test": {
               "executor": "@nrwl/jest:jest",
               "outputs": [
@@ -865,6 +950,10 @@
           "tags": [],
           "files": [
             {
+              "file": "packages/url-parser/.babelrc",
+              "hash": "2c64266a65228de2e3bbe322748035145e5fe156"
+            },
+            {
               "file": "packages/url-parser/.eslintrc.json",
               "hash": "9d9c0db55bb1e91c5f2e7b64a02bc6bf69fc7cb5"
             },
@@ -874,11 +963,11 @@
             },
             {
               "file": "packages/url-parser/package.json",
-              "hash": "3b48e5c20a2fd6d8a9c64aff5ccafeaefa933299"
+              "hash": "8a05d1d1c5d3604c547107fc2f6da8244cb8ffd8"
             },
             {
               "file": "packages/url-parser/project.json",
-              "hash": "40a1e4270c78796fbfc2dbea10f2c5879cc63dcc"
+              "hash": "8dfbbd93838a3657df6870c6954e050ff4da1043"
             },
             {
               "file": "packages/url-parser/README.md",
@@ -886,7 +975,7 @@
             },
             {
               "file": "packages/url-parser/src/index.ts",
-              "hash": "a600f1954e61568aee57bfa36547c8687bed53f1"
+              "hash": "019870e7a701b5445fe6d04388164262534efc5b"
             },
             {
               "file": "packages/url-parser/src/lib/constants.ts",
@@ -966,7 +1055,7 @@
             },
             {
               "file": "packages/url-parser/tsconfig.lib.json",
-              "hash": "a8b9431f9172ad42dcb1eaf292f7ae9601ac760b"
+              "hash": "acf47d45aebbeb2be94fd14c6ceb84f4eb2d9410"
             },
             {
               "file": "packages/url-parser/tsconfig.spec.json",
@@ -997,7 +1086,7 @@
                 ]
               }
             },
-            "build:prod": {
+            "prod": {
               "executor": "@nrwl/web:rollup",
               "outputs": [
                 "{options.outputPath}"
@@ -1012,8 +1101,14 @@
                   "cjs"
                 ],
                 "rollupConfig": [
-                  "rollup.lib.js"
+                  "rollup.lib.prod.js"
                 ]
+              }
+            },
+            "publish": {
+              "executor": "@nrwl/workspace:run-commands",
+              "options": {
+                "command": "./node_modules/.bin/ts-node tools/scripts/publish/publish-single.ts router"
               }
             },
             "lint": {
@@ -1058,14 +1153,11 @@
             },
             {
               "file": "packages/router/package.json",
-              "hash": "bc762edd4dd3dff36223cb1badbe030f8ae56df5",
-              "deps": [
-                "event-emitter"
-              ]
+              "hash": "ad73a9b134b77b4c926e0cd72ba3bf15762ab0ea"
             },
             {
               "file": "packages/router/project.json",
-              "hash": "fa3feefdbf9c9d0eb70085453c703370166e7613"
+              "hash": "f6c5474ef1d008b614584d77396e56936213efe2"
             },
             {
               "file": "packages/router/README.md",
@@ -1128,7 +1220,7 @@
                 ]
               }
             },
-            "build:prod": {
+            "prod": {
               "executor": "@nrwl/web:rollup",
               "outputs": [
                 "{options.outputPath}"
@@ -1145,6 +1237,12 @@
                 "rollupConfig": [
                   "rollup.lib.prod.js"
                 ]
+              }
+            },
+            "publish": {
+              "executor": "@nrwl/workspace:run-commands",
+              "options": {
+                "command": "./node_modules/.bin/ts-node tools/scripts/publish/publish-single.ts query"
               }
             },
             "lint": {
@@ -1185,15 +1283,14 @@
             },
             {
               "file": "packages/query/package.json",
-              "hash": "14beb690c607dd168782b6fc06da40ee2332fcb1",
+              "hash": "4bc14c4e92930d2de831812a9c36166d4348c627",
               "deps": [
-                "string-utils",
-                "redux-utils"
+                "npm:@reduxjs/toolkit"
               ]
             },
             {
               "file": "packages/query/project.json",
-              "hash": "9ab4f681524e063a00f0365a9225534ac852fe45"
+              "hash": "e5542aeaf338b2f6846833acec15f4594da86e09"
             },
             {
               "file": "packages/query/README.md",
@@ -1220,7 +1317,7 @@
             },
             {
               "file": "packages/query/src/lib/create-data-slice.ts",
-              "hash": "6339d1aded77440c86e1b4b3485f9cebde572bb6",
+              "hash": "73e83ae6c8b9b9c44c1e28f030d464290536f279",
               "deps": [
                 "npm:@reduxjs/toolkit"
               ]
@@ -1310,7 +1407,7 @@
                 ]
               }
             },
-            "build:prod": {
+            "prod": {
               "executor": "@nrwl/web:rollup",
               "outputs": [
                 "{options.outputPath}"
@@ -1325,8 +1422,14 @@
                   "cjs"
                 ],
                 "rollupConfig": [
-                  "rollup.lib.js"
+                  "rollup.lib.prod.js"
                 ]
+              }
+            },
+            "publish": {
+              "executor": "@nrwl/workspace:run-commands",
+              "options": {
+                "command": "./node_modules/.bin/ts-node tools/scripts/publish/publish-single.ts store"
               }
             },
             "lint": {
@@ -1379,11 +1482,11 @@
             },
             {
               "file": "packages/store/package.json",
-              "hash": "6a55d9eb7582af79fe0ef8b9efcc196e8683edfd"
+              "hash": "e3330330cc6fd96bfb552d45b6394f17aa63a1c7"
             },
             {
               "file": "packages/store/project.json",
-              "hash": "3ed5f8db539f367f3ae926fe4a4e33f10fead4d6"
+              "hash": "1cccbec28d0420461181cdbbd908143a22589463"
             },
             {
               "file": "packages/store/README.md",
@@ -1427,278 +1530,6 @@
           ]
         }
       },
-      "core": {
-        "name": "core",
-        "type": "lib",
-        "data": {
-          "root": "packages/core",
-          "sourceRoot": "packages/core/src",
-          "projectType": "library",
-          "targets": {
-            "build": {
-              "executor": "@nrwl/js:tsc",
-              "outputs": [
-                "{options.outputPath}"
-              ],
-              "options": {
-                "outputPath": "dist/packages/core",
-                "main": "packages/core/src/index.ts",
-                "tsConfig": "packages/core/tsconfig.lib.json",
-                "assets": [
-                  "packages/core/*.md"
-                ]
-              }
-            },
-            "build:prod": {
-              "executor": "@nrwl/web:rollup",
-              "outputs": [
-                "{options.outputPath}"
-              ],
-              "options": {
-                "outputPath": "dist/packages/core",
-                "tsConfig": "packages/core/tsconfig.lib.json",
-                "project": "packages/core/package.json",
-                "entryFile": "packages/core/src/index.ts",
-                "format": [
-                  "esm",
-                  "cjs"
-                ],
-                "rollupConfig": [
-                  "rollup.lib.prod.js"
-                ]
-              }
-            },
-            "lint": {
-              "executor": "@nrwl/linter:eslint",
-              "outputs": [
-                "{options.outputFile}"
-              ],
-              "options": {
-                "lintFilePatterns": [
-                  "packages/core/**/*.ts"
-                ]
-              }
-            },
-            "test": {
-              "executor": "@nrwl/jest:jest",
-              "outputs": [
-                "coverage/packages/core"
-              ],
-              "options": {
-                "jestConfig": "packages/core/jest.config.js",
-                "passWithNoTests": true
-              }
-            }
-          },
-          "tags": [],
-          "files": [
-            {
-              "file": "packages/core/.babelrc",
-              "hash": "cf7ddd99c615a064ac18eb3109eee4f394ab1faf"
-            },
-            {
-              "file": "packages/core/.eslintrc.json",
-              "hash": "9d9c0db55bb1e91c5f2e7b64a02bc6bf69fc7cb5"
-            },
-            {
-              "file": "packages/core/jest.config.js",
-              "hash": "706ad8cc6d9e7b32b2ab124f3041ffea1f6757b2"
-            },
-            {
-              "file": "packages/core/package.json",
-              "hash": "f89a56e16a6a14c10d9f4dc541cf1d9f1460fa96"
-            },
-            {
-              "file": "packages/core/project.json",
-              "hash": "72eb340954c7c8a77cffcafc44dc3bc51c2b92de"
-            },
-            {
-              "file": "packages/core/README.md",
-              "hash": "a79b43aad90df156f467c0f44b1a36ae1fd2574a"
-            },
-            {
-              "file": "packages/core/src/index.ts",
-              "hash": "e87855f47ea142d7bc8761adcca3ccb7473170b7"
-            },
-            {
-              "file": "packages/core/src/lib/core.spec.ts",
-              "hash": "480dc1cab28333c2657c315f4ec6e635274ab01d"
-            },
-            {
-              "file": "packages/core/src/lib/core.ts",
-              "hash": "9f93a79cfcdaef5c50a7dc8fbf9c5f7871ea297e",
-              "deps": [
-                "event-emitter"
-              ]
-            },
-            {
-              "file": "packages/core/src/lib/mock/emitter.ts",
-              "hash": "03583c7a6bb01445b8e02ab855df63439630820b"
-            },
-            {
-              "file": "packages/core/src/lib/mock/index.ts",
-              "hash": "eaf81b2924c1625bfce01bf9325b6d5d1a19d956"
-            },
-            {
-              "file": "packages/core/src/lib/mock/layout.ts",
-              "hash": "35c20b2a2eb5d17f329b0f1969c3338f9118d66a"
-            },
-            {
-              "file": "packages/core/src/lib/mock/module.ts",
-              "hash": "06bc68eae8589b46fafd2bbcc8ca608f195cf51f"
-            },
-            {
-              "file": "packages/core/src/lib/mock/store.ts",
-              "hash": "7060bf13a56c9f8c1c5e86c149c7c51bc563b576"
-            },
-            {
-              "file": "packages/core/src/lib/mock/types.ts",
-              "hash": "1ae4214f7fdd065675bd4cb3f84e573e4181e391"
-            },
-            {
-              "file": "packages/core/src/lib/modules.ts",
-              "hash": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
-            },
-            {
-              "file": "packages/core/src/lib/new/ core.ts",
-              "hash": "1715dc70f9c6fd363cd5b160f3f78befcaf763ca",
-              "deps": [
-                "di"
-              ]
-            },
-            {
-              "file": "packages/core/src/lib/new/core.spec.ts",
-              "hash": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
-            },
-            {
-              "file": "packages/core/src/lib/types.ts",
-              "hash": "bac981793f249517dd38f96ffc46a59acce5ea8a"
-            },
-            {
-              "file": "packages/core/src/lib/types/action.ts",
-              "hash": "521d8557bf530d6ac4a363b2384e065eee46483e"
-            },
-            {
-              "file": "packages/core/src/lib/types/module.ts",
-              "hash": "bb42671b41faf527c6e8aade1423315f58303ad8"
-            },
-            {
-              "file": "packages/core/tsconfig.json",
-              "hash": "e258886ffc933cca0326ceb2ee4fde881378131b"
-            },
-            {
-              "file": "packages/core/tsconfig.lib.json",
-              "hash": "64a5e6892871ceff0e4aa8ab9a6b8245344c1ffa"
-            },
-            {
-              "file": "packages/core/tsconfig.spec.json",
-              "hash": "82333c0a01995847ea1c8e6e71f693b4deb03852"
-            }
-          ]
-        }
-      },
-      "cli": {
-        "name": "cli",
-        "type": "app",
-        "data": {
-          "root": "packages/cli",
-          "sourceRoot": "packages/cli/src",
-          "projectType": "application",
-          "targets": {
-            "build": {
-              "executor": "@nrwl/js:tsc",
-              "outputs": [
-                "{options.outputPath}"
-              ],
-              "options": {
-                "outputPath": "dist/packages/cli",
-                "main": "packages/cli/src/index.ts",
-                "tsConfig": "packages/cli/tsconfig.app.json",
-                "assets": [
-                  "packages/cli/*.md"
-                ]
-              }
-            },
-            "serve": {
-              "executor": "@nrwl/js:node",
-              "options": {
-                "buildTarget": "cli:build"
-              }
-            },
-            "lint": {
-              "executor": "@nrwl/linter:eslint",
-              "outputs": [
-                "{options.outputFile}"
-              ],
-              "options": {
-                "lintFilePatterns": [
-                  "packages/cli/**/*.ts"
-                ]
-              }
-            },
-            "test": {
-              "executor": "@nrwl/jest:jest",
-              "outputs": [
-                "coverage/packages/cli"
-              ],
-              "options": {
-                "jestConfig": "packages/cli/jest.config.js",
-                "passWithNoTests": true
-              }
-            }
-          },
-          "tags": [],
-          "files": [
-            {
-              "file": "packages/cli/.eslintrc.json",
-              "hash": "9d9c0db55bb1e91c5f2e7b64a02bc6bf69fc7cb5"
-            },
-            {
-              "file": "packages/cli/jest.config.js",
-              "hash": "5557cc315c7fb25cffc207480a7dc4cbde1a3dba"
-            },
-            {
-              "file": "packages/cli/package.json",
-              "hash": "2474c465c0b8bb394ac7d204163d66b8e056b5f2"
-            },
-            {
-              "file": "packages/cli/project.json",
-              "hash": "5fa837fefb37e7d3d8507fa32fc41c8e41826b0e"
-            },
-            {
-              "file": "packages/cli/README.md",
-              "hash": "073003a2d7348439a33035c3ce8ac54277338673"
-            },
-            {
-              "file": "packages/cli/src/app/dev.spec.ts",
-              "hash": "c639ab2a9d33c7927df01726a8039b81794410c0"
-            },
-            {
-              "file": "packages/cli/src/app/dev.ts",
-              "hash": "cb0b1c92b80a93b068d870b8337d10cbca867c78",
-              "deps": [
-                "event-emitter"
-              ]
-            },
-            {
-              "file": "packages/cli/src/index.ts",
-              "hash": "174d80495828bc9afb263d332ffc2fbd4c7aa15f"
-            },
-            {
-              "file": "packages/cli/tsconfig.app.json",
-              "hash": "da56f46a1b84d8ce3cf5f3a2a8ad02563ebdba13"
-            },
-            {
-              "file": "packages/cli/tsconfig.json",
-              "hash": "a1362fb87e3e92624593f9dd33cd9ec219d1d44e"
-            },
-            {
-              "file": "packages/cli/tsconfig.spec.json",
-              "hash": "a18afb604688956c6a84dd7780d99923f0c04662"
-            }
-          ]
-        }
-      },
       "fsm": {
         "name": "fsm",
         "type": "lib",
@@ -1721,7 +1552,7 @@
                 ]
               }
             },
-            "build:prod": {
+            "prod": {
               "executor": "@nrwl/web:rollup",
               "outputs": [
                 "{options.outputPath}"
@@ -1736,8 +1567,14 @@
                   "cjs"
                 ],
                 "rollupConfig": [
-                  "rollup.lib.js"
+                  "rollup.lib.prod.js"
                 ]
+              }
+            },
+            "publish": {
+              "executor": "@nrwl/workspace:run-commands",
+              "options": {
+                "command": "./node_modules/.bin/ts-node tools/scripts/publish/publish-single.ts fsm"
               }
             },
             "lint": {
@@ -1782,11 +1619,11 @@
             },
             {
               "file": "packages/fsm/package.json",
-              "hash": "c8ab12544daa95eb33db0e53c9b1e4da5fa48564"
+              "hash": "c24b073a207f4bd2177b4b5634b35b90b610edbe"
             },
             {
               "file": "packages/fsm/project.json",
-              "hash": "2709b097491a23dcbdb7986da3f0f83a24558e80"
+              "hash": "bf85d1fad5a6369df0acaf277f80ffb090f218fb"
             },
             {
               "file": "packages/fsm/README.md",
@@ -1802,7 +1639,7 @@
             },
             {
               "file": "packages/fsm/src/lib/fsm.ts",
-              "hash": "067eda8e4394e96a0aac534b36b9e389c4177550",
+              "hash": "d2bea7c4f3f983c3f648bc4387a767c658dd38a3",
               "deps": [
                 "event-emitter"
               ]
@@ -1842,9 +1679,14 @@
                 "assets": [
                   "packages/di/*.md"
                 ]
+              },
+              "configurations": {
+                "production": {
+                  "tsConfig": "libs/mylib/tsconfig-prod.lib.json"
+                }
               }
             },
-            "build:prod": {
+            "prod": {
               "executor": "@nrwl/web:rollup",
               "outputs": [
                 "{options.outputPath}"
@@ -1859,8 +1701,14 @@
                   "cjs"
                 ],
                 "rollupConfig": [
-                  "rollup.lib.js"
+                  "rollup.lib.prod.js"
                 ]
+              }
+            },
+            "publish": {
+              "executor": "@nrwl/workspace:run-commands",
+              "options": {
+                "command": "./node_modules/.bin/ts-node tools/scripts/publish/publish-single.ts di"
               }
             },
             "lint": {
@@ -1905,11 +1753,11 @@
             },
             {
               "file": "packages/di/package.json",
-              "hash": "aeef4329db0cc17d8b2212c7fde6f1338f1a3aeb"
+              "hash": "174224e74e6501988e71655614d2327a9e47c866"
             },
             {
               "file": "packages/di/project.json",
-              "hash": "50cbe366b0ce0adbd68809cff78a072075e3a426"
+              "hash": "67c8ed37752c083bc9d47d544189a16ed0c44ed5"
             },
             {
               "file": "packages/di/README.md",
@@ -1921,7 +1769,7 @@
             },
             {
               "file": "packages/di/src/lib/all-dependencies-exist.ts",
-              "hash": "d5d8763f828fef61a7b4995bd2684ce071073995"
+              "hash": "d44cbba6c00a9a7a3eb0d268263880f0db85f83f"
             },
             {
               "file": "packages/di/src/lib/by-dependency.ts",
@@ -1985,12 +1833,12 @@
       "query": [
         {
           "source": "query",
-          "target": "string-utils",
+          "target": "redux-utils",
           "type": "static"
         },
         {
           "source": "query",
-          "target": "redux-utils",
+          "target": "string-utils",
           "type": "static"
         }
       ],
@@ -1998,25 +1846,6 @@
         {
           "source": "store",
           "target": "sync-queue",
-          "type": "static"
-        }
-      ],
-      "core": [
-        {
-          "source": "core",
-          "target": "event-emitter",
-          "type": "static"
-        },
-        {
-          "source": "core",
-          "target": "di",
-          "type": "static"
-        }
-      ],
-      "cli": [
-        {
-          "source": "cli",
-          "target": "event-emitter",
           "type": "static"
         }
       ],

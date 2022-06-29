@@ -13,7 +13,7 @@
         "assets": ["packages/store/*.md"]
       }
     },
-    "build:prod": {
+    "prod": {
       "executor": "@nrwl/web:rollup",
       "outputs": ["{options.outputPath}"],
       "options": {
@@ -25,7 +25,13 @@
           "esm",
           "cjs"
         ],
-        "rollupConfig": ["rollup.lib.js"]
+        "rollupConfig": ["rollup.lib.prod.js"]
+      }
+    },
+    "publish": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "command": "./node_modules/.bin/ts-node tools/scripts/packages/publish-single.ts store"
       }
     },
     "lint": {

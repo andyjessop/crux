@@ -13,6 +13,27 @@
         "assets": ["packages/reducer-registry/*.md"]
       }
     },
+    "prod": {
+      "executor": "@nrwl/web:rollup",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/reducer-registry",
+        "tsConfig": "packages/reducer-registry/tsconfig.lib.json",
+        "project": "packages/reducer-registry/package.json",
+        "entryFile": "packages/reducer-registry/src/index.ts",
+        "format": [
+          "esm",
+          "cjs"
+        ],
+        "rollupConfig": ["rollup.lib.prod.js"]
+      }
+    },
+    "publish": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "command": "./node_modules/.bin/ts-node tools/scripts/packages/publish-single.ts reducer-registry"
+      }
+    },
     "lint": {
       "executor": "@nrwl/linter:eslint",
       "outputs": ["{options.outputFile}"],

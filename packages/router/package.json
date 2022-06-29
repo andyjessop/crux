@@ -1,8 +1,5 @@
 {
   "name": "@crux/router",
-  "version": "0.2.0-alpha",
-  "type": "commonjs",
-  "dependencies": {
-    "@crux/event-emitter": "0.2.0-alpha"
-  }
+  "version": "0.0.23",
+  "type": "commonjs"
 }

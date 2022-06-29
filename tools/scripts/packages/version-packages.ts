@@ -1,25 +1,26 @@
 import { ProjectGraph } from "@nrwl/devkit";
 import { readFileSync, writeFileSync } from "fs";
+import { exec } from 'child_process';
+import { config } from 'dotenv';
 
-export function publish(graph: ProjectGraph, type: 'patch' | 'minor' | 'major') {
+config();
+
+execute('npx nx dep-graph --file=tools/scripts/publish/tmp/project.json')
+  .then(() => {
+    const projectJson = JSON.parse(readFileSync(`tools/scripts/publish/tmp/project.json`, 'utf8'));
+    versionPackages(projectJson.graph);
+  })
+
+export async function versionPackages(graph: ProjectGraph) {
   const version = getCurrentVersion();
   const libNodes = getLibs(graph);
 
   for (const name of libNodes) {
-    const packageJson = getProjectPackageJson(name);
-    const deps = getProjectDeps(graph, name);
-
-    for (const dep of deps) {
-      packageJson.dependencies[dep] = version;
-    }
+    const packageJson = getProjectPackageJson(name, 'dev');
+    packageJson.version = version;
 
     writePackageJson(packageJson, name);
   }
-  // for each lib node
-    // add dependencies to package.json
-  // run nx build
-  // for each lib node
-    // npm publish dist/packages/[name] --access=public
 }
 
 function getLibs(graph: ProjectGraph) {
@@ -40,7 +41,7 @@ function writePackageJson(obj: any, name: string) {
   const path = `${getPackagePath(name)}/package.json`;
 
   console.log(`Writing JSON to ${path}`);
-
+  console.log(json);
   writeFileSync(path, json);
 }
 
@@ -52,16 +53,16 @@ function getCurrentVersion() {
   return version;
 }
 
-function getProjectPackageJson(name: string) {
-  return JSON.parse(readFileSync(`${getPackagePath(name)}/package.json`, 'utf8'));
+function getProjectPackageJson(name: string, env: 'dev' | 'prod') {
+  return JSON.parse(readFileSync(`${env === 'prod' ? getPackageDistPath(name) : getPackagePath(name)}/package.json`, 'utf8'));
 }
 
 function getProjectDeps(graph: ProjectGraph, name: string): string[] {
   const deps = [];
 
   for (const file of graph.nodes[name].data.files) {
-    for (const dep of file.deps) {
-      if (!dep.starsWith('npm:')) {
+    for (const dep of (file.deps || [])) {
+      if (dep && !dep.startsWith('npm:')) {
         deps.push(dep);
       }
     }
@@ -69,3 +70,11 @@ function getProjectDeps(graph: ProjectGraph, name: string): string[] {
 
   return [...new Set(deps)];
 }
+
+function execute(command: string) {
+  return new Promise<string>((resolve) => {
+    exec(command, function(error, stdout, stderr) {
+      resolve(stdout);
+    });
+  });
+};

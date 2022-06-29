@@ -11,9 +11,14 @@
         "main": "packages/di/src/index.ts",
         "tsConfig": "packages/di/tsconfig.lib.json",
         "assets": ["packages/di/*.md"]
+      },
+      "configurations": {
+        "production": {
+          "tsConfig": "libs/mylib/tsconfig-prod.lib.json"
+        }
       }
     },
-    "build:prod": {
+    "prod": {
       "executor": "@nrwl/web:rollup",
       "outputs": ["{options.outputPath}"],
       "options": {
@@ -25,7 +30,13 @@
           "esm",
           "cjs"
         ],
-        "rollupConfig": ["rollup.lib.js"]
+        "rollupConfig": ["rollup.lib.prod.js"]
+      }
+    },
+    "publish": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "command": "./node_modules/.bin/ts-node tools/scripts/packages/publish-single.ts di"
       }
     },
     "lint": {

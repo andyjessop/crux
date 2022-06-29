@@ -13,6 +13,27 @@
         "assets": ["packages/redux-utils/*.md"]
       }
     },
+    "prod": {
+      "executor": "@nrwl/web:rollup",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/redux-utils",
+        "tsConfig": "packages/redux-utils/tsconfig.lib.json",
+        "project": "packages/redux-utils/package.json",
+        "entryFile": "packages/redux-utils/src/index.ts",
+        "format": [
+          "esm",
+          "cjs"
+        ],
+        "rollupConfig": ["rollup.lib.prod.js"]
+      }
+    },
+    "publish": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "command": "./node_modules/.bin/ts-node tools/scripts/packages/publish-single.ts redux-utils"
+      }
+    },
     "lint": {
       "executor": "@nrwl/linter:eslint",
       "outputs": ["{options.outputFile}"],

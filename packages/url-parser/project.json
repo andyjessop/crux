@@ -13,11 +13,11 @@
         "assets": ["packages/url-parser/*.md"]
       }
     },
-    "build:prod": {
+    "prod": {
       "executor": "@nrwl/web:rollup",
       "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "dist/packages/router",
+        "outputPath": "dist/packages/url-parser",
         "tsConfig": "packages/url-parser/tsconfig.lib.json",
         "project": "packages/url-parser/package.json",
         "entryFile": "packages/url-parser/src/index.ts",
@@ -33,6 +33,12 @@
       "outputs": ["{options.outputFile}"],
       "options": {
         "lintFilePatterns": ["packages/url-parser/**/*.ts"]
+      }
+    },
+    "publish": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "command": "./node_modules/.bin/ts-node tools/scripts/packages/publish-single.ts url-parser"
       }
     },
     "test": {

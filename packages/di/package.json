@@ -1,5 +1,6 @@
 {
   "name": "@crux/di",
-  "version": "0.2.0-alpha",
-  "type": "commonjs"
+  "version": "0.0.23",
+  "type": "commonjs",
+  "dependencies": {}
 }

@@ -85,8 +85,10 @@ function buildHandlers<T extends Config>(
 ) {
   const keys = Object.keys(config) as (keyof T)[];
 
-  return keys.reduce((acc, cur) => {
-    const [first, ...rest] = cur as string;
+
+  return keys.reduce((acc, cur: any) => {
+    const first = cur.slice(0, 1);
+    const rest = cur.slice(1).split('');
 
     const k = `on${first.toUpperCase()}${rest.join('')}` as `on${Capitalize<Extract<keyof T, string>>}`;
 

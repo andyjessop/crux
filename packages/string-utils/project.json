@@ -13,7 +13,7 @@
         "assets": ["packages/string-utils/*.md"]
       }
     },
-    "build:prod": {
+    "prod": {
       "executor": "@nrwl/web:rollup",
       "outputs": ["{options.outputPath}"],
       "options": {
@@ -26,6 +26,12 @@
           "cjs"
         ],
         "rollupConfig": ["rollup.lib.prod.js"]
+      }
+    },
+    "publish": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "command": "./node_modules/.bin/ts-node tools/scripts/packages/publish-single.ts string-utils"
       }
     },
     "lint": {

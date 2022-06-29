@@ -1,5 +1,6 @@
 {
   "name": "@crux/async-queue",
-  "version": "0.2.0",
-  "type": "commonjs"
+  "version": "0.0.23",
+  "type": "commonjs",
+  "dependencies": {}
 }

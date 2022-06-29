@@ -1,8 +1,12 @@
 {
   "name": "crux",
-  "version": "0.0.20",
+  "version": "0.0.23",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "build": "npx nx run-many --target=prod --all --with-deps",
+    "publish": "npx nx run-many --target=publish --all --with-deps",
+    "version-packages": "ts-node --project=tools/tsconfig.tools.json tools/scripts/packages/version-packages.ts"
+  },
   "private": true,
   "dependencies": {
     "@nrwl/js": "^13.7.3",
@@ -16,6 +20,7 @@
     "tslib": "^2.0.0"
   },
   "devDependencies": {
+    "@jsdevtools/npm-publish": "^1.4.3",
     "@nrwl/cli": "13.7.3",
     "@nrwl/cypress": "13.7.3",
     "@nrwl/devkit": "13.7.3",
@@ -39,6 +44,7 @@
     "@typescript-eslint/parser": "~5.10.0",
     "babel-jest": "27.2.3",
     "cypress": "^9.1.0",
+    "dotenv": "^16.0.1",
     "eslint": "~8.7.0",
     "eslint-config-prettier": "8.1.0",
     "eslint-plugin-cypress": "^2.10.3",
