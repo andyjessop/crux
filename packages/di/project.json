@@ -30,7 +30,7 @@
           "esm",
           "cjs"
         ],
-        "rollupConfig": ["rollup.lib.prod.js"]
+        "rollupConfig": ["rollup.lib.prod.js", "packages/di/rollup.lib.js"]
       }
     },
     "publish": {

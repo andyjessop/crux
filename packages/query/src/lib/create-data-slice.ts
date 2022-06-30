@@ -145,8 +145,8 @@ function createPOSTSlice<Data, E>(initialState: State<Data, E>, resource: string
       return {
         ...state,
         data: optimisticTransform ? getOptimisticData<Data>(optimisticTransform, state.data, payload) : state.data,
-        loading: true,
-        updating: state.data !== null,
+        loading: !optimisticTransform,
+        updating: state.data !== null && !optimisticTransform,
       };
     },
     [`${name}/fulfilled`]: (state: State<Data, E>, payload: Data | undefined) => ({
@@ -178,8 +178,8 @@ function createPUTSlice<Data, E>(initialState: State<Data, E>, resource: string,
       return {
         ...state,
         data: optimisticTransform ? getOptimisticData<Data>(optimisticTransform, state.data, payload) : state.data,
-        loading: true,
-        updating: state.data !== null,
+        loading: !optimisticTransform,
+        updating: state.data !== null && !optimisticTransform,
       };
     },
     [`${name}/fulfilled`]: (state: State<Data, E>, payload: Data | undefined) => ({
@@ -211,8 +211,8 @@ function createDELETESlice<Data, E>(initialState: State<Data, E>, resource: stri
       return {
         ...state,
         data: optimisticTransform ? getOptimisticData<Data>(optimisticTransform, state.data) : state.data,
-        loading: true,
-        updating: state.data !== null,
+        loading: !optimisticTransform,
+        updating: state.data !== null && !optimisticTransform,
       };
     },
     [`${name}/fulfilled`]: (state: State<Data, E>, payload: Data | null | undefined) => ({

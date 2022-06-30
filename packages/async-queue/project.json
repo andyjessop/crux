@@ -25,7 +25,7 @@
           "esm",
           "cjs"
         ],
-        "rollupConfig": ["rollup.lib.prod.js"]
+        "rollupConfig": ["rollup.lib.prod.js", "packages/async-queue/rollup.lib.js"]
       }
     },
     "publish": {

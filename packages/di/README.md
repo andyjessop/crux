@@ -15,49 +15,106 @@ npm install --save @crux/di
 ```ts
 import { di } from '@crux/di';
 
-const container = di({
-  data: createDataService,
-  http: createHTTPService,
-});
-
-function createDataService(): Promise<Data> {
-  return import('/path/to/data/service').then(mod => mod.default);
+async function cache() = {
+  return import('./cache-service').then(mod => mod.cacheService);
 }
 
-function createHTTPService(): Promise<HTTP> {
-  return import('/path/to/http/service').then(mod => mod.default);
+const container = di({
+  cache: { factory: cache },
+});
+```
+
+And the service:
+
+```ts
+// ./cache-service
+export function cacheService() {
+  return {
+    get: (key: string) => {
+      // retrieve key from cache
+    },
+    set: (key: string, value: unknown) => {
+      // set value in cache
+    }
+  }
 }
 ```
 
 ### Retrieving a service from the container
 
 ```ts
-const cache = container.get('data')
-  .then(dataService => dataService.get('users'));
+async function doSomething() {
+  const cache = await container.get('cache');
+
+  cache.get('myVal'); // get method is inferred by TypeScript here.
+}
 ```
 
 Notice that all services are retrieved asynchronously, which encourages you to dynamically import them to help code splitting in your app. The service has been lazily instantiated.
 
 ### Defining dependencies for a service
 
-Your service may well not be standalone. For instance, your data service might depend on the http service. Let's see how you would define that in `@crux/di`.
+Your service may well not be standalone. For instance, your data service might depend on an http service. Let's see how you would define that in `@crux/di`.
+
+The data service itself:
+
+```ts
+// ./data-service
+export function dataService(http: httpService) {
+  return {
+    getUsers: () => http.get('/users'),
+  }
+}
+```
+
+Pulling it all together:
+
+```ts
+// The dynamic import.
+async function data() = {
+  return import('./data-service').then(mod => mod.cache);
+}
+
+const container = di({
+  data: { factory: data, deps: ['http'] }, // 'http' refers to the key of the http service below
+  http: { factory: http }
+});
+
+// Inside an async function
+const data = await container.get('data');
+
+const users = await data.getUsers();
+```
+
+Notice that `@crux/di` injected the `http` dependency into the data service when it was instantiated. You can have as many deps as you like and they are injected in order. For example:
 
 ```ts
 const container = di({
-  data: [createDataService, 'http'],
-  http: createHTTPService
+  cache: { factory: cache }
+  data: { factory: data, deps: ['http', 'cache'] },
+  http: { factory: http }
 });
-
-function createDataService(http: HTTP): Data {}
 ```
 
-If required, you can also define a dependency as a singleton:
+Where the data service might now be something like:
+
+```ts
+export function dataService(http: httpService, cache: cacheService) {
+  return {
+    getUsers: () => http.get('/users').then(users => cache.set('users', users)),
+  }
+}
+```
+
+In order to inject a service as a singleton, define a separate service for each that you need:
 
 ```ts
 const container = di({
-  data: [createDataService, { constructor: 'http', singleton: true }],
-  http: createHTTPService
+  cache: { factory: cache, deps: ['httpCache'] },
+  data: { factory: data, deps: ['httpData'] },
+  httpCache: { factory: http },
+  httpData: { factory: http },
 });
 ```
 
-This will ensure that every time you call `container.get('data')` that `createDataService` is provided with a singleton http dependency.
+This will ensure that the `data` service has a unique instance of the `http` service injected into it.

@@ -17,7 +17,7 @@ The central concept is that the core of your application contains your business 
 - [event-emitter](packages/event-emitter/README.md) - a fully-typed event emitter
 - [fsm](packages/fsm/README.md) - a simple, no-frills finite state machine
 - [redux-router](packages/redux-router/README.md) - a router that hooks into the Redux state
-- [redux-query](packages/redux-query/README.md) - a tiny RTK-alternative
+- [query](packages/query/README.md) - a tiny RTK-alternative
 - [router](packages/router/README.md) - a lightweight and decoupled router
 - [store](packages/store/README.md) - a framework-agnostic store that provides immutable updates and observers by default
 - [sync-queue](packages/sync-queue/README.md) - a synchronous queue utility.

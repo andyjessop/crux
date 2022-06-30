@@ -1,6 +1,6 @@
-import { mergeReducers } from "@crux/redux-utils";
+import { combineReducers, mergeReducers } from "@crux/redux-utils";
 import { generateRandomId } from "@crux/string-utils";
-import { combineReducers, AnyAction, MiddlewareAPI, Dispatch, Reducer } from "redux";
+import { AnyAction, MiddlewareAPI, Dispatch, Reducer } from "redux";
 import { createDataSlice } from "./create-data-slice";
 import { Endpoint, FinalReturnType, OperationType, ResourceConfig, State } from "./types";
 
@@ -199,7 +199,8 @@ export function createAPI(rId?: string) {
       if (config.mutations) {
         for (const mutateMethodName of Object.keys(config.mutations)) {
           const handleSuccess = async (name: string, data: Data) => {
-            if (config.mutations[mutateMethodName]['options'].refetchOnSuccess) {
+            // refetch on success defaults to true
+            if (config.mutations[mutateMethodName]['options'].refetchOnSuccess ?? true) {
               await refetch();
             }
 

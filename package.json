@@ -1,6 +1,6 @@
 {
   "name": "crux",
-  "version": "0.0.23",
+  "version": "0.0.26",
   "license": "MIT",
   "scripts": {
     "build": "npx nx run-many --target=prod --all --with-deps",
@@ -16,7 +16,9 @@
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-redux": "^7.2.6",
+    "redux": "^4.2.0",
     "regenerator-runtime": "0.13.7",
+    "rollup-plugin-copy": "^3.4.0",
     "tslib": "^2.0.0"
   },
   "devDependencies": {

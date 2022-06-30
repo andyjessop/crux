@@ -38,14 +38,15 @@
                   "cjs"
                 ],
                 "rollupConfig": [
-                  "rollup.lib.prod.js"
+                  "rollup.lib.prod.js",
+                  "packages/reducer-registry/rollup.lib.js"
                 ]
               }
             },
             "publish": {
               "executor": "@nrwl/workspace:run-commands",
               "options": {
-                "command": "./node_modules/.bin/ts-node tools/scripts/publish/publish-single.ts reducer-registry"
+                "command": "./node_modules/.bin/ts-node tools/scripts/packages/publish-single.ts reducer-registry"
               }
             },
             "lint": {
@@ -82,15 +83,22 @@
             },
             {
               "file": "packages/reducer-registry/package.json",
-              "hash": "1792cd88a60f87bc804b4c829a5e981f6c7c6a35"
+              "hash": "dc399fbb8a00ed147db96655d29ee24e14468f5f"
             },
             {
               "file": "packages/reducer-registry/project.json",
-              "hash": "06fe3929b8459af099e111fb2a471ec24781aae8"
+              "hash": "cb5ff72b19df8d4d433d37c6eb8b02c169ebc59a"
             },
             {
               "file": "packages/reducer-registry/README.md",
               "hash": "c8f29778e73f961bc233fd3cb2fabaf155621b07"
+            },
+            {
+              "file": "packages/reducer-registry/rollup.lib.js",
+              "hash": "4b0e756b896aa29400babf039821330c645169b3",
+              "deps": [
+                "npm:rollup-plugin-copy"
+              ]
             },
             {
               "file": "packages/reducer-registry/src/index.ts",
@@ -102,7 +110,10 @@
             },
             {
               "file": "packages/reducer-registry/src/lib/reducer-registry.ts",
-              "hash": "1735683e15a1378449fec63cd8d3684917964957"
+              "hash": "1735683e15a1378449fec63cd8d3684917964957",
+              "deps": [
+                "npm:redux"
+              ]
             },
             {
               "file": "packages/reducer-registry/tsconfig.json",
@@ -156,14 +167,15 @@
                   "cjs"
                 ],
                 "rollupConfig": [
-                  "rollup.lib.prod.js"
+                  "rollup.lib.prod.js",
+                  "packages/event-emitter/rollup.lib.js"
                 ]
               }
             },
             "publish": {
               "executor": "@nrwl/workspace:run-commands",
               "options": {
-                "command": "./node_modules/.bin/ts-node tools/scripts/publish/publish-single.ts event-emitter"
+                "command": "./node_modules/.bin/ts-node tools/scripts/packages/publish-single.ts event-emitter"
               }
             },
             "lint": {
@@ -208,15 +220,22 @@
             },
             {
               "file": "packages/event-emitter/package.json",
-              "hash": "35d350e295576218e693c8cf43c5f41229290903"
+              "hash": "5c8be9ddabf0ab5fc0c0b0c3578944164955e184"
             },
             {
               "file": "packages/event-emitter/project.json",
-              "hash": "2413a8da900dde8cbe5127f72eb6f36f48939afe"
+              "hash": "c906d62194ef5363396f5f069692e8c22908315c"
             },
             {
               "file": "packages/event-emitter/README.md",
               "hash": "537dcea1dba4c2133e307cd2b9edd5c98150646f"
+            },
+            {
+              "file": "packages/event-emitter/rollup.lib.js",
+              "hash": "1763a8be5a777ac110156eba109c0b4aa965481e",
+              "deps": [
+                "npm:rollup-plugin-copy"
+              ]
             },
             {
               "file": "packages/event-emitter/src/index.ts",
@@ -282,14 +301,15 @@
                   "cjs"
                 ],
                 "rollupConfig": [
-                  "rollup.lib.prod.js"
+                  "rollup.lib.prod.js",
+                  "packages/redux-router/rollup.lib.js"
                 ]
               }
             },
             "publish": {
               "executor": "@nrwl/workspace:run-commands",
               "options": {
-                "command": "./node_modules/.bin/ts-node tools/scripts/publish/publish-single.ts redux-router"
+                "command": "./node_modules/.bin/ts-node tools/scripts/packages/publish-single.ts redux-router"
               }
             },
             "lint": {
@@ -342,18 +362,26 @@
             },
             {
               "file": "packages/redux-router/package.json",
-              "hash": "ae8a5e6462f2fd1637d5bfe83bded1c1c8c10ff7",
+              "hash": "fd3155074d5c487b3902e9a2efb7bec1cd081afc",
               "deps": [
-                "npm:react"
+                "npm:react",
+                "npm:redux"
               ]
             },
             {
               "file": "packages/redux-router/project.json",
-              "hash": "86b855d8735a5bb635e37e02c40a2e6bc78e7a3c"
+              "hash": "cd94704051088d9714450e99539d9bdb7d1e9c51"
             },
             {
               "file": "packages/redux-router/README.md",
               "hash": "bda069033597513e1cf7a0f1918a1dc5a1cf2c8a"
+            },
+            {
+              "file": "packages/redux-router/rollup.lib.js",
+              "hash": "b75957558d0260467fd2ab58996a70490563c594",
+              "deps": [
+                "npm:rollup-plugin-copy"
+              ]
             },
             {
               "file": "packages/redux-router/src/index.ts",
@@ -368,7 +396,8 @@
               "hash": "aee14c9ec77787fc94c9d9b8eb37848eb8f139bc",
               "deps": [
                 "router",
-                "npm:react"
+                "npm:react",
+                "npm:redux"
               ]
             },
             {
@@ -423,14 +452,15 @@
                   "cjs"
                 ],
                 "rollupConfig": [
-                  "rollup.lib.prod.js"
+                  "rollup.lib.prod.js",
+                  "packages/string-utils/rollup.lib.js"
                 ]
               }
             },
             "publish": {
               "executor": "@nrwl/workspace:run-commands",
               "options": {
-                "command": "./node_modules/.bin/ts-node tools/scripts/publish/publish-single.ts string-utils"
+                "command": "./node_modules/.bin/ts-node tools/scripts/packages/publish-single.ts string-utils"
               }
             },
             "lint": {
@@ -471,15 +501,22 @@
             },
             {
               "file": "packages/string-utils/package.json",
-              "hash": "c9026d3215744a889dee24df2d539cc9cbd7c88b"
+              "hash": "398e86274bbc79251a5f7107864523b92c020924"
             },
             {
               "file": "packages/string-utils/project.json",
-              "hash": "ba24ac5c6a44ec0a3b1086da3eb8f1d33678f3fc"
+              "hash": "a5f9f44eabb46b4330e662d12457086abaf71906"
             },
             {
               "file": "packages/string-utils/README.md",
               "hash": "879137bf2ac71f6868c4f32046595cfca844bee4"
+            },
+            {
+              "file": "packages/string-utils/rollup.lib.js",
+              "hash": "1a2108aa3d22ba1e38e9b42af5d5f48b6dc66149",
+              "deps": [
+                "npm:rollup-plugin-copy"
+              ]
             },
             {
               "file": "packages/string-utils/src/index.ts",
@@ -545,14 +582,15 @@
                   "cjs"
                 ],
                 "rollupConfig": [
-                  "rollup.lib.prod.js"
+                  "rollup.lib.prod.js",
+                  "packages/async-queue/rollup.lib.js"
                 ]
               }
             },
             "publish": {
               "executor": "@nrwl/workspace:run-commands",
               "options": {
-                "command": "./node_modules/.bin/ts-node tools/scripts/publish/publish-single.ts async-queue"
+                "command": "./node_modules/.bin/ts-node tools/scripts/packages/publish-single.ts async-queue"
               }
             },
             "lint": {
@@ -597,15 +635,22 @@
             },
             {
               "file": "packages/async-queue/package.json",
-              "hash": "91aaac5f853792391be4c6a64d7d22dda67581ba"
+              "hash": "c470f75450f224ca8bc3610e4f3809049c44b101"
             },
             {
               "file": "packages/async-queue/project.json",
-              "hash": "15e53ac6d40a6f329e04262002bd49fc6c61ea8d"
+              "hash": "6e25ade6eb4d9425586effacc16a46426b7b2074"
             },
             {
               "file": "packages/async-queue/README.md",
               "hash": "59abffdf75da1177bb9a082eabbd1d13a74d7805"
+            },
+            {
+              "file": "packages/async-queue/rollup.lib.js",
+              "hash": "12d25f92a28f46e980a37685a578caae9764aa1f",
+              "deps": [
+                "npm:rollup-plugin-copy"
+              ]
             },
             {
               "file": "packages/async-queue/src/index.ts",
@@ -671,14 +716,15 @@
                   "cjs"
                 ],
                 "rollupConfig": [
-                  "rollup.lib.prod.js"
+                  "rollup.lib.prod.js",
+                  "packages/redux-utils/rollup.lib.js"
                 ]
               }
             },
             "publish": {
               "executor": "@nrwl/workspace:run-commands",
               "options": {
-                "command": "./node_modules/.bin/ts-node tools/scripts/publish/publish-single.ts redux-utils"
+                "command": "./node_modules/.bin/ts-node tools/scripts/packages/publish-single.ts redux-utils"
               }
             },
             "lint": {
@@ -719,23 +765,40 @@
             },
             {
               "file": "packages/redux-utils/package.json",
-              "hash": "aa12b516b825b31d2a1a077ec018942afa5d9276"
+              "hash": "5db465a2936b489400b62fd767f13562e72f77cb"
             },
             {
               "file": "packages/redux-utils/project.json",
-              "hash": "1afdf2bad444aac684be08aea4401b5fca016275"
+              "hash": "83e3a312c466792d0a4298526f5791caf2db1480"
             },
             {
               "file": "packages/redux-utils/README.md",
               "hash": "8e9f55fea80a9b4bf5793d59486407d756b9a3a0"
             },
             {
+              "file": "packages/redux-utils/rollup.lib.js",
+              "hash": "44b974fb34afb7af21855f53651764407c8d5c7f",
+              "deps": [
+                "npm:rollup-plugin-copy"
+              ]
+            },
+            {
               "file": "packages/redux-utils/src/index.ts",
-              "hash": "acf325a92ee2b3f1ee6fa09e8763ae1d0bd1e193"
+              "hash": "824790bdef823e23833cd295fc47df293e27f015"
+            },
+            {
+              "file": "packages/redux-utils/src/lib/combine-reducers.ts",
+              "hash": "0e145ed4aad3fe26b7cea8539e09d356405a428a",
+              "deps": [
+                "npm:redux"
+              ]
             },
             {
               "file": "packages/redux-utils/src/lib/merge-reducers.ts",
-              "hash": "3be3b4bc7bf983a7961078d28e82086992df85ff"
+              "hash": "3be3b4bc7bf983a7961078d28e82086992df85ff",
+              "deps": [
+                "npm:redux"
+              ]
             },
             {
               "file": "packages/redux-utils/tsconfig.json",
@@ -789,14 +852,15 @@
                   "cjs"
                 ],
                 "rollupConfig": [
-                  "rollup.lib.prod.js"
+                  "rollup.lib.prod.js",
+                  "packages/sync-queue/rollup.lib.js"
                 ]
               }
             },
             "publish": {
               "executor": "@nrwl/workspace:run-commands",
               "options": {
-                "command": "./node_modules/.bin/ts-node tools/scripts/publish/publish-single.ts sync-queue"
+                "command": "./node_modules/.bin/ts-node tools/scripts/packages/publish-single.ts sync-queue"
               }
             },
             "lint": {
@@ -841,15 +905,22 @@
             },
             {
               "file": "packages/sync-queue/package.json",
-              "hash": "408b03a7fb4814b75dabc555b44e6e0c8198380e"
+              "hash": "21ca999def68645650c6564937f00b9f01068e82"
             },
             {
               "file": "packages/sync-queue/project.json",
-              "hash": "5753269af30ffcffed89b42ee0e5414db478b2b2"
+              "hash": "b4e1aa7492e93925672b9f242db66b28b56ccc40"
             },
             {
               "file": "packages/sync-queue/README.md",
               "hash": "47eee2de7131a50d645e645e5413621fa2f147fb"
+            },
+            {
+              "file": "packages/sync-queue/rollup.lib.js",
+              "hash": "79f1167ed3d1bfcf3f3b85402ead288be269de2a",
+              "deps": [
+                "npm:rollup-plugin-copy"
+              ]
             },
             {
               "file": "packages/sync-queue/src/index.ts",
@@ -915,7 +986,8 @@
                   "cjs"
                 ],
                 "rollupConfig": [
-                  "rollup.lib.prod.js"
+                  "rollup.lib.prod.js",
+                  "packages/url-parser/rollup.lib.js"
                 ]
               }
             },
@@ -933,7 +1005,7 @@
             "publish": {
               "executor": "@nrwl/workspace:run-commands",
               "options": {
-                "command": "./node_modules/.bin/ts-node tools/scripts/publish/publish-single.ts url-parser"
+                "command": "./node_modules/.bin/ts-node tools/scripts/packages/publish-single.ts url-parser"
               }
             },
             "test": {
@@ -963,15 +1035,22 @@
             },
             {
               "file": "packages/url-parser/package.json",
-              "hash": "8a05d1d1c5d3604c547107fc2f6da8244cb8ffd8"
+              "hash": "761aa4b159c49b695cc36558856b23fe528bfd7e"
             },
             {
               "file": "packages/url-parser/project.json",
-              "hash": "8dfbbd93838a3657df6870c6954e050ff4da1043"
+              "hash": "372814146af8bee76744c2709101598a0586cc97"
             },
             {
               "file": "packages/url-parser/README.md",
               "hash": "f0583c09dc9eb422dfb69d6e3ddbc03e6418e433"
+            },
+            {
+              "file": "packages/url-parser/rollup.lib.js",
+              "hash": "8f68dc1e8df66b466a8138cf36e717be5e440efb",
+              "deps": [
+                "npm:rollup-plugin-copy"
+              ]
             },
             {
               "file": "packages/url-parser/src/index.ts",
@@ -1101,14 +1180,15 @@
                   "cjs"
                 ],
                 "rollupConfig": [
-                  "rollup.lib.prod.js"
+                  "rollup.lib.prod.js",
+                  "packages/router/rollup.lib.js"
                 ]
               }
             },
             "publish": {
               "executor": "@nrwl/workspace:run-commands",
               "options": {
-                "command": "./node_modules/.bin/ts-node tools/scripts/publish/publish-single.ts router"
+                "command": "./node_modules/.bin/ts-node tools/scripts/packages/publish-single.ts router"
               }
             },
             "lint": {
@@ -1153,15 +1233,22 @@
             },
             {
               "file": "packages/router/package.json",
-              "hash": "ad73a9b134b77b4c926e0cd72ba3bf15762ab0ea"
+              "hash": "3e9f900c723c141849101acee87cf52ac881ece5"
             },
             {
               "file": "packages/router/project.json",
-              "hash": "f6c5474ef1d008b614584d77396e56936213efe2"
+              "hash": "cb0667edbfa130577589f3dde395b4f7a975803d"
             },
             {
               "file": "packages/router/README.md",
               "hash": "b987fee2d01bbfc2421ef3116b8589f0beaf6ba2"
+            },
+            {
+              "file": "packages/router/rollup.lib.js",
+              "hash": "ed1c22dd5b0b20df68d9aca381d86c725140669a",
+              "deps": [
+                "npm:rollup-plugin-copy"
+              ]
             },
             {
               "file": "packages/router/src/index.ts",
@@ -1235,14 +1322,15 @@
                   "cjs"
                 ],
                 "rollupConfig": [
-                  "rollup.lib.prod.js"
+                  "rollup.lib.prod.js",
+                  "packages/query/rollup.lib.js"
                 ]
               }
             },
             "publish": {
               "executor": "@nrwl/workspace:run-commands",
               "options": {
-                "command": "./node_modules/.bin/ts-node tools/scripts/publish/publish-single.ts query"
+                "command": "./node_modules/.bin/ts-node tools/scripts/packages/publish-single.ts query"
               }
             },
             "lint": {
@@ -1283,18 +1371,22 @@
             },
             {
               "file": "packages/query/package.json",
-              "hash": "4bc14c4e92930d2de831812a9c36166d4348c627",
-              "deps": [
-                "npm:@reduxjs/toolkit"
-              ]
+              "hash": "f7682a8f0578dd3591bb03153c480eb3503a6e60"
             },
             {
               "file": "packages/query/project.json",
-              "hash": "e5542aeaf338b2f6846833acec15f4594da86e09"
+              "hash": "0798ca33f4aa565588729f270a57f8da3385ae32"
             },
             {
               "file": "packages/query/README.md",
-              "hash": "857d703a82bc2133867485231eeef2cf3edea5bb"
+              "hash": "8674b6ffb77e14abfaa932ecb347e9ed2c0d6aa5"
+            },
+            {
+              "file": "packages/query/rollup.lib.js",
+              "hash": "2737082a3bb58ec32f0bab5024122db2afa3dfd4",
+              "deps": [
+                "npm:rollup-plugin-copy"
+              ]
             },
             {
               "file": "packages/query/src/index.ts",
@@ -1309,15 +1401,16 @@
             },
             {
               "file": "packages/query/src/lib/create-api.ts",
-              "hash": "b94de283cfccf3d4a07dc31ff679fa3e44dcddf7",
+              "hash": "b67aa361869711600e4bd654d969bbb491e1b002",
               "deps": [
                 "redux-utils",
-                "string-utils"
+                "string-utils",
+                "npm:redux"
               ]
             },
             {
               "file": "packages/query/src/lib/create-data-slice.ts",
-              "hash": "73e83ae6c8b9b9c44c1e28f030d464290536f279",
+              "hash": "920e3c082fce681aff966f78168b6f321ffd7f06",
               "deps": [
                 "npm:@reduxjs/toolkit"
               ]
@@ -1368,7 +1461,10 @@
             },
             {
               "file": "packages/query/src/lib/types.ts",
-              "hash": "fe1c30718fd14a5288f62b4688fb7590d4060f06"
+              "hash": "fe1c30718fd14a5288f62b4688fb7590d4060f06",
+              "deps": [
+                "npm:redux"
+              ]
             },
             {
               "file": "packages/query/tsconfig.json",
@@ -1422,14 +1518,15 @@
                   "cjs"
                 ],
                 "rollupConfig": [
-                  "rollup.lib.prod.js"
+                  "rollup.lib.prod.js",
+                  "packages/store/rollup.lib.js"
                 ]
               }
             },
             "publish": {
               "executor": "@nrwl/workspace:run-commands",
               "options": {
-                "command": "./node_modules/.bin/ts-node tools/scripts/publish/publish-single.ts store"
+                "command": "./node_modules/.bin/ts-node tools/scripts/packages/publish-single.ts store"
               }
             },
             "lint": {
@@ -1482,15 +1579,22 @@
             },
             {
               "file": "packages/store/package.json",
-              "hash": "e3330330cc6fd96bfb552d45b6394f17aa63a1c7"
+              "hash": "c0175c6daf570f9ccdbfa8127ca9abdb22917e97"
             },
             {
               "file": "packages/store/project.json",
-              "hash": "1cccbec28d0420461181cdbbd908143a22589463"
+              "hash": "b8a7ba200a23fc097824e4349bb9337aa7ed2564"
             },
             {
               "file": "packages/store/README.md",
               "hash": "184f6f5379491d87841bae9a8abd9c1ccf95e63a"
+            },
+            {
+              "file": "packages/store/rollup.lib.js",
+              "hash": "6fb25ab21c33fc505867d3ebaec035cd0e12de25",
+              "deps": [
+                "npm:rollup-plugin-copy"
+              ]
             },
             {
               "file": "packages/store/src/index.ts",
@@ -1567,14 +1671,15 @@
                   "cjs"
                 ],
                 "rollupConfig": [
-                  "rollup.lib.prod.js"
+                  "rollup.lib.prod.js",
+                  "packages/fsm/rollup.lib.js"
                 ]
               }
             },
             "publish": {
               "executor": "@nrwl/workspace:run-commands",
               "options": {
-                "command": "./node_modules/.bin/ts-node tools/scripts/publish/publish-single.ts fsm"
+                "command": "./node_modules/.bin/ts-node tools/scripts/packages/publish-single.ts fsm"
               }
             },
             "lint": {
@@ -1619,15 +1724,22 @@
             },
             {
               "file": "packages/fsm/package.json",
-              "hash": "c24b073a207f4bd2177b4b5634b35b90b610edbe"
+              "hash": "c1504850567247a3806625e6f2d05b04e1632d0b"
             },
             {
               "file": "packages/fsm/project.json",
-              "hash": "bf85d1fad5a6369df0acaf277f80ffb090f218fb"
+              "hash": "7153f2960b2b4def6badff94fdba6e7743141b11"
             },
             {
               "file": "packages/fsm/README.md",
               "hash": "9b3284a497c97e1988da7db2c086573377c8ce87"
+            },
+            {
+              "file": "packages/fsm/rollup.lib.js",
+              "hash": "b7e134a879f64a87ea0192bab88165441a0a8fea",
+              "deps": [
+                "npm:rollup-plugin-copy"
+              ]
             },
             {
               "file": "packages/fsm/src/index.ts",
@@ -1701,14 +1813,15 @@
                   "cjs"
                 ],
                 "rollupConfig": [
-                  "rollup.lib.prod.js"
+                  "rollup.lib.prod.js",
+                  "packages/di/rollup.lib.js"
                 ]
               }
             },
             "publish": {
               "executor": "@nrwl/workspace:run-commands",
               "options": {
-                "command": "./node_modules/.bin/ts-node tools/scripts/publish/publish-single.ts di"
+                "command": "./node_modules/.bin/ts-node tools/scripts/packages/publish-single.ts di"
               }
             },
             "lint": {
@@ -1753,15 +1866,22 @@
             },
             {
               "file": "packages/di/package.json",
-              "hash": "174224e74e6501988e71655614d2327a9e47c866"
+              "hash": "1eeaa6558a7b3428c9193a69dca538855ba955b7"
             },
             {
               "file": "packages/di/project.json",
-              "hash": "67c8ed37752c083bc9d47d544189a16ed0c44ed5"
+              "hash": "1279a1d95a35f4c8d97f00ba6e1bcbfad63ace76"
             },
             {
               "file": "packages/di/README.md",
-              "hash": "9f01568ed403141377d3dc894a0d83409ac68068"
+              "hash": "5572c532284e0c287d31e411b44ca771f4685dc7"
+            },
+            {
+              "file": "packages/di/rollup.lib.js",
+              "hash": "cad36fbb09e8b518bdb3c2cc0c4504512a8837d8",
+              "deps": [
+                "npm:rollup-plugin-copy"
+              ]
             },
             {
               "file": "packages/di/src/index.ts",
