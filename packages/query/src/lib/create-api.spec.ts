@@ -88,8 +88,8 @@ describe('createAPI', () => {
         { id: 2, name: 'name2' },
       ],
       error: null,
-      loading: true,
-      updating: true,
+      loading: false,
+      updating: false,
     });
 
     unsubscribe();

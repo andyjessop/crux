@@ -1,6 +1,6 @@
 # `@crux/query`
 
-A tiny and simplified alternative to Redux Toolkit.
+Analternative to Redux Toolkit with a simplified API.
 
 ## Motivation
 
@@ -144,7 +144,7 @@ Notice how both `loading` and `updating` are `true`. `loading` is for the initia
 
 The `data` and `error` values are still `null`, because we haven't received any data yet.
 
-When the `data.users.getAll()` call resolves`, `@crux/query` will fire off a `users/get/fulfilled` action, and will update the store accordingly:
+When the `data.users.getAll()` call resolves, `@crux/query` will fire off a `users/get/fulfilled` action, and will update the store accordingly:
 
 ```ts
 users: {
