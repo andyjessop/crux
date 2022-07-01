@@ -1,6 +1,6 @@
 # `@crux/query`
 
-Analternative to Redux Toolkit with a simplified API.
+An alternative to Redux Toolkit with a simplified API.
 
 ## Motivation
 
@@ -197,7 +197,7 @@ export const userResource = {
 
 ### Mutations
 
-We've covered querying data from your API, but how to you mutate data? This is the `C`, the `U`, and the `D` of `CRUD`. Let's look at how to add these to your resource config:
+We've covered querying data from your API, but how to you mutate data? Let's look at how to add `create`, `delete` and `update` to your resource config:
 
 ```ts
 const resource = {
@@ -268,11 +268,11 @@ export function updateUser(data: User[] | null, user: PutUser) {
 
 **See below ([Updating state optimistically](#updating-state-optimistically)) for why we're returning `undefined` in the examples above**
 
-The config above defines the three operations we're missing, `create`, `delete`, and `update`. Each of them has a `@crux/query`, where we call our API, and some optional `options` (of course they're optional, they're options...).
+Each of the mutations above has a `query` property, where we call our API, and some optional `options` (of course they're optional, they're options...).
 
-Notice that `delete` and `update` define the `optimisticTransform` option. Let's look at that now
+Notice that `delete` and `update` define the `optimisticTransform` option. Let's look at that now.
 
-### Updating state optimistically
+### Updating State Optimistically
 
 For many API operations, you generally know it's going to succeed. In which case, to provide the best possible user experience you might want the UI to update immediately. In order to do this, for any given mutation, `query` allows you to specify an `optimisticTransform` - this is a way to transform the input to your mutation into a new state. 
 
