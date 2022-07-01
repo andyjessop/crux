@@ -1,6 +1,6 @@
 {
   "name": "@crux/string-utils",
-  "version": "0.0.26",
+  "version": "0.0.26-alpha",
   "type": "commonjs",
   "dependencies": {}
 }

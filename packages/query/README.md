@@ -14,10 +14,11 @@ npm install --save @crux/query
 
 ## `createSlice`
 
+`createSlice` is a shorthand way of creating actions and reducers, with minimal boilerplate. There is no shorter-hand way of defining a slice than this.
+
 ```ts
 import { createSlice } from '@crux/query';
 
-// counter/slice.ts
 interface State {
   count: number;
 }
@@ -56,7 +57,7 @@ import { actions } from 'counter/slice.ts';
 dispatch(actions.add(5)); // dispatches { type: 'counter/add', payload: 5 }
 ```
 
-If you need access to the action type (for sagas, for example), you can use `getType`:
+The payload of the action is fully typed, taken from your payload definition in the `createSlice` config. If you need access to the action type (to use in a saga, for example), you can use `getType`:
 
 ```ts
 import { getType } from 'counter/slice.ts';

@@ -83,7 +83,7 @@
             },
             {
               "file": "packages/reducer-registry/package.json",
-              "hash": "dc399fbb8a00ed147db96655d29ee24e14468f5f"
+              "hash": "c007ee72f1f0af607316bc5bc67715ee19acd90b"
             },
             {
               "file": "packages/reducer-registry/project.json",
@@ -220,7 +220,7 @@
             },
             {
               "file": "packages/event-emitter/package.json",
-              "hash": "5c8be9ddabf0ab5fc0c0b0c3578944164955e184"
+              "hash": "8fa31c4adb3c9973160018814dd65b89f947c6a6"
             },
             {
               "file": "packages/event-emitter/project.json",
@@ -362,7 +362,7 @@
             },
             {
               "file": "packages/redux-router/package.json",
-              "hash": "fd3155074d5c487b3902e9a2efb7bec1cd081afc",
+              "hash": "dde7cdd31afda470aa9c4d2c0e7b2fe81ea92222",
               "deps": [
                 "npm:react",
                 "npm:redux"
@@ -501,7 +501,7 @@
             },
             {
               "file": "packages/string-utils/package.json",
-              "hash": "398e86274bbc79251a5f7107864523b92c020924"
+              "hash": "4cafb7461fb58f8fa81ec9b8d452c4bb04e1c5e5"
             },
             {
               "file": "packages/string-utils/project.json",
@@ -635,7 +635,7 @@
             },
             {
               "file": "packages/async-queue/package.json",
-              "hash": "c470f75450f224ca8bc3610e4f3809049c44b101"
+              "hash": "3adf3e210c29437de5fd501cd3a0882972c375d5"
             },
             {
               "file": "packages/async-queue/project.json",
@@ -765,7 +765,7 @@
             },
             {
               "file": "packages/redux-utils/package.json",
-              "hash": "5db465a2936b489400b62fd767f13562e72f77cb"
+              "hash": "cf8d411ae91a4cc5e01bd9d1674597fffa7964b1"
             },
             {
               "file": "packages/redux-utils/project.json",
@@ -905,7 +905,7 @@
             },
             {
               "file": "packages/sync-queue/package.json",
-              "hash": "21ca999def68645650c6564937f00b9f01068e82"
+              "hash": "e032c25d0bd6fd2190fbb1f53c257318fb3ab6fb"
             },
             {
               "file": "packages/sync-queue/project.json",
@@ -1035,7 +1035,7 @@
             },
             {
               "file": "packages/url-parser/package.json",
-              "hash": "761aa4b159c49b695cc36558856b23fe528bfd7e"
+              "hash": "2192946205773df4e5eb77e97d7676a3b1b0dfe3"
             },
             {
               "file": "packages/url-parser/project.json",
@@ -1233,7 +1233,7 @@
             },
             {
               "file": "packages/router/package.json",
-              "hash": "3e9f900c723c141849101acee87cf52ac881ece5"
+              "hash": "1068a443959e7ee932779b0d488fd9133661f966"
             },
             {
               "file": "packages/router/project.json",
@@ -1371,7 +1371,7 @@
             },
             {
               "file": "packages/query/package.json",
-              "hash": "f7682a8f0578dd3591bb03153c480eb3503a6e60"
+              "hash": "84031ee4356ac736d2b25b8a75221b305562177f"
             },
             {
               "file": "packages/query/project.json",
@@ -1379,7 +1379,7 @@
             },
             {
               "file": "packages/query/README.md",
-              "hash": "8674b6ffb77e14abfaa932ecb347e9ed2c0d6aa5"
+              "hash": "63161c9c12054388e109c1ae7ccf6aa449cda9dc"
             },
             {
               "file": "packages/query/rollup.lib.js",
@@ -1394,7 +1394,7 @@
             },
             {
               "file": "packages/query/src/lib/create-api.spec.ts",
-              "hash": "d570db5154f316fac37541bfac16481c5cdb01b1",
+              "hash": "f0ae8a8834055859991a2ed0a326bb714d52b032",
               "deps": [
                 "npm:@reduxjs/toolkit"
               ]
@@ -1579,7 +1579,7 @@
             },
             {
               "file": "packages/store/package.json",
-              "hash": "c0175c6daf570f9ccdbfa8127ca9abdb22917e97"
+              "hash": "57dad940b5b51b8e7ba25e3738cfdc8157d51a57"
             },
             {
               "file": "packages/store/project.json",
@@ -1724,7 +1724,7 @@
             },
             {
               "file": "packages/fsm/package.json",
-              "hash": "c1504850567247a3806625e6f2d05b04e1632d0b"
+              "hash": "a449f5fcac347581729f9b8468bdf17241e3b351"
             },
             {
               "file": "packages/fsm/project.json",
@@ -1866,7 +1866,7 @@
             },
             {
               "file": "packages/di/package.json",
-              "hash": "1eeaa6558a7b3428c9193a69dca538855ba955b7"
+              "hash": "9657dd020586a1729add1abf0cd01fe61a654d06"
             },
             {
               "file": "packages/di/project.json",
