@@ -16,6 +16,7 @@ The central concept is that the core of your application contains your business 
 - [di](packages/di/README.md) - a lightweight dependency-injection framework to encourage code decoupling
 - [event-emitter](packages/event-emitter/README.md) - a fully-typed event emitter
 - [fsm](packages/fsm/README.md) - a simple, no-frills finite state machine
+- [redux-registry](packages/redux-registry/README.md) - dynamically register/unregister middleware and reducers (for code-splitting)
 - [redux-router](packages/redux-router/README.md) - a router that hooks into the Redux state
 - [query](packages/query/README.md) - a tiny RTK-alternative
 - [router](packages/router/README.md) - a lightweight and decoupled router
