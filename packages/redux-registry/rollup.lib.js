@@ -7,7 +7,7 @@ module.exports = function createLibConfig(config) {
       ...config.plugins || [],
       copy({
         targets: [
-          { src: `packages/reducer-registry/README.md`, dest: `dist/packages/reducer-registry` }
+          { src: `packages/redux-registry/README.md`, dest: `dist/packages/redux-registry` }
         ]
       })
     ]

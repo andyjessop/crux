@@ -1,13 +1,13 @@
 {
   "name": "crux",
-  "version": "0.0.26-alpha",
+  "version": "0.0.30-alpha",
   "license": "MIT",
   "scripts": {
-    "build": "npx nx run-many --target=prod --all --with-deps",
-    "publish": "npx nx run-many --target=publish --all --with-deps",
+    "build-packages": "npx nx run-many --target=prod --all --with-deps",
+    "publish-packages": "npx nx run-many --target=publish --all --with-deps",
     "version-packages": "ts-node --project=tools/tsconfig.tools.json tools/scripts/packages/version-packages.ts"
   },
-  "private": true,
+  "private": false,
   "dependencies": {
     "@nrwl/js": "^13.7.3",
     "@reduxjs/toolkit": "^1.7.2",
@@ -62,6 +62,7 @@
     "typescript": "~4.5.2"
   },
   "workspaces": [
+    "apps/**",
     "packages/**"
   ]
 }

@@ -1,4 +1,4 @@
-import { createSlice } from './create-slice';
+import { slice } from './slice';
 
 describe('reduxQuery', () => {
   it('should work', () => {
@@ -8,7 +8,7 @@ describe('reduxQuery', () => {
     
     const initial: State = { count: 0 };
     
-    const { actions, getType, reducer } = createSlice({
+    const { actions, getType, reducer } = slice({
       add: (state: State, payload: number) => ({
         ...state,
         count: state.count + payload

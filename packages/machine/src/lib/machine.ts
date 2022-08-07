@@ -1,6 +1,6 @@
 import { createEventEmitter, EventEmitter, EventHandler } from '@crux/event-emitter';
 
-export function createFSM<T extends Config>(config: T, options: Options<T>) {
+export function machine<T extends Config>(config: T, options: Options<T>) {
   const { emitter = createEventEmitter<Events<T>>(), initialState } = options;
   const secEmitter = createEventEmitter<StateEvents<T>>();
 
@@ -42,8 +42,8 @@ export function createFSM<T extends Config>(config: T, options: Options<T>) {
     };
   }
 
-  async function transition(action: Actions<T>): Promise<keyof T & string | undefined> {
-    await emitter.emit(EventTypes.OnExit, { action, current });
+  async function transition(action: Actions<T>, ...meta: unknown[]): Promise<keyof T & string | undefined> {
+    await emitter.emit(EventTypes.OnExit, { action, current, meta });
 
     const last = current;
 
@@ -51,10 +51,10 @@ export function createFSM<T extends Config>(config: T, options: Options<T>) {
       return;
     }
 
-    current = await config[current][action]();
+    current = await config[current][action](meta);
 
-    await emitter.emit(EventTypes.OnEnter, { action, current, last });
-    await secEmitter.emit(current, { action, current, last: last as Exclude<keyof T, keyof T & string> });
+    await emitter.emit(EventTypes.OnEnter, { action, current, last, meta });
+    await secEmitter.emit(current, { action, current, last: last as Exclude<keyof T, keyof T & string>, meta });
 
     return current;
   }
@@ -71,12 +71,12 @@ function buildActions<T extends Config>(
       return acc;
     }, new Set<Actions<T>>())
   ).reduce((acc, action) => {
-    acc[action] = function doTransition() {
-      return transition(action);
+    acc[action] = function doTransition(...meta: unknown[]) {
+      return transition(action, ...meta);
     };
 
     return acc;
-  }, <Record<Actions<T>, () => Promise<keyof T & string | undefined>>>{});
+  }, <Record<Actions<T>, (...meta: unknown[]) => Promise<keyof T & string | undefined>>>{});
 }
 
 function buildHandlers<T extends Config>(
@@ -85,7 +85,6 @@ function buildHandlers<T extends Config>(
 ) {
   const keys = Object.keys(config) as (keyof T)[];
 
-
   return keys.reduce((acc, cur: any) => {
     const first = cur.slice(0, 1);
     const rest = cur.slice(1).split('');
@@ -93,7 +92,7 @@ function buildHandlers<T extends Config>(
     const k = `on${first.toUpperCase()}${rest.join('')}` as `on${Capitalize<Extract<keyof T, string>>}`;
 
     acc[k] = (handler: EventHandler<StateEvents<T>[keyof T]>) => {
-      emitter.on(cur, data => handler(data));
+      emitter.on(cur, handler);
 
       return () => emitter.off(cur, handler);
     };
@@ -103,16 +102,16 @@ function buildHandlers<T extends Config>(
 }
 
 type Config = {
-  [key: string]: Record<string, () => Promise<string> | string>;
+  [key: string]: Record<string, (...params: any[]) => Promise<string> | string>;
 };
 
 type Events<T> = {
-  onEnter: { action: Actions<T>; current: keyof T; last: keyof T };
-  onExit: { action: Actions<T>; current: keyof T };
+  onEnter: { action: Actions<T>; current: keyof T; meta?: unknown; last: keyof T };
+  onExit: { action: Actions<T>; current: keyof T, meta?: unknown; };
 };
 
 type StateEvents<T> = {
-  [K in keyof T]: { action: Actions<T>; current: K; last: Exclude<keyof T, K> }
+  [K in keyof T]: { action: Actions<T>; current: K; meta?: unknown; last: Exclude<keyof T, K> }
 }
 
 export const enum EventTypes {
@@ -129,6 +128,6 @@ type NestedKeys<T> = T extends object
   ? { [K in keyof T]-?: K | NestedKeys<T[K]> }[keyof T]
   : never;
 
-type Transition<T> = (action: Actions<T>) => Promise<keyof T & string | undefined>;
+type Transition<T> = (action: Actions<T>, meta?: unknown) => Promise<keyof T & string | undefined>;
 
 type Actions<T> = Exclude<NestedKeys<T>, keyof T>;

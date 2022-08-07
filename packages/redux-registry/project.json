@@ -1,0 +1,54 @@
+{
+  "root": "packages/redux-registry",
+  "sourceRoot": "packages/redux-registry/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/redux-registry",
+        "main": "packages/redux-registry/src/index.ts",
+        "tsConfig": "packages/redux-registry/tsconfig.lib.json",
+        "assets": ["packages/redux-registry/*.md"]
+      }
+    },
+    "prod": {
+      "executor": "@nrwl/web:rollup",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/redux-registry",
+        "tsConfig": "packages/redux-registry/tsconfig.lib.json",
+        "project": "packages/redux-registry/package.json",
+        "entryFile": "packages/redux-registry/src/index.ts",
+        "format": [
+          "esm",
+          "cjs"
+        ],
+        "rollupConfig": ["rollup.lib.prod.js", "packages/redux-registry/rollup.lib.js"]
+      }
+    },
+    "publish": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "command": "./node_modules/.bin/ts-node tools/scripts/packages/publish-single.ts redux-registry"
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["packages/redux-registry/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/packages/redux-registry"],
+      "options": {
+        "jestConfig": "packages/redux-registry/jest.config.js",
+        "passWithNoTests": true
+      }
+    }
+  },
+  "tags": []
+}

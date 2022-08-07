@@ -1,11 +1,11 @@
-# `@crux/fsm`
+# `@crux/machine`
 
-`fsm` is an asynchronous Finite State Machine with a simple API.
+`machine` is an asynchronous Finite State Machine with a simple API.
 
 ## Installation
 
 ```bash
-npm install --save @crux/fsm
+npm install --save @crux/machine
 ```
 
 ## Usage
@@ -13,7 +13,7 @@ npm install --save @crux/fsm
 The following example shows a very simple state machine. It has two states: `idle` and `running`, and two actions: `go` and `stop`.
 
 ```ts
-import { createFSM } from '@crux/fsm';
+import { createFSM } from '@crux/machine';
 
 const machine = createFSM({
   idle: {
@@ -75,7 +75,7 @@ unsubscribe(); // listener destroyed
 
 ### Shorthand methods
 
-`machine.transition(...)` is a little ugly. Luckily `fsm` builds shorthand methods for each of your actions. So, transitioning our example is as simple as:
+`machine.transition(...)` is a little ugly. Luckily `machine` builds shorthand methods for each of your actions. So, transitioning our example is as simple as:
 
 ```ts
 machine.go(); // new state is 'running'
@@ -83,7 +83,7 @@ machine.go(); // new state is 'running'
 machine.stop(); // new state is 'idle'
 ```
 
-`fsm` doesn't just build shorthand methods for transitions, but also for state changes:
+`machine` doesn't just build shorthand methods for transitions, but also for state changes:
 
 ```ts
 machine.onIdle((data) => {});
@@ -96,7 +96,7 @@ unsubscribe();
 
 ### TypeScript support
 
-`fsm` knows which are your states and which are your actions, and will throw TS errors when you try to transition with an action that doesn't exist. This applies to both `transition` and the shorthand methods:
+`machine` knows which are your states and which are your actions, and will throw TS errors when you try to transition with an action that doesn't exist. This applies to both `transition` and the shorthand methods:
 
 ```ts
 machine.goForth(); // Property 'goForth' does not exist on type...
@@ -104,7 +104,7 @@ machine.goForth(); // Property 'goForth' does not exist on type...
 machine.transition('goForth'); // Argument of type '"goForth"' is not assignable to parameter of type...
 ```
 
-`fsm` also types the `data` of emitted events
+`machine` also types the `data` of emitted events
 
 ```ts
 machine.onEnter(data => console.log(data)); // data type is { action: keyof Actions, current: keyof State, last: keyof State )

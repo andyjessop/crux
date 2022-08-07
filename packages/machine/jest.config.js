@@ -1,5 +1,5 @@
 module.exports = {
-  displayName: 'reducer-registry',
+  displayName: 'machine',
   preset: '../../jest.preset.js',
   globals: {
     'ts-jest': {
@@ -10,5 +10,5 @@ module.exports = {
     '^.+\\.[tj]s$': 'ts-jest',
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
-  coverageDirectory: '../../coverage/packages/reducer-registry',
+  coverageDirectory: '../../coverage/packages/machine',
 };

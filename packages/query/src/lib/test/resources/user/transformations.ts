@@ -24,13 +24,13 @@ export function postResponseToData(data: User[] | null, response: Response<User>
   ];
 }
 
-export function deleteUser(data: User[] | null, user: User) {
+export function deleteUser(data: User[] | null, id: number) {
   if (data === null) {
     return data;
   }
 
 
-  return data.filter(u => user.id !== u.id);
+  return data.filter(u => id !== u.id);
 }
 
 export function mergeUser(data: User[] | null, user: PutUser) {

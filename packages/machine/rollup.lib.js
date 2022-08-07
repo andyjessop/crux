@@ -7,7 +7,7 @@ module.exports = function createLibConfig(config) {
       ...config.plugins || [],
       copy({
         targets: [
-          { src: `packages/fsm/README.md`, dest: `dist/packages/fsm` }
+          { src: `packages/machine/README.md`, dest: `dist/packages/machine` }
         ]
       })
     ]

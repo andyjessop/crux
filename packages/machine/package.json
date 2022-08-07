@@ -1,5 +1,5 @@
 {
-  "name": "@crux/event-emitter",
+  "name": "@crux/machine",
   "version": "0.0.30-alpha",
   "type": "commonjs",
   "dependencies": {}

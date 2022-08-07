@@ -1,4 +1,24 @@
-import { Reducer } from "redux";
+export interface Action<Payload = unknown> {
+  meta?: any;
+  payload: Payload;
+  type: string;
+}
+
+export type Dispatch<A extends Action = Action> = {
+  <T extends A>(action: T): T
+};
+
+export type Reducer<S = unknown, A extends Action = Action> = (
+  state: S | undefined,
+  action: A
+) => S;
+
+export interface MiddlewareAPI<D extends Dispatch = Dispatch, S = unknown> {
+  dispatch: D
+  getState(): S
+}
+
+export type Middleware = (api: MiddlewareAPI) => (next: Dispatch) => void;
 
 export interface State<D, E> {
   data: D | null;
@@ -7,16 +27,18 @@ export interface State<D, E> {
   updating: boolean;
 }
 
+export type MutationConfig<Data = any> = {
+  query: ((...params: any[]) => (data: Data) => any) | ((...params: any[]) => any),
+  optimistic?: ((...params: any[]) => (data: Data) => any) | ((...params: any[]) => any),
+  options?: {
+    refetchOnSuccess?: boolean,
+  }
+}
+
 export type ResourceConfig<Data = any> = {
-  query: ((...params: any[]) => (data: Data) => Promise<Data>) | ((...params: any[]) => Promise<Data>),
+  query: (...params: any[]) => Promise<Data>,
   mutations: {
-    [key: string]: {
-      query: ((...params: any[]) => (data: Data) => any) | ((...params: any[]) => any),
-      options?: {
-        optimisticTransform?: ((...params: any[]) => (data: Data) => any) | ((...params: any[]) => any),
-        refetchOnSuccess?: boolean,
-      }
-    }
+    [key: string]: MutationConfig<Data>
   },
   options?: Options,
 }
@@ -24,6 +46,7 @@ export type ResourceConfig<Data = any> = {
 export type Options = {
   lazy?: boolean,
   keepUnusedDataFor?: number,
+  maxRetryCount?: number,
   pollingInterval?: number,
   refetchOnError?: boolean,
 }

@@ -1,14 +1,14 @@
 import { generateRandomId } from "@crux/string-utils";
-import { AnyAction } from "@reduxjs/toolkit";
+import { Action } from "../types";
 
-export function createSlice<T extends Record<string, (state: S, payload?: any) => S>, S>(config: T, { initialState, name }: { initialState: S, name?: string; }) {
-  const keys = Object.keys(config) as unknown as (keyof T)[];
+export function slice<T extends Record<string, (state: S, payload?: any) => S>, S>(config: T, { initialState, name }: { initialState: S, name?: string; }) {
+  const keys = Object.keys(config) as unknown as (keyof T & string)[];
   const id = name || generateRandomId(20);
 
   return {
     actions: keys
       .reduce((acc, key) => {
-        acc[key] = function<K extends keyof T>(payload?: Parameters<T[K]>[1]) {
+        acc[key] = function<K extends keyof T & string>(payload?: Parameters<T[K]>[1]) {
           return {
             payload,
             type: getType(key),
@@ -23,7 +23,7 @@ export function createSlice<T extends Record<string, (state: S, payload?: any) =
 
     getType,
 
-    reducer: (state: S | undefined, action: AnyAction) => {
+    reducer: (state: S | undefined, action: Action) => {
       const [namespace, ...rest] = action.type.split('/');
 
       if (namespace !== id) {
@@ -36,7 +36,7 @@ export function createSlice<T extends Record<string, (state: S, payload?: any) =
     },
   }
 
-  function getType(key: keyof T) {
+  function getType(key: keyof T & string) {
     return `${id}/${key}`;
   } 
 }

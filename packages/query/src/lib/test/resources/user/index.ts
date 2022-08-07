@@ -13,19 +13,16 @@ export function createUserConfig(api: ReturnType<typeof createDataAPI>) {
         query: (user: PostUser) => api.user.post(user)
       },
       delete: {
-        query: (id: number) => api.user
-          .delete(id)
-          .then(res => res.data),
-        options: {
-          optimisticTransform: (user: User) => (data: User[] | null) => deleteUser(data, user),
-        }
+        query: (id: number) => api.user.delete(id),
+        optimistic: (id: number) => (data: User[] | null) => deleteUser(data, id),
       },
       update: {
         query: (user: PutUser) => (data: User[] | null) => api.user
           .put(user)
           .then(res => mergeUser(data, res.data)),
+        optimistic: (user: PutUser) => (data: User[] | null) => mergeUser(data, user),
         options: {
-          optimisticTransform: (user: PutUser) => (data: User[] | null) => mergeUser(data, user),
+          refetchOnSuccess: false,
         }
       },
     },

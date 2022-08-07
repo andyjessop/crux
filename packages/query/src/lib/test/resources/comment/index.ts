@@ -14,13 +14,13 @@ export function createCommentConfig(api: ReturnType<typeof createDataAPI>) {
       delete: {
         query: (id: number) => api.comment.delete(id),
         options: {
-          optimisticTransform: (user: Comment) => (data: Comment[] | null) => deleteComment(data, user),
+          updateStateOptimistically: (user: Comment) => (data: Comment[] | null) => deleteComment(data, user),
         }
       },
       update: {
         query: (comment: PutComment) => api.comment.put(comment),
         options: {
-          optimisticTransform: (user: PutComment) => (data: Comment[] | null) => mergeComment(data, user),
+          updateStateOptimistically: (user: PutComment) => (data: Comment[] | null) => mergeComment(data, user),
         }
       },
     },
