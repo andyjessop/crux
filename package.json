@@ -1,6 +1,6 @@
 {
   "name": "crux",
-  "version": "0.0.30-alpha",
+  "version": "0.0.33-alpha",
   "license": "MIT",
   "scripts": {
     "build-packages": "npx nx run-many --target=prod --all --with-deps",

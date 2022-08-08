@@ -1,8 +1,8 @@
 import { Action, Dispatch, Middleware, MiddlewareAPI, Reducer } from '@crux/query';
-import { combineReducers, compose, Store } from 'redux';
+import { combineReducers, compose } from 'redux';
 
-export const middlewareRegistry = (middlewares: Middleware[]) => {
-  const mdw = middlewares || [];
+export const middlewareRegistry = () => {
+  const mdw: Middleware[] = [];
 
   return {
     middleware: ({ getState, dispatch }: MiddlewareAPI) => (next: Dispatch) => (action: Action) => {
@@ -22,38 +22,42 @@ export const middlewareRegistry = (middlewares: Middleware[]) => {
       } else {
         mdw.splice(order, 0, m);
       }
+
+      return () => {
+        const index = mdw.findIndex(d => d === m);
+
+        if (index < 0) {
+          return;
+        }
+  
+        mdw.splice(index, 1);
+      }
     },
 
-    remove: (middlewareFn: Middleware) => {
-      const index = mdw.findIndex(d => d === middlewareFn);
-
-      mdw.splice(index, 1);
-    },
+    getIndex: (m: Middleware) => {
+      return mdw.findIndex(d => d === m);
+    }
   }
 };
 
-export const reducerRegistry = (rdcr: Reducer) => {
-  const reducers = rdcr || {};
+export const reducerRegistry = () => {
+  const reducers = new Map<string, Reducer>();
+  let currentReducer: Reducer = <S>(state?: S) => state || {};
 
   return {
-    add: (store: Store, reducer: Reducer, namespace: string) => {
-      (reducers as any)[namespace] = compose((reducers as any)[namespace] || (a => a), reducer);
+    add,
+    reducer: currentReducer,
+  };
 
-      store.replaceReducer(combineReducers({ ...reducers }));
-    },
+  function add(id: string, newReducer: Reducer) {
+    reducers.set(id, newReducer);
 
-    remove: (store: Store, namespace: string) => {
-      delete (reducers as any)[namespace];
+    currentReducer = combineReducers(Object.fromEntries(reducers)) as Reducer;
 
-      const stateKeys = Object.keys(store.getState());
-      const reducerKeys = new Set(Object.keys(reducers));
+    return function unregisterReducer() {
+      reducers.delete(id);
 
-      stateKeys
-        .filter(key => !reducerKeys.has(key)) // state has a key that doesn't have a corresponding reducer
-        .forEach(key => {
-          (reducers as any)[key] = (state: unknown) => state === undefined ? null : state;
-        });
-      store.replaceReducer(combineReducers({ ...reducers }));
-    },
+      currentReducer = combineReducers(Object.fromEntries(reducers)) as Reducer;
+    }
   }
 };

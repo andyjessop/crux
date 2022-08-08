@@ -1,3 +1,5 @@
+import { query } from "./query/query";
+
 export interface Action<Payload = unknown> {
   meta?: any;
   payload: Payload;
@@ -34,6 +36,8 @@ export type MutationConfig<Data = any> = {
     refetchOnSuccess?: boolean,
   }
 }
+
+export type API = ReturnType<typeof query>;
 
 export type ResourceConfig<Data = any> = {
   query: (...params: any[]) => Promise<Data>,

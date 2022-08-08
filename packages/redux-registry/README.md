@@ -7,25 +7,14 @@ It's very small, weighing-in <600B minified and gzipped.
 ### Usage
 
 ```ts
-import { createStore } from 'redux';
+import { legacy_createStore as createStore, applyMiddleware } from 'redux';
 import { middlewareRegistry, reducerRegistry } from '@crux/redux-registry';
 
-// Middleware
 const mRegistry = middlewareRegistry();
-
-const store = createStore(
-  reducer,
-  applyMiddleware(
-    // ...other app middleware,
-    mRegistry.middleware
-  )
-);
-
-mRegistry.add(middleware, order);
-mRegistry.remove(middleware);
-
-// Reducer
 const rRegistry = reducerRegistry();
-rRegistry.add(store, namespace, reducer);
-rRegistry.remove(store, namespace);
+
+export const addMiddleware = mRegistry.add;
+export const addReducer = rRegistry.add;
+
+const store = createStore(rRegistry.reducer, {}, applyMiddleware(...[mRegistry.middleware]));
 ```

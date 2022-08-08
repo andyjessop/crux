@@ -1,6 +1,6 @@
 {
   "name": "@crux/store",
-  "version": "0.0.30-alpha",
+  "version": "0.0.33-alpha",
   "type": "commonjs",
   "dependencies": {
     "@nx-js/observer-util": "^4.2.2"

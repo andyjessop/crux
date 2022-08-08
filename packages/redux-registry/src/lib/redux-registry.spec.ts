@@ -1,7 +1,7 @@
-import { reduxRegistry } from './redux-registry';
+import { reducerRegistry, middlewareRegistry } from './redux-registry';
 
 describe('reduxRegistry', () => {
   it('should work', () => {
-    expect(reduxRegistry()).toEqual('redux-registry');
+    expect(reducerRegistry()).toEqual('redux-registry');
   });
 });
