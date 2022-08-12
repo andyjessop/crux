@@ -1,26 +1,5 @@
+import { Reducer } from "@crux/redux-types";
 import { query } from "./query/query";
-
-export interface Action<Payload = unknown> {
-  meta?: any;
-  payload: Payload;
-  type: string;
-}
-
-export type Dispatch<A extends Action = Action> = {
-  <T extends A>(action: T): T
-};
-
-export type Reducer<S = unknown, A extends Action = Action> = (
-  state: S | undefined,
-  action: A
-) => S;
-
-export interface MiddlewareAPI<D extends Dispatch = Dispatch, S = unknown> {
-  dispatch: D
-  getState(): S
-}
-
-export type Middleware = (api: MiddlewareAPI) => (next: Dispatch) => void;
 
 export interface State<D, E> {
   data: D | null;

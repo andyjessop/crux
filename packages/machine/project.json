@@ -1,5 +1,4 @@
 {
-  "root": "packages/machine",
   "sourceRoot": "packages/machine/src",
   "projectType": "library",
   "targets": {
@@ -21,10 +20,7 @@
         "tsConfig": "packages/machine/tsconfig.lib.json",
         "project": "packages/machine/package.json",
         "entryFile": "packages/machine/src/index.ts",
-        "format": [
-          "esm",
-          "cjs"
-        ],
+        "format": ["esm", "cjs"],
         "rollupConfig": ["rollup.lib.prod.js", "packages/machine/rollup.lib.js"]
       }
     },
@@ -45,7 +41,7 @@
       "executor": "@nrwl/jest:jest",
       "outputs": ["coverage/packages/machine"],
       "options": {
-        "jestConfig": "packages/machine/jest.config.js",
+        "jestConfig": "packages/machine/jest.config.ts",
         "passWithNoTests": true
       }
     }

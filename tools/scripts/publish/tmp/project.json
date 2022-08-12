@@ -21,7 +21,10 @@
                 "assets": [
                   "packages/redux-registry/*.md"
                 ]
-              }
+              },
+              "dependsOn": [
+                "^build"
+              ]
             },
             "prod": {
               "executor": "@nrwl/web:rollup",
@@ -66,7 +69,7 @@
                 "coverage/packages/redux-registry"
               ],
               "options": {
-                "jestConfig": "packages/redux-registry/jest.config.js",
+                "jestConfig": "packages/redux-registry/jest.config.ts",
                 "passWithNoTests": true
               }
             }
@@ -78,23 +81,23 @@
               "hash": "9d9c0db55bb1e91c5f2e7b64a02bc6bf69fc7cb5"
             },
             {
-              "file": "packages/redux-registry/jest.config.js",
-              "hash": "4acc8919928519de65daa5e4867ba2d5799be87a"
+              "file": "packages/redux-registry/jest.config.ts",
+              "hash": "c0242754eca3a85684e623a67262d5753cee6542"
             },
             {
               "file": "packages/redux-registry/package.json",
-              "hash": "0cd2d4ce19f0d6361d0f7b8973e1fddb026e6b61",
+              "hash": "da15abbce41d0fa3faab5aba65e75b665437c72b",
               "deps": [
                 "npm:redux"
               ]
             },
             {
               "file": "packages/redux-registry/project.json",
-              "hash": "88ab180da0a844ea35737153486fd239df8bbe88"
+              "hash": "2f9fb78d7315d72f46357fb222894d797fc76b7a"
             },
             {
               "file": "packages/redux-registry/README.md",
-              "hash": "ed90d4b53dcf8a7ebe353b4beb6daa12e02b0dc8"
+              "hash": "aa358b3ca2e4e57452de440ac33bd40777d57013"
             },
             {
               "file": "packages/redux-registry/rollup.lib.js",
@@ -113,9 +116,9 @@
             },
             {
               "file": "packages/redux-registry/src/lib/redux-registry.ts",
-              "hash": "f7d7d482ee18e203ea1eb928ca622daa3f0d59e0",
+              "hash": "ce99cd01f48b29edee6157190b027768897d420b",
               "deps": [
-                "query",
+                "redux-types",
                 "npm:redux"
               ]
             },
@@ -154,7 +157,10 @@
                 "assets": [
                   "packages/event-emitter/*.md"
                 ]
-              }
+              },
+              "dependsOn": [
+                "^build"
+              ]
             },
             "prod": {
               "executor": "@nrwl/web:rollup",
@@ -199,7 +205,7 @@
                 "coverage/packages/event-emitter"
               ],
               "options": {
-                "jestConfig": "packages/event-emitter/jest.config.js",
+                "jestConfig": "packages/event-emitter/jest.config.ts",
                 "passWithNoTests": true
               }
             }
@@ -215,8 +221,8 @@
               "hash": "9d9c0db55bb1e91c5f2e7b64a02bc6bf69fc7cb5"
             },
             {
-              "file": "packages/event-emitter/jest.config.js",
-              "hash": "9d366b1a1937d40ea98e775cb773dc14bea1ec38"
+              "file": "packages/event-emitter/jest.config.ts",
+              "hash": "0b22e226913da46344931723b4e89def4c8662f6"
             },
             {
               "file": "packages/event-emitter/LICENSE",
@@ -224,11 +230,11 @@
             },
             {
               "file": "packages/event-emitter/package.json",
-              "hash": "6c43fe63c763e25dde1687c0c745e5730b5d8c3e"
+              "hash": "e37970ebbd94b4d5657207efa1b75fe59d5988c0"
             },
             {
               "file": "packages/event-emitter/project.json",
-              "hash": "c906d62194ef5363396f5f069692e8c22908315c"
+              "hash": "07845a557a2bd90936765373e0861c0066429ecf"
             },
             {
               "file": "packages/event-emitter/README.md",
@@ -268,6 +274,154 @@
           ]
         }
       },
+      "redux-machine": {
+        "name": "redux-machine",
+        "type": "lib",
+        "data": {
+          "root": "packages/redux-machine",
+          "sourceRoot": "packages/redux-machine/src",
+          "projectType": "library",
+          "targets": {
+            "build": {
+              "executor": "@nrwl/js:tsc",
+              "outputs": [
+                "{options.outputPath}"
+              ],
+              "options": {
+                "outputPath": "dist/packages/redux-machine",
+                "main": "packages/redux-machine/src/index.ts",
+                "tsConfig": "packages/redux-machine/tsconfig.lib.json",
+                "assets": [
+                  "packages/redux-machine/*.md"
+                ]
+              },
+              "dependsOn": [
+                "^build"
+              ]
+            },
+            "prod": {
+              "executor": "@nrwl/web:rollup",
+              "outputs": [
+                "{options.outputPath}"
+              ],
+              "options": {
+                "outputPath": "dist/packages/redux-machine",
+                "tsConfig": "packages/redux-machine/tsconfig.lib.json",
+                "project": "packages/redux-machine/package.json",
+                "entryFile": "packages/redux-machine/src/index.ts",
+                "format": [
+                  "esm",
+                  "cjs"
+                ],
+                "rollupConfig": [
+                  "rollup.lib.prod.js",
+                  "packages/redux-machine/rollup.lib.js"
+                ]
+              }
+            },
+            "publish": {
+              "executor": "@nrwl/workspace:run-commands",
+              "options": {
+                "command": "./node_modules/.bin/ts-node tools/scripts/packages/publish-single.ts redux-machine"
+              }
+            },
+            "lint": {
+              "executor": "@nrwl/linter:eslint",
+              "outputs": [
+                "{options.outputFile}"
+              ],
+              "options": {
+                "lintFilePatterns": [
+                  "packages/redux-machine/**/*.ts"
+                ]
+              }
+            },
+            "test": {
+              "executor": "@nrwl/jest:jest",
+              "outputs": [
+                "coverage/packages/redux-machine"
+              ],
+              "options": {
+                "jestConfig": "packages/redux-machine/jest.config.ts",
+                "passWithNoTests": true
+              }
+            }
+          },
+          "tags": [],
+          "files": [
+            {
+              "file": "packages/redux-machine/.babelrc",
+              "hash": "3949c55bc04b7751d86db82d6278c850cca144c7"
+            },
+            {
+              "file": "packages/redux-machine/.eslintrc.json",
+              "hash": "9d9c0db55bb1e91c5f2e7b64a02bc6bf69fc7cb5"
+            },
+            {
+              "file": "packages/redux-machine/jest.config.ts",
+              "hash": "de9f8db5353d237d89760b31e1ab2b60e4349550"
+            },
+            {
+              "file": "packages/redux-machine/LICENSE",
+              "hash": "4c6ceb2e1938bc590570c9d1995dab08756f2ac9"
+            },
+            {
+              "file": "packages/redux-machine/package.json",
+              "hash": "f05eb506173a8b293f5c849e0ebd73ca5559c1b2"
+            },
+            {
+              "file": "packages/redux-machine/project.json",
+              "hash": "394299b6fb0a1df0fae30098c544c0d637363228"
+            },
+            {
+              "file": "packages/redux-machine/README.md",
+              "hash": "7a8f6db584f4985d1fbd99abe11d33ae60bef722"
+            },
+            {
+              "file": "packages/redux-machine/rollup.lib.js",
+              "hash": "830beb80007dbc93c7717dd5575309fa22e70e80",
+              "deps": [
+                "npm:rollup-plugin-copy"
+              ]
+            },
+            {
+              "file": "packages/redux-machine/src/index.ts",
+              "hash": "1adf404e982d37165f59ba33fe3a585443fbd05d"
+            },
+            {
+              "file": "packages/redux-machine/src/lib/redux-machine.spec.ts",
+              "hash": "877ef223cfe43b399770c9deda46b26800db50a8",
+              "deps": [
+                "redux-utils",
+                "redux-types",
+                "npm:redux",
+                "npm:redux-thunk"
+              ]
+            },
+            {
+              "file": "packages/redux-machine/src/lib/redux-machine.ts",
+              "hash": "63b05a7ba20572cef22ffb54a689cb90fe4a7e87",
+              "deps": [
+                "redux-slice",
+                "redux-types",
+                "npm:redux"
+              ]
+            },
+            {
+              "file": "packages/redux-machine/tsconfig.json",
+              "hash": "14a5871aff60797c0969600becc2693b512b2cca"
+            },
+            {
+              "file": "packages/redux-machine/tsconfig.lib.json",
+              "hash": "a8b9431f9172ad42dcb1eaf292f7ae9601ac760b"
+            },
+            {
+              "file": "packages/redux-machine/tsconfig.spec.json",
+              "hash": "a18afb604688956c6a84dd7780d99923f0c04662"
+            }
+          ]
+        }
+      },
       "redux-router": {
         "name": "redux-router",
         "type": "lib",
@@ -288,7 +442,10 @@
                 "assets": [
                   "packages/redux-router/*.md"
                 ]
-              }
+              },
+              "dependsOn": [
+                "^build"
+              ]
             },
             "prod": {
               "executor": "@nrwl/web:rollup",
@@ -333,7 +490,7 @@
                 "coverage/packages/redux-router"
               ],
               "options": {
-                "jestConfig": "packages/redux-router/jest.config.js",
+                "jestConfig": "packages/redux-router/jest.config.ts",
                 "passWithNoTests": true
               }
             }
@@ -349,8 +506,8 @@
               "hash": "9d9c0db55bb1e91c5f2e7b64a02bc6bf69fc7cb5"
             },
             {
-              "file": "packages/redux-router/jest.config.js",
-              "hash": "8c5a0e6aa0ade0c6718b5904377227e57b9c15e5"
+              "file": "packages/redux-router/jest.config.ts",
+              "hash": "14b8b8118032233a612debbc9a006a4eae5ce126"
             },
             {
               "file": "packages/redux-router/LICENSE",
@@ -366,7 +523,7 @@
             },
             {
               "file": "packages/redux-router/package.json",
-              "hash": "7e42b014be8da7fe190c1315a23dc44f9a62c903",
+              "hash": "aa26a17a5c6b1c42b9c7e53873cc9ab4fb65bdff",
               "deps": [
                 "npm:react",
                 "npm:redux"
@@ -374,7 +531,7 @@
             },
             {
               "file": "packages/redux-router/project.json",
-              "hash": "cd94704051088d9714450e99539d9bdb7d1e9c51"
+              "hash": "4d571773279e413f52f2a0b6ac0cb0bd4ab4e382"
             },
             {
               "file": "packages/redux-router/README.md",
@@ -439,7 +596,10 @@
                 "assets": [
                   "packages/string-utils/*.md"
                 ]
-              }
+              },
+              "dependsOn": [
+                "^build"
+              ]
             },
             "prod": {
               "executor": "@nrwl/web:rollup",
@@ -484,7 +644,7 @@
                 "coverage/packages/string-utils"
               ],
               "options": {
-                "jestConfig": "packages/string-utils/jest.config.js",
+                "jestConfig": "packages/string-utils/jest.config.ts",
                 "passWithNoTests": true
               }
             }
@@ -500,16 +660,16 @@
               "hash": "9d9c0db55bb1e91c5f2e7b64a02bc6bf69fc7cb5"
             },
             {
-              "file": "packages/string-utils/jest.config.js",
-              "hash": "02a26021fd61b6269994ca29e220086fba4dc084"
+              "file": "packages/string-utils/jest.config.ts",
+              "hash": "d67b55781026b0b7b1826f5ce6873f86a0ddca3f"
             },
             {
               "file": "packages/string-utils/package.json",
-              "hash": "bdb7cd751035e621ddcc50af0bf1f3e1eaa761f0"
+              "hash": "bf717c97c9a1aa32871b79cc8e0dce1bd2810a7f"
             },
             {
               "file": "packages/string-utils/project.json",
-              "hash": "a5f9f44eabb46b4330e662d12457086abaf71906"
+              "hash": "ad9532f997ef5594f6c1a112584ee07571aa5572"
             },
             {
               "file": "packages/string-utils/README.md",
@@ -569,7 +729,10 @@
                 "assets": [
                   "packages/async-queue/*.md"
                 ]
-              }
+              },
+              "dependsOn": [
+                "^build"
+              ]
             },
             "prod": {
               "executor": "@nrwl/web:rollup",
@@ -614,7 +777,7 @@
                 "coverage/packages/async-queue"
               ],
               "options": {
-                "jestConfig": "packages/async-queue/jest.config.js",
+                "jestConfig": "packages/async-queue/jest.config.ts",
                 "passWithNoTests": true
               }
             }
@@ -630,8 +793,8 @@
               "hash": "9d9c0db55bb1e91c5f2e7b64a02bc6bf69fc7cb5"
             },
             {
-              "file": "packages/async-queue/jest.config.js",
-              "hash": "007d53373dba7c26230b7c8c10e60ee803118c61"
+              "file": "packages/async-queue/jest.config.ts",
+              "hash": "f5e0e0db27089826a323b161276d81c1ccc8f7b1"
             },
             {
               "file": "packages/async-queue/LICENSE",
@@ -639,11 +802,11 @@
             },
             {
               "file": "packages/async-queue/package.json",
-              "hash": "cec73631aac292776f2d5d5de10c389f8e297bf2"
+              "hash": "40a04f7f681a3a4982616c07761a0cb73fb116dd"
             },
             {
               "file": "packages/async-queue/project.json",
-              "hash": "6e25ade6eb4d9425586effacc16a46426b7b2074"
+              "hash": "c7f7d8f6c6e0bf71ab15e9c8220b8e65ae55076b"
             },
             {
               "file": "packages/async-queue/README.md",
@@ -666,7 +829,7 @@
             },
             {
               "file": "packages/async-queue/src/lib/async-queue.ts",
-              "hash": "a680b3f8ddbb5273b0136b5796dd6aa1f2b823a8"
+              "hash": "d5d96251f3a8fbb393dcbbf58641ff7f05c687b0"
             },
             {
               "file": "packages/async-queue/tsconfig.json",
@@ -678,6 +841,272 @@
             },
             {
               "file": "packages/async-queue/tsconfig.spec.json",
+              "hash": "a18afb604688956c6a84dd7780d99923f0c04662"
+            }
+          ]
+        }
+      },
+      "redux-slice": {
+        "name": "redux-slice",
+        "type": "lib",
+        "data": {
+          "root": "packages/redux-slice",
+          "sourceRoot": "packages/redux-slice/src",
+          "projectType": "library",
+          "targets": {
+            "build": {
+              "executor": "@nrwl/js:tsc",
+              "outputs": [
+                "{options.outputPath}"
+              ],
+              "options": {
+                "outputPath": "dist/packages/redux-slice",
+                "main": "packages/redux-slice/src/index.ts",
+                "tsConfig": "packages/redux-slice/tsconfig.lib.json",
+                "assets": [
+                  "packages/redux-slice/*.md"
+                ]
+              },
+              "dependsOn": [
+                "^build"
+              ]
+            },
+            "prod": {
+              "executor": "@nrwl/web:rollup",
+              "outputs": [
+                "{options.outputPath}"
+              ],
+              "options": {
+                "outputPath": "dist/packages/redux-slice",
+                "tsConfig": "packages/redux-slice/tsconfig.lib.json",
+                "project": "packages/redux-slice/package.json",
+                "entryFile": "packages/redux-slice/src/index.ts",
+                "format": [
+                  "esm",
+                  "cjs"
+                ],
+                "rollupConfig": [
+                  "rollup.lib.prod.js",
+                  "packages/redux-slice/rollup.lib.js"
+                ]
+              }
+            },
+            "publish": {
+              "executor": "@nrwl/workspace:run-commands",
+              "options": {
+                "command": "./node_modules/.bin/ts-node tools/scripts/packages/publish-single.ts redux-slice"
+              }
+            },
+            "lint": {
+              "executor": "@nrwl/linter:eslint",
+              "outputs": [
+                "{options.outputFile}"
+              ],
+              "options": {
+                "lintFilePatterns": [
+                  "packages/redux-slice/**/*.ts"
+                ]
+              }
+            },
+            "test": {
+              "executor": "@nrwl/jest:jest",
+              "outputs": [
+                "coverage/packages/redux-slice"
+              ],
+              "options": {
+                "jestConfig": "packages/redux-slice/jest.config.ts",
+                "passWithNoTests": true
+              }
+            }
+          },
+          "tags": [],
+          "files": [
+            {
+              "file": "packages/redux-slice/.babelrc",
+              "hash": "61641ec8ac3659e204441c80bb06defe323e3110"
+            },
+            {
+              "file": "packages/redux-slice/.eslintrc.json",
+              "hash": "9d9c0db55bb1e91c5f2e7b64a02bc6bf69fc7cb5"
+            },
+            {
+              "file": "packages/redux-slice/jest.config.ts",
+              "hash": "f096c06808177c1e2926ed8f861376e2028d5115"
+            },
+            {
+              "file": "packages/redux-slice/package.json",
+              "hash": "6127db94327261f4c65c403d6962e80bba02f8b6"
+            },
+            {
+              "file": "packages/redux-slice/project.json",
+              "hash": "c9c7c35efa7813287935707c815dbc8000f4c15b"
+            },
+            {
+              "file": "packages/redux-slice/README.md",
+              "hash": "d61f2893dab6e6135761ee304f29b8c9a16b858b"
+            },
+            {
+              "file": "packages/redux-slice/rollup.lib.js",
+              "hash": "c2c5832a8669d2b1d75ae0b3a3ddcf85ec520068",
+              "deps": [
+                "npm:rollup-plugin-copy"
+              ]
+            },
+            {
+              "file": "packages/redux-slice/src/index.ts",
+              "hash": "e95f4b50931468df404962d8fb15c057432ec7a8"
+            },
+            {
+              "file": "packages/redux-slice/src/lib/slice.spec.ts",
+              "hash": "c32a721002f58637a818183d518e68bc16a87d9f"
+            },
+            {
+              "file": "packages/redux-slice/src/lib/slice.ts",
+              "hash": "f1f6cbebe75e89b82a8a16ee5a03a5df1d93839b",
+              "deps": [
+                "string-utils",
+                "npm:redux"
+              ]
+            },
+            {
+              "file": "packages/redux-slice/tsconfig.json",
+              "hash": "27847903877abbdf65d7e168465084d52054d1e0"
+            },
+            {
+              "file": "packages/redux-slice/tsconfig.lib.json",
+              "hash": "a8b9431f9172ad42dcb1eaf292f7ae9601ac760b"
+            },
+            {
+              "file": "packages/redux-slice/tsconfig.spec.json",
+              "hash": "a18afb604688956c6a84dd7780d99923f0c04662"
+            }
+          ]
+        }
+      },
+      "redux-types": {
+        "name": "redux-types",
+        "type": "lib",
+        "data": {
+          "root": "packages/redux-types",
+          "sourceRoot": "packages/redux-types/src",
+          "projectType": "library",
+          "targets": {
+            "build": {
+              "executor": "@nrwl/js:tsc",
+              "outputs": [
+                "{options.outputPath}"
+              ],
+              "options": {
+                "outputPath": "dist/packages/redux-types",
+                "main": "packages/redux-types/src/index.ts",
+                "tsConfig": "packages/redux-types/tsconfig.lib.json",
+                "assets": [
+                  "packages/redux-types/*.md"
+                ]
+              },
+              "dependsOn": [
+                "^build"
+              ]
+            },
+            "prod": {
+              "executor": "@nrwl/web:rollup",
+              "outputs": [
+                "{options.outputPath}"
+              ],
+              "options": {
+                "outputPath": "dist/packages/redux-types",
+                "tsConfig": "packages/redux-types/tsconfig.lib.json",
+                "project": "packages/redux-types/package.json",
+                "entryFile": "packages/redux-types/src/index.ts",
+                "format": [
+                  "esm",
+                  "cjs"
+                ],
+                "rollupConfig": [
+                  "rollup.lib.prod.js",
+                  "packages/redux-types/rollup.lib.js"
+                ]
+              }
+            },
+            "publish": {
+              "executor": "@nrwl/workspace:run-commands",
+              "options": {
+                "command": "./node_modules/.bin/ts-node tools/scripts/packages/publish-single.ts redux-types"
+              }
+            },
+            "lint": {
+              "executor": "@nrwl/linter:eslint",
+              "outputs": [
+                "{options.outputFile}"
+              ],
+              "options": {
+                "lintFilePatterns": [
+                  "packages/redux-types/**/*.ts"
+                ]
+              }
+            },
+            "test": {
+              "executor": "@nrwl/jest:jest",
+              "outputs": [
+                "coverage/packages/redux-types"
+              ],
+              "options": {
+                "jestConfig": "packages/redux-types/jest.config.ts",
+                "passWithNoTests": true
+              }
+            }
+          },
+          "tags": [],
+          "files": [
+            {
+              "file": "packages/redux-types/.babelrc",
+              "hash": "61641ec8ac3659e204441c80bb06defe323e3110"
+            },
+            {
+              "file": "packages/redux-types/.eslintrc.json",
+              "hash": "9d9c0db55bb1e91c5f2e7b64a02bc6bf69fc7cb5"
+            },
+            {
+              "file": "packages/redux-types/jest.config.ts",
+              "hash": "f78f5959f4ebcef952ae33e0c8a320b72de4d73e"
+            },
+            {
+              "file": "packages/redux-types/package.json",
+              "hash": "84546a4b8de368d03b67604dac27c9df5c6abfce"
+            },
+            {
+              "file": "packages/redux-types/project.json",
+              "hash": "0a4f69f7c5571fee80a625b7244a6a0f4475f5c6"
+            },
+            {
+              "file": "packages/redux-types/README.md",
+              "hash": "bf84651dc268fe0788e5aa7302fcdd5079157603"
+            },
+            {
+              "file": "packages/redux-types/rollup.lib.js",
+              "hash": "c8c89e88c99e5904b7b16f555c9c8a2ea36e285b",
+              "deps": [
+                "npm:rollup-plugin-copy"
+              ]
+            },
+            {
+              "file": "packages/redux-types/src/index.ts",
+              "hash": "a8664ad50481398cc3ab5f3081496f82dd387d30"
+            },
+            {
+              "file": "packages/redux-types/src/lib/types.ts",
+              "hash": "6b55758686489034fea5dc71f94d6f349c1dc072"
+            },
+            {
+              "file": "packages/redux-types/tsconfig.json",
+              "hash": "27847903877abbdf65d7e168465084d52054d1e0"
+            },
+            {
+              "file": "packages/redux-types/tsconfig.lib.json",
+              "hash": "a8b9431f9172ad42dcb1eaf292f7ae9601ac760b"
+            },
+            {
+              "file": "packages/redux-types/tsconfig.spec.json",
               "hash": "a18afb604688956c6a84dd7780d99923f0c04662"
             }
           ]
@@ -703,7 +1132,10 @@
                 "assets": [
                   "packages/redux-utils/*.md"
                 ]
-              }
+              },
+              "dependsOn": [
+                "^build"
+              ]
             },
             "prod": {
               "executor": "@nrwl/web:rollup",
@@ -748,7 +1180,7 @@
                 "coverage/packages/redux-utils"
               ],
               "options": {
-                "jestConfig": "packages/redux-utils/jest.config.js",
+                "jestConfig": "packages/redux-utils/jest.config.ts",
                 "passWithNoTests": true
               }
             }
@@ -764,16 +1196,16 @@
               "hash": "9d9c0db55bb1e91c5f2e7b64a02bc6bf69fc7cb5"
             },
             {
-              "file": "packages/redux-utils/jest.config.js",
-              "hash": "32229f034f24fc9837419f2ca7598f0e46c7da25"
+              "file": "packages/redux-utils/jest.config.ts",
+              "hash": "9599f82c5162929cc3ade864bab661d00ae0c57b"
             },
             {
               "file": "packages/redux-utils/package.json",
-              "hash": "48cda04d2b3d144ab595c8858d33494d73a5c520"
+              "hash": "29f7a48c104144d3c30f1366ae6a14e12c65e383"
             },
             {
               "file": "packages/redux-utils/project.json",
-              "hash": "83e3a312c466792d0a4298526f5791caf2db1480"
+              "hash": "a4b32ca10006f3b375744ef94416b00d79ff5f4e"
             },
             {
               "file": "packages/redux-utils/README.md",
@@ -792,7 +1224,7 @@
             },
             {
               "file": "packages/redux-utils/src/lib/combine-reducers.ts",
-              "hash": "0e145ed4aad3fe26b7cea8539e09d356405a428a",
+              "hash": "cfcf0f3d187f8172b5faaf344c08f65ca304c57b",
               "deps": [
                 "npm:redux"
               ]
@@ -810,7 +1242,7 @@
             },
             {
               "file": "packages/redux-utils/tsconfig.lib.json",
-              "hash": "a8b9431f9172ad42dcb1eaf292f7ae9601ac760b"
+              "hash": "54e4d01bdf031a0cd1c9469bbcce18a5b4b76527"
             },
             {
               "file": "packages/redux-utils/tsconfig.spec.json",
@@ -839,7 +1271,10 @@
                 "assets": [
                   "packages/sync-queue/*.md"
                 ]
-              }
+              },
+              "dependsOn": [
+                "^build"
+              ]
             },
             "prod": {
               "executor": "@nrwl/web:rollup",
@@ -884,7 +1319,7 @@
                 "coverage/packages/sync-queue"
               ],
               "options": {
-                "jestConfig": "packages/sync-queue/jest.config.js",
+                "jestConfig": "packages/sync-queue/jest.config.ts",
                 "passWithNoTests": true
               }
             }
@@ -900,8 +1335,8 @@
               "hash": "9d9c0db55bb1e91c5f2e7b64a02bc6bf69fc7cb5"
             },
             {
-              "file": "packages/sync-queue/jest.config.js",
-              "hash": "0d02f3376e35f28babc9c8bc4f03ad013b15347b"
+              "file": "packages/sync-queue/jest.config.ts",
+              "hash": "0f136caab3b9515b8ef3141e3f756c1d18d72a08"
             },
             {
               "file": "packages/sync-queue/LICENSE",
@@ -909,11 +1344,11 @@
             },
             {
               "file": "packages/sync-queue/package.json",
-              "hash": "668ef3dc1883745383200455ee0796fcf06d0bf9"
+              "hash": "9ef564e0a23c2512815e890bf4268c3a3072cdc5"
             },
             {
               "file": "packages/sync-queue/project.json",
-              "hash": "b4e1aa7492e93925672b9f242db66b28b56ccc40"
+              "hash": "cc441af2c83866e62b2360af26d1d441b7a49487"
             },
             {
               "file": "packages/sync-queue/README.md",
@@ -973,7 +1408,10 @@
                 "assets": [
                   "packages/url-parser/*.md"
                 ]
-              }
+              },
+              "dependsOn": [
+                "^build"
+              ]
             },
             "prod": {
               "executor": "@nrwl/web:rollup",
@@ -1018,7 +1456,7 @@
                 "coverage/packages/url-parser"
               ],
               "options": {
-                "jestConfig": "packages/url-parser/jest.config.js",
+                "jestConfig": "packages/url-parser/jest.config.ts",
                 "passWithNoTests": true
               }
             }
@@ -1034,16 +1472,16 @@
               "hash": "9d9c0db55bb1e91c5f2e7b64a02bc6bf69fc7cb5"
             },
             {
-              "file": "packages/url-parser/jest.config.js",
-              "hash": "4072c6132734016efb8639fc1b0c4abb4cfb0d59"
+              "file": "packages/url-parser/jest.config.ts",
+              "hash": "2c8d3aff3225c87e678d86603870950f3cbd1954"
             },
             {
               "file": "packages/url-parser/package.json",
-              "hash": "81e8ad71eae225fd209ba3b27c7b7a3ea8b2bb34"
+              "hash": "935b66f36bb054e9d0cdf8d719100646f733b2d8"
             },
             {
               "file": "packages/url-parser/project.json",
-              "hash": "372814146af8bee76744c2709101598a0586cc97"
+              "hash": "cab8d3ba7aaad92bed421233c22dc079eefb35eb"
             },
             {
               "file": "packages/url-parser/README.md",
@@ -1167,7 +1605,10 @@
                 "assets": [
                   "packages/machine/*.md"
                 ]
-              }
+              },
+              "dependsOn": [
+                "^build"
+              ]
             },
             "prod": {
               "executor": "@nrwl/web:rollup",
@@ -1212,7 +1653,7 @@
                 "coverage/packages/machine"
               ],
               "options": {
-                "jestConfig": "packages/machine/jest.config.js",
+                "jestConfig": "packages/machine/jest.config.ts",
                 "passWithNoTests": true
               }
             }
@@ -1228,8 +1669,8 @@
               "hash": "9d9c0db55bb1e91c5f2e7b64a02bc6bf69fc7cb5"
             },
             {
-              "file": "packages/machine/jest.config.js",
-              "hash": "d8d29795616bf8989c9634a972a1913690b47648"
+              "file": "packages/machine/jest.config.ts",
+              "hash": "2e2d1dd99fe293073919104f9e30445e73e94a6e"
             },
             {
               "file": "packages/machine/LICENSE",
@@ -1237,15 +1678,15 @@
             },
             {
               "file": "packages/machine/package.json",
-              "hash": "ff101f3f92d9790f895f52ebebe1303ba635dc6a"
+              "hash": "d6915e14b47b93b16fed648d6b8c6ad1232fe596"
             },
             {
               "file": "packages/machine/project.json",
-              "hash": "295d4cf8ac485a1327231bec0acf2c8946d25dfa"
+              "hash": "1c36d5530555146906e4b272d1805647f9c8b55f"
             },
             {
               "file": "packages/machine/README.md",
-              "hash": "dfbc30cb52fc7c535ba957b5963c4e1cacb71730"
+              "hash": "f3ef332bb2093b98dd80f7e013cd90a8efca61d8"
             },
             {
               "file": "packages/machine/rollup.lib.js",
@@ -1260,11 +1701,11 @@
             },
             {
               "file": "packages/machine/src/lib/machine.spec.ts",
-              "hash": "76f9c83bc3635efe927251680ae510b0b57b91a6"
+              "hash": "7936052ec87b93d47bbb4a71ac07352d5f849377"
             },
             {
               "file": "packages/machine/src/lib/machine.ts",
-              "hash": "f338f151678e13d87f44295eafa595f72d410c65",
+              "hash": "0a58e220919969ce1924ea764ad39434933bf3e8",
               "deps": [
                 "event-emitter"
               ]
@@ -1304,7 +1745,10 @@
                 "assets": [
                   "packages/router/*.md"
                 ]
-              }
+              },
+              "dependsOn": [
+                "^build"
+              ]
             },
             "prod": {
               "executor": "@nrwl/web:rollup",
@@ -1349,7 +1793,7 @@
                 "coverage/packages/router"
               ],
               "options": {
-                "jestConfig": "packages/router/jest.config.js",
+                "jestConfig": "packages/router/jest.config.ts",
                 "passWithNoTests": true
               }
             }
@@ -1365,8 +1809,8 @@
               "hash": "9d9c0db55bb1e91c5f2e7b64a02bc6bf69fc7cb5"
             },
             {
-              "file": "packages/router/jest.config.js",
-              "hash": "89bd863ebdcd033f05aaaa08f16b56f9c9386a9a"
+              "file": "packages/router/jest.config.ts",
+              "hash": "f7b5f8aea864c8e9ef171603c9fced4c69a7b5ba"
             },
             {
               "file": "packages/router/LICENSE",
@@ -1374,11 +1818,11 @@
             },
             {
               "file": "packages/router/package.json",
-              "hash": "07b756051b759109162a9bc531b74a352e73548b"
+              "hash": "737d2fb4ab9c247b943b0405d077afb45d9e1a77"
             },
             {
               "file": "packages/router/project.json",
-              "hash": "cb0667edbfa130577589f3dde395b4f7a975803d"
+              "hash": "3560d3d5ce9b6c02ee8c4c55223a42728d48bccb"
             },
             {
               "file": "packages/router/README.md",
@@ -1446,7 +1890,10 @@
                 "assets": [
                   "packages/query/*.md"
                 ]
-              }
+              },
+              "dependsOn": [
+                "^build"
+              ]
             },
             "prod": {
               "executor": "@nrwl/web:rollup",
@@ -1491,7 +1938,7 @@
                 "coverage/packages/query"
               ],
               "options": {
-                "jestConfig": "packages/query/jest.config.js",
+                "jestConfig": "packages/query/jest.config.ts",
                 "passWithNoTests": true
               }
             }
@@ -1507,16 +1954,16 @@
               "hash": "9d9c0db55bb1e91c5f2e7b64a02bc6bf69fc7cb5"
             },
             {
-              "file": "packages/query/jest.config.js",
-              "hash": "128dec217bb479e4d918bc1605d2eef3f5bd8e84"
+              "file": "packages/query/jest.config.ts",
+              "hash": "2bda811a0c91e7e3e3d819ed92665f79c20028b2"
             },
             {
               "file": "packages/query/package.json",
-              "hash": "e901310ef20ea6912c09fc70c30beadde4e805ed"
+              "hash": "befed9dd5e1deedb21adf4ddfedcd9c9f52cf136"
             },
             {
               "file": "packages/query/project.json",
-              "hash": "0798ca33f4aa565588729f270a57f8da3385ae32"
+              "hash": "5299da64d03b91148d3c042f5659ec771bac173c"
             },
             {
               "file": "packages/query/README.md",
@@ -1531,7 +1978,7 @@
             },
             {
               "file": "packages/query/src/index.ts",
-              "hash": "b12c1d103429d39beb76defaa305ff3ed01f0195"
+              "hash": "39322ead16b8ccc5133dfd7a976c862a9d46e7f0"
             },
             {
               "file": "packages/query/src/lib/helpers/serializer.ts",
@@ -1546,14 +1993,18 @@
             },
             {
               "file": "packages/query/src/lib/query/query.ts",
-              "hash": "057f6e54a1e3153196047a2335de0cd1e93b8250",
+              "hash": "a5fb406b632e80673c1d8ffa1010d1383a8ab74c",
               "deps": [
-                "event-emitter"
+                "event-emitter",
+                "redux-types"
               ]
             },
             {
               "file": "packages/query/src/lib/query/reducer.ts",
-              "hash": "2cf81dadbd02ab89def3103655ec3312bc826776"
+              "hash": "4734a8725ab3c897c61d6dc8340e1401e842fb12",
+              "deps": [
+                "redux-types"
+              ]
             },
             {
               "file": "packages/query/src/lib/query/resource.ts",
@@ -1561,17 +2012,6 @@
               "deps": [
                 "machine",
                 "async-queue"
-              ]
-            },
-            {
-              "file": "packages/query/src/lib/slice/slice.spec.ts",
-              "hash": "c32a721002f58637a818183d518e68bc16a87d9f"
-            },
-            {
-              "file": "packages/query/src/lib/slice/slice.ts",
-              "hash": "aec87a6331b2932fdfcae650cb9e5ab5859bd7d5",
-              "deps": [
-                "string-utils"
               ]
             },
             {
@@ -1604,7 +2044,10 @@
             },
             {
               "file": "packages/query/src/lib/types.ts",
-              "hash": "81ac4f3fd4b66605d33d1a0a4b75a6c542423072"
+              "hash": "16f8d7c3ff4a9b3d87ed1014610915e246b4c14e",
+              "deps": [
+                "redux-types"
+              ]
             },
             {
               "file": "packages/query/tsconfig.json",
@@ -1641,7 +2084,10 @@
                 "assets": [
                   "packages/store/*.md"
                 ]
-              }
+              },
+              "dependsOn": [
+                "^build"
+              ]
             },
             "prod": {
               "executor": "@nrwl/web:rollup",
@@ -1686,7 +2132,7 @@
                 "coverage/packages/store"
               ],
               "options": {
-                "jestConfig": "packages/store/jest.config.js",
+                "jestConfig": "packages/store/jest.config.ts",
                 "passWithNoTests": true
               }
             }
@@ -1702,8 +2148,8 @@
               "hash": "9d9c0db55bb1e91c5f2e7b64a02bc6bf69fc7cb5"
             },
             {
-              "file": "packages/store/jest.config.js",
-              "hash": "75bdee7ebcf817682d4fe80b13c4fe2963a987b5"
+              "file": "packages/store/jest.config.ts",
+              "hash": "60eb54c5c7cb9b602524a56780753d0e6c16dfa0"
             },
             {
               "file": "packages/store/LICENSE",
@@ -1719,11 +2165,11 @@
             },
             {
               "file": "packages/store/package.json",
-              "hash": "10711de01e349180f45277cfc7bc147487c18d4c"
+              "hash": "625c7e19ca168fba45e92f45ac78c5cd29b14c08"
             },
             {
               "file": "packages/store/project.json",
-              "hash": "b8a7ba200a23fc097824e4349bb9337aa7ed2564"
+              "hash": "926688095883dc17cee08bcb333f38f5206114d2"
             },
             {
               "file": "packages/store/README.md",
@@ -1799,7 +2245,10 @@
                 "production": {
                   "tsConfig": "libs/mylib/tsconfig-prod.lib.json"
                 }
-              }
+              },
+              "dependsOn": [
+                "^build"
+              ]
             },
             "prod": {
               "executor": "@nrwl/web:rollup",
@@ -1844,7 +2293,7 @@
                 "coverage/packages/di"
               ],
               "options": {
-                "jestConfig": "packages/di/jest.config.js",
+                "jestConfig": "packages/di/jest.config.ts",
                 "passWithNoTests": true
               }
             }
@@ -1860,8 +2309,8 @@
               "hash": "9d9c0db55bb1e91c5f2e7b64a02bc6bf69fc7cb5"
             },
             {
-              "file": "packages/di/jest.config.js",
-              "hash": "e5810290b8db6c83159ca9262e2d371233d7303b"
+              "file": "packages/di/jest.config.ts",
+              "hash": "53a155fca36b2ea2942e062516386d7902b6cf6c"
             },
             {
               "file": "packages/di/LICENSE",
@@ -1869,11 +2318,11 @@
             },
             {
               "file": "packages/di/package.json",
-              "hash": "0d74183d0254d3acd3cd3a4a07fe68c9a831a4ce"
+              "hash": "6783ffc48759a036ecfebf117996a9db498b7b49"
             },
             {
               "file": "packages/di/project.json",
-              "hash": "1279a1d95a35f4c8d97f00ba6e1bcbfad63ace76"
+              "hash": "1da4baedfbe5b48f5c252f21575103b9bf39664c"
             },
             {
               "file": "packages/di/README.md",
@@ -1930,11 +2379,28 @@
       "redux-registry": [
         {
           "source": "redux-registry",
-          "target": "query",
+          "target": "redux-types",
           "type": "static"
         }
       ],
       "event-emitter": [],
+      "redux-machine": [
+        {
+          "source": "redux-machine",
+          "target": "redux-utils",
+          "type": "static"
+        },
+        {
+          "source": "redux-machine",
+          "target": "redux-types",
+          "type": "static"
+        },
+        {
+          "source": "redux-machine",
+          "target": "redux-slice",
+          "type": "static"
+        }
+      ],
       "redux-router": [
         {
           "source": "redux-router",
@@ -1944,6 +2410,14 @@
       ],
       "string-utils": [],
       "async-queue": [],
+      "redux-slice": [
+        {
+          "source": "redux-slice",
+          "target": "string-utils",
+          "type": "static"
+        }
+      ],
+      "redux-types": [],
       "redux-utils": [],
       "sync-queue": [],
       "url-parser": [],
@@ -1974,17 +2448,17 @@
         },
         {
           "source": "query",
+          "target": "redux-types",
+          "type": "static"
+        },
+        {
+          "source": "query",
           "target": "machine",
           "type": "static"
         },
         {
           "source": "query",
           "target": "async-queue",
-          "type": "static"
-        },
-        {
-          "source": "query",
-          "target": "string-utils",
           "type": "static"
         }
       ],

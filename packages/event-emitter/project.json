@@ -1,5 +1,4 @@
 {
-  "root": "packages/event-emitter",
   "sourceRoot": "packages/event-emitter/src",
   "projectType": "library",
   "targets": {
@@ -21,11 +20,11 @@
         "tsConfig": "packages/event-emitter/tsconfig.lib.json",
         "project": "packages/event-emitter/package.json",
         "entryFile": "packages/event-emitter/src/index.ts",
-        "format": [
-          "esm",
-          "cjs"
-        ],
-        "rollupConfig": ["rollup.lib.prod.js", "packages/event-emitter/rollup.lib.js"]
+        "format": ["esm", "cjs"],
+        "rollupConfig": [
+          "rollup.lib.prod.js",
+          "packages/event-emitter/rollup.lib.js"
+        ]
       }
     },
     "publish": {
@@ -45,7 +44,7 @@
       "executor": "@nrwl/jest:jest",
       "outputs": ["coverage/packages/event-emitter"],
       "options": {
-        "jestConfig": "packages/event-emitter/jest.config.js",
+        "jestConfig": "packages/event-emitter/jest.config.ts",
         "passWithNoTests": true
       }
     }

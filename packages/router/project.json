@@ -1,5 +1,4 @@
 {
-  "root": "packages/router",
   "sourceRoot": "packages/router/src",
   "projectType": "library",
   "targets": {
@@ -21,10 +20,7 @@
         "tsConfig": "packages/router/tsconfig.lib.json",
         "project": "packages/router/package.json",
         "entryFile": "packages/router/src/index.ts",
-        "format": [
-          "esm",
-          "cjs"
-        ],
+        "format": ["esm", "cjs"],
         "rollupConfig": ["rollup.lib.prod.js", "packages/router/rollup.lib.js"]
       }
     },
@@ -45,7 +41,7 @@
       "executor": "@nrwl/jest:jest",
       "outputs": ["coverage/packages/router"],
       "options": {
-        "jestConfig": "packages/router/jest.config.js",
+        "jestConfig": "packages/router/jest.config.ts",
         "passWithNoTests": true
       }
     }

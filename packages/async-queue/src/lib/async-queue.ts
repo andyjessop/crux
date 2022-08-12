@@ -3,6 +3,7 @@ type AnyFunction = (...args: any[]) => void;
 export interface AsyncQueue {
   add(fn: AnyFunction, ...params: unknown[]): Promise<unknown>;
   clear(): void;
+  entries: AsyncQueueEntry[];
   flush(): Promise<unknown>;
 }
 
@@ -20,6 +21,7 @@ export function createAsyncQueue(): AsyncQueue {
   return {
     add,
     clear,
+    entries,
     flush,
   };
 

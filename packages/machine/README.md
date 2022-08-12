@@ -1,6 +1,6 @@
 # `@crux/machine`
 
-`machine` is an asynchronous Finite State Machine with a simple API.
+`machine` is an asynchronous Finite State Machine for redux
 
 ## Installation
 

@@ -1,5 +1,4 @@
 {
-  "root": "packages/redux-registry",
   "sourceRoot": "packages/redux-registry/src",
   "projectType": "library",
   "targets": {
@@ -21,11 +20,11 @@
         "tsConfig": "packages/redux-registry/tsconfig.lib.json",
         "project": "packages/redux-registry/package.json",
         "entryFile": "packages/redux-registry/src/index.ts",
-        "format": [
-          "esm",
-          "cjs"
-        ],
-        "rollupConfig": ["rollup.lib.prod.js", "packages/redux-registry/rollup.lib.js"]
+        "format": ["esm", "cjs"],
+        "rollupConfig": [
+          "rollup.lib.prod.js",
+          "packages/redux-registry/rollup.lib.js"
+        ]
       }
     },
     "publish": {
@@ -45,7 +44,7 @@
       "executor": "@nrwl/jest:jest",
       "outputs": ["coverage/packages/redux-registry"],
       "options": {
-        "jestConfig": "packages/redux-registry/jest.config.js",
+        "jestConfig": "packages/redux-registry/jest.config.ts",
         "passWithNoTests": true
       }
     }

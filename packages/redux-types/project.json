@@ -1,0 +1,53 @@
+{
+  "sourceRoot": "packages/redux-types/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/redux-types",
+        "main": "packages/redux-types/src/index.ts",
+        "tsConfig": "packages/redux-types/tsconfig.lib.json",
+        "assets": ["packages/redux-types/*.md"]
+      }
+    },
+    "prod": {
+      "executor": "@nrwl/web:rollup",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/redux-types",
+        "tsConfig": "packages/redux-types/tsconfig.lib.json",
+        "project": "packages/redux-types/package.json",
+        "entryFile": "packages/redux-types/src/index.ts",
+        "format": ["esm", "cjs"],
+        "rollupConfig": [
+          "rollup.lib.prod.js",
+          "packages/redux-types/rollup.lib.js"
+        ]
+      }
+    },
+    "publish": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "command": "./node_modules/.bin/ts-node tools/scripts/packages/publish-single.ts redux-types"
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["packages/redux-types/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/packages/redux-types"],
+      "options": {
+        "jestConfig": "packages/redux-types/jest.config.ts",
+        "passWithNoTests": true
+      }
+    }
+  },
+  "tags": []
+}

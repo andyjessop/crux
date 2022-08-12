@@ -1,5 +1,6 @@
 import { createEventEmitter } from "@crux/event-emitter";
-import { Action, Dispatch, FinalReturnType, MiddlewareAPI, ResourceConfig, State } from "../types";
+import { FinalReturnType, ResourceConfig, State } from "../types";
+import { Action, Dispatch, MiddlewareAPI } from '@crux/redux-types';
 import { createReducer } from "./reducer";
 import { resource } from './resource';
 

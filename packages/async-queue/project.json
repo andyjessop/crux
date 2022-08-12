@@ -1,5 +1,4 @@
 {
-  "root": "packages/async-queue",
   "sourceRoot": "packages/async-queue/src",
   "projectType": "library",
   "targets": {
@@ -21,11 +20,11 @@
         "tsConfig": "packages/async-queue/tsconfig.lib.json",
         "project": "packages/async-queue/package.json",
         "entryFile": "packages/async-queue/src/index.ts",
-        "format": [
-          "esm",
-          "cjs"
-        ],
-        "rollupConfig": ["rollup.lib.prod.js", "packages/async-queue/rollup.lib.js"]
+        "format": ["esm", "cjs"],
+        "rollupConfig": [
+          "rollup.lib.prod.js",
+          "packages/async-queue/rollup.lib.js"
+        ]
       }
     },
     "publish": {
@@ -45,7 +44,7 @@
       "executor": "@nrwl/jest:jest",
       "outputs": ["coverage/packages/async-queue"],
       "options": {
-        "jestConfig": "packages/async-queue/jest.config.js",
+        "jestConfig": "packages/async-queue/jest.config.ts",
         "passWithNoTests": true
       }
     }

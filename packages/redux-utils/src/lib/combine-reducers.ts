@@ -1,10 +1,10 @@
-import { Reducer } from 'redux';
+import { AnyAction, Reducer } from 'redux';
 
 export function combineReducers(reducers: Record<string, Reducer>) {
   // First get an array with all the keys of the reducers (the reducer names)
   const reducerKeys = Object.keys(reducers);
 
-  return function reducer(state: any = {}, action: { type: string, payload: unknown }) {
+  return function reducer(state: any = {}, action: AnyAction) {
     // This is the object we are going to return.
     const nextState: any = {};
 

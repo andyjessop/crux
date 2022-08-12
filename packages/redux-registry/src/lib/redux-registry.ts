@@ -1,4 +1,4 @@
-import { Action, Dispatch, Middleware, MiddlewareAPI, Reducer } from '@crux/query';
+import { Action, Dispatch, Middleware, MiddlewareAPI, Reducer } from '@crux/redux-types';
 import { combineReducers, compose } from 'redux';
 
 export const middlewareRegistry = () => {
@@ -46,7 +46,7 @@ export const reducerRegistry = () => {
 
   return {
     add,
-    reducer: currentReducer,
+    reducer: (state: any, action: Action) => currentReducer(state, action),
   };
 
   function add(id: string, newReducer: Reducer) {

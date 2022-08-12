@@ -1,6 +1,6 @@
 {
   "name": "@crux/sync-queue",
-  "version": "0.0.33-alpha",
+  "version": "0.0.35-alpha",
   "type": "commonjs",
   "dependencies": {}
 }
