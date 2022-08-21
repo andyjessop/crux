@@ -4,9 +4,11 @@
 
 `crux` is a system for building web apps that are designed to be small, fast, and decoupled. It helps you to ensure the code you write is long-lived, low in technical debt, and low in churn.
 
-The central concept is that the core of your application contains your business logic, and is small and lightweight. Components such as the data layer, cache, presentation layer, etc. are all "services" that plug into the core.
+`crux` is a framework that brings Redux front-and-centre of your app. Rather than "you might not need Redux", `crux` posits that "you might not need React". It allows you to use any view library (even multiple frameworks), and simplifies the rendering of a view such that you will probably opt for a library that is much simpler and less capable (read "smaller and less complex") than React. For example, something like `lit` is a perfect fit.
 
-`crux` supports micro-frontends by decoupling the layout from the individual views, both of which can be written in any framework and deployed separately.
+It's often claimed that testing is a first-class citizen in many front-end frameworks, but this is rarely the case. Testing is usually cumbersome and requires third-party libraries that couple your test code to the framework. I would argue that this is a bad practice for an app with long-term ambition. `crux` approaches things differently - because your views are strictly a pure representation of the state, most of your testing involves testing the state. Not only is this faster, it has better support in your IDE, and is portable to multiple frameworks.
+
+`crux` is a framework that stays out of the way of your code, encouraging it to be truly modular and long-lived.
 
 ## Packages
 
@@ -15,9 +17,12 @@ The central concept is that the core of your application contains your business 
 - [async-queue](packages/async-queue/README.md) - a queue utility that waits for queue entry `Promise`s to resolve before running the next
 - [di](packages/di/README.md) - a lightweight dependency-injection framework to encourage code decoupling
 - [event-emitter](packages/event-emitter/README.md) - a fully-typed event emitter
-- [fsm](packages/fsm/README.md) - a simple, no-frills finite state machine
+- [machine](packages/machine/README.md) - a simple, no-frills finite state machine
+- [redux-machine](packages/redux-machine/README.md) - a simple, no-frills finite state machine that integrates with a redux slice
 - [redux-registry](packages/redux-registry/README.md) - dynamically register/unregister middleware and reducers (for code-splitting)
 - [redux-router](packages/redux-router/README.md) - a router that hooks into the Redux state
+- [redux-slice](packages/redux-slice/README.md) - an RTK-alternative createSlice that has better typing and a smaller footprint.
+- [redux-types](packages/redux-types/README.md) - types for Redux
 - [query](packages/query/README.md) - a tiny RTK-alternative
 - [router](packages/router/README.md) - a lightweight and decoupled router
 - [store](packages/store/README.md) - a framework-agnostic store that provides immutable updates and observers by default
