@@ -8,20 +8,24 @@ export function slice<T extends Record<string, (state: S, payload?: any) => S>, 
   return {
     actions: keys
       .reduce((acc, key) => {
-        acc[key] = function<K extends keyof T & string>(payload?: Parameters<T[K]>[1]) {
+        const type = getType(key);
+
+        const actionCreator = function<K extends keyof T & string>(payload?: Parameters<T[K]>[1]) {
           return {
             payload,
-            type: getType(key),
+            type,
           }
         };
 
+        actionCreator.type = type;
+
+        acc[key] = actionCreator;
+
         return acc;
       }, {} as { [K in keyof T]: Parameters<T[K]>[1] extends undefined ?
-        { (): { payload: Parameters<T[K]>[1]; type: K; }; name: K; } :
-        { (payload: Parameters<T[K]>[1]): { payload: Parameters<T[K]>[1]; type: K; }; name: K; }
+        { (): { payload: Parameters<T[K]>[1]; type: K; }; name: K; type: K; } :
+        { (payload: Parameters<T[K]>[1]): { payload: Parameters<T[K]>[1]; type: K; }; name: K; type: K; }
       }),
-
-    getType,
 
     reducer: (state: S | undefined, action: AnyAction) => {
       const [namespace, ...rest] = action.type.split('/');

@@ -16,7 +16,7 @@ export function query(reducerId = 'crux') {
     reducerId,
   };
 
-  function middleware(api: MiddlewareAPI<Dispatch, unknown>) {
+  function middleware(api: MiddlewareAPI) {
     dispatch = api.dispatch;
     getState = api.getState;
     return function withNext(next: Dispatch<Action>) {

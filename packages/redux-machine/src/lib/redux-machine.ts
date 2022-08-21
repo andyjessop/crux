@@ -1,6 +1,5 @@
 import { slice } from '@crux/redux-slice';
-import { DispatchActionOrThunk } from '@crux/redux-types';
-import { Dispatch } from 'redux';
+import { Dispatch } from '@crux/redux-types';
 
 export function machine<T extends Config<D>, D extends DefaultData>(name: string, config: T, data: D) {   
   // Flatten config to get actions with key, e.g. 'off/switchOn': (state, payload) => state
@@ -24,7 +23,7 @@ export function machine<T extends Config<D>, D extends DefaultData>(name: string
 
   const actionMethods = actionKeys
     .reduce((acc, actionKey) => {
-      acc[actionKey] = function(payload?: any): (dispatch: DispatchActionOrThunk, getState: () => any) => void {
+      acc[actionKey] = function(payload?: any): (dispatch: Dispatch, getState: () => any) => void {
         return thunk(actionKey, payload);
       };
 
@@ -36,7 +35,7 @@ export function machine<T extends Config<D>, D extends DefaultData>(name: string
     reducer,
   };
 
-  function thunk(actionKey: keyof Nested<T>, payload?: any): (dispatch: DispatchActionOrThunk, getState: () => any) => void {
+  function thunk(actionKey: keyof Nested<T>, payload?: any): (dispatch: Dispatch, getState: () => any) => void {
     return function(dispatch, getState) {
       const currentState = getState()[name].state;
 
@@ -96,6 +95,6 @@ type Params<T> = {
  */
 export type Actions<T> = {
   [K in keyof Nested<T>]: Params<T>[K][1] extends undefined
-    ? () => (dispatch: DispatchActionOrThunk, getState: () => any) => void
-    : (payload: Params<T>[K][1]) => (dispatch: DispatchActionOrThunk, getState: () => any) => void
+    ? () => (dispatch: Dispatch, getState: () => any) => void
+    : (payload: Params<T>[K][1]) => (dispatch: Dispatch, getState: () => any) => void
 }

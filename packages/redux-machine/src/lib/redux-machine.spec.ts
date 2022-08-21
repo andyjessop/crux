@@ -1,5 +1,5 @@
 import { combineReducers } from '@crux/redux-utils';
-import type { Store } from '@crux/redux-types';
+import type { StoreWithThunkableDispatch } from '@crux/redux-types';
 import { applyMiddleware, legacy_createStore as createStore } from 'redux';
 import { Actions, machine } from './redux-machine';
 import thunk from 'redux-thunk';
@@ -30,7 +30,7 @@ const lightSwitch = {
   },
 };
 
-let store: Store;
+let store: StoreWithThunkableDispatch;
 let actions: Actions<typeof lightSwitch>;
 
 describe('redux-machine', () => {

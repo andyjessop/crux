@@ -1,17 +1,8 @@
+import { Action, ActionCreator, MiddlewareAPI, Reducer } from '@crux/redux-types';
 import { createRouter, Route, Router, RoutesConfig } from '@crux/router';
 import { Dispatch } from 'react';
-import { AnyAction, MiddlewareAPI, Reducer } from 'redux';
 
-interface ActionCreators {
-  navigate: <T>(route: Route<T>) => {
-    type: EventType.Navigate,
-    payload: Route<T>
-  };
-  _navigated: <T>(route: Route<T>) => {
-    type: EventType.Navigated,
-    payload: Route<T>
-  };
-}
+type ActionCreators = Record<string, ActionCreator>;
 
 enum EventType {
   Navigate = 'router/navigate',
@@ -39,8 +30,8 @@ export interface State<T = any> {
 
 export interface ReduxRouter<T extends RoutesConfig<T>> {
   actions: ActionCreators;
-  middleware: (api: MiddlewareAPI) => (next: Dispatch<AnyAction>) => (action: AnyAction) => void;
-  reducer: Reducer<State<keyof T | "root" | "notFound">, AnyAction>;
+  middleware: (api: MiddlewareAPI) => (next: Dispatch<Action>) => (action: Action) => void;
+  reducer: Reducer<State<keyof T | "root" | "notFound">, Action>;
 }
 
 export function createReduxRouter<T extends RoutesConfig<T>>(config: RoutesConfig<T>, existingRouter?: Router<T>): ReduxRouter<T> {
@@ -77,8 +68,8 @@ export function createReduxRouterMiddleware<T>(router: Router<T>) {
       api.dispatch(actions['_navigated'](current));
     })
 
-    return function withNext(next: Dispatch<AnyAction>) {
-      return function withAction(action: AnyAction) {
+    return function withNext(next: Dispatch<Action>) {
+      return function withAction(action: Action) {
         if (action.type.startsWith('router')) {
           switch(action.type) {
             case 'router/navigate':
@@ -97,7 +88,7 @@ export function createReduxRouterMiddleware<T>(router: Router<T>) {
 }
 
 export function createReducer(initialState: State) {
-  return function reducer(state = initialState, action: AnyAction) {
+  return function reducer(state = initialState, action: Action) {
     switch(action.type) {
       case 'router/_navigated':
         return {

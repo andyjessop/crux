@@ -12,67 +12,6 @@ The folks over at RTK have done an amazing job at reducing boilerplate in Redux 
 npm install --save @crux/query
 ```
 
-## `createSlice`
-
-`createSlice` is a shorthand way of creating actions and reducers, with minimal boilerplate. There is no shorter-hand way of defining a slice than this.
-
-```ts
-import { createSlice } from '@crux/query';
-
-interface State {
-  count: number;
-}
-
-const initial: State = { count: 0 };
-
-export const { actions, getType, reducer } = createSlice({
-  add: (state: State, payload: number) => ({
-    ...state,
-    count: state.count + payload
-  }),
-  subtract: (state: State, payload: number) => ({
-    ...state,
-    count: state.count - payload
-  }),
-}, { initialState: initial, name: 'counter' });
-```
-
-You can then add your reducer as normal:
-
-```ts
-import { reducer } from 'counter/slice.ts';
-
-configureStore({
-  reducer: {
-    counter: reducer
-  }
-});
-```
-
-And dispatch your actions as normal:
-
-```ts
-import { actions } from 'counter/slice.ts';
-
-dispatch(actions.add(5)); // dispatches { type: 'counter/add', payload: 5 }
-```
-
-The payload of the action is fully typed, taken from your payload definition in the `createSlice` config. If you need access to the action type (to use in a saga, for example), you can use `getType`:
-
-```ts
-import { getType } from 'counter/slice.ts';
-
-// ...in saga
-yield takeLatest(getType('add'), cb);
-```
-
-Note that the string passed to `getType` is guarded by TS, so you will get an error if it's not been provided as a key in your slice config.
-
-
-## `query`
-
-`query` is used for when you want to hook up your existing HTTP API with Redux. `@crux/query` will intelligently manage your Redux store so that you can subscribe to endpoints _declaratively_, not worrying about when to fetch, how to update your cache, etc. Using `query` you can drastically simplify the most common operations (and some of the more obscure ones too).
-
 ### Initialising
 
 The general concept is that you create your `api` then use that to create `resource`s to which you can subscribe.
