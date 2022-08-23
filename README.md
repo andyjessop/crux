@@ -14,6 +14,7 @@ It's often claimed that testing is a first-class citizen in many front-end frame
 
 `crux` uses various libraries, maintained in this repo, and free for you to use in your own projects.
 
+- [app](packages/app/README.md) - create a `crux` application
 - [async-queue](packages/async-queue/README.md) - a queue utility that waits for queue entry `Promise`s to resolve before running the next
 - [di](packages/di/README.md) - a lightweight dependency-injection framework to encourage code decoupling
 - [event-emitter](packages/event-emitter/README.md) - a fully-typed event emitter
@@ -25,6 +26,7 @@ It's often claimed that testing is a first-class citizen in many front-end frame
 - [redux-types](packages/redux-types/README.md) - types for Redux
 - [query](packages/query/README.md) - a tiny RTK-alternative
 - [router](packages/router/README.md) - a lightweight and decoupled router
+- [set-utils](packages/set-utils/README.md) - utilities for working with Sets.
 - [store](packages/store/README.md) - a framework-agnostic store that provides immutable updates and observers by default
 - [sync-queue](packages/sync-queue/README.md) - a synchronous queue utility.
 - [url-parser](packages/url-parser/README.md) - a url parser/generator.
@@ -40,7 +42,7 @@ npx nx serve dev
 ### Adding a new package
 
 ```bash
-npx nx g @nrwl/js:library [name] --buildable --dryRun
+npx nx g @nrwl/js:library [name] --buildable
 ```
 
 ### Building a package

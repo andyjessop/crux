@@ -16,6 +16,7 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@crux/app": ["packages/app/src/index.ts"],
       "@crux/async-queue": ["packages/async-queue/src/index.ts"],
       "@crux/core": ["packages/core/src/index.ts"],
       "@crux/di": ["packages/di/src/index.ts"],
@@ -29,6 +30,7 @@
       "@crux/redux-types": ["packages/redux-types/src/index.ts"],
       "@crux/redux-utils": ["packages/redux-utils/src/index.ts"],
       "@crux/router": ["packages/router/src/index.ts"],
+      "@crux/set-utils": ["packages/set-utils/src/index.ts"],
       "@crux/store": ["packages/store/src/index.ts"],
       "@crux/string-utils": ["packages/string-utils/src/index.ts"],
       "@crux/sync-queue": ["packages/sync-queue/src/index.ts"],

@@ -1,0 +1,50 @@
+{
+  "sourceRoot": "packages/set-utils/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/set-utils",
+        "main": "packages/set-utils/src/index.ts",
+        "tsConfig": "packages/set-utils/tsconfig.lib.json",
+        "assets": ["packages/set-utils/*.md"]
+      }
+    },
+    "prod": {
+      "executor": "@nrwl/web:rollup",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/set-utils",
+        "tsConfig": "packages/set-utils/tsconfig.lib.json",
+        "project": "packages/set-utils/package.json",
+        "entryFile": "packages/set-utils/src/index.ts",
+        "format": ["esm", "cjs"],
+        "rollupConfig": ["rollup.lib.prod.js", "packages/set-utils/rollup.lib.js"]
+      }
+    },
+    "publish": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "command": "./node_modules/.bin/ts-node tools/scripts/packages/publish-single.ts set-utils"
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["packages/set-utils/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/packages/set-utils"],
+      "options": {
+        "jestConfig": "packages/set-utils/jest.config.ts",
+        "passWithNoTests": true
+      }
+    }
+  },
+  "tags": []
+}

@@ -1,7 +1,9 @@
 {
   "version": 2,
   "projects": {
+    "app": "packages/app",
     "async-queue": "packages/async-queue",
+    "dev": "apps/dev",
     "di": "packages/di",
     "event-emitter": "packages/event-emitter",
     "machine": "packages/machine",
@@ -13,6 +15,7 @@
     "redux-types": "packages/redux-types",
     "redux-utils": "packages/redux-utils",
     "router": "packages/router",
+    "set-utils": "packages/set-utils",
     "store": "packages/store",
     "string-utils": "packages/string-utils",
     "sync-queue": "packages/sync-queue",
