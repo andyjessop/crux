@@ -66,7 +66,7 @@ export async function createAuth(api: AuthAPI): Promise<Auth> {
 
   auth.onEnter(data => {
     emitter.emit('stateChange', data);
-  })
+  });
 
   return {
     ...emitter,
