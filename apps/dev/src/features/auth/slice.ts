@@ -1,4 +1,5 @@
 import { slice } from "@crux/redux-slice";
+import type { States } from "./domain/auth";
 
 interface User {
   id: string;
@@ -7,13 +8,13 @@ interface User {
 }
 
 export interface AuthState {
-  isShowingSignupForm: boolean;
+  machineState: States | null;
   user: User | null;
 }
 
 const initialState: AuthState = {
-  isShowingSignupForm: false,
-  user: null
+  machineState: null,
+  user: null,
 }
 
 export function authSlice() {
@@ -22,9 +23,9 @@ export function authSlice() {
       ...state,
       user: payload
     }),
-    showSignupForm: (state: AuthState, payload: boolean) => ({
+    setMachineState: (state: AuthState, payload: States) => ({
       ...state,
-      isShowingSignupForm: payload
+      machineState: payload
     }),
   }, { initialState, name: 'auth' } );
 }

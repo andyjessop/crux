@@ -4,6 +4,12 @@ import { Variable } from "../../../shared/env/env.service";
 import type { Token, User } from "./types";
 
 export type AuthAPI = ReturnType<typeof createAuthApi>;
+export type AuthError = {
+  code: number;
+  message: string;
+} | {
+  error: string;
+} | false;
 
 export function createAuthApi(cache: AsyncCache, env: Env) {  
   const headers = new Headers();
@@ -34,7 +40,7 @@ export function createAuthApi(cache: AsyncCache, env: Env) {
       cache.get('crux-auth-jwt-refresh-token') as Promise<string | undefined>
     ]);
 
-    if (expires < Date.now()) {
+    if (!expires || expires < Date.now()) {
       await Promise.all([
         cache.remove('crux-auth-jwt'),
         cache.remove('crux-auth-jwt-expiry'),
@@ -58,7 +64,7 @@ export function createAuthApi(cache: AsyncCache, env: Env) {
         })
       });
 
-      return res.json() as Promise<Token & { user: User }>;
+      return res.json() as Promise<(Token & { user: User } | AuthError)>;
     } catch (e) {
       return false;
     }
@@ -85,7 +91,7 @@ export function createAuthApi(cache: AsyncCache, env: Env) {
         body: JSON.stringify({ refresh_token: await cache.get('crux-auth-jwt-refresh-token') as Promise<string | undefined> })
       });
 
-      return res.json() as Promise<Token & { user: User }>;
+      return res.json() as Promise<(Token & { user: User }) | AuthError>;
     } catch (e) {
       return false;
     }
@@ -101,7 +107,7 @@ export function createAuthApi(cache: AsyncCache, env: Env) {
         })
       });
 
-      return res.json() as Promise<User>;
+      return res.json() as Promise<User | AuthError>;
     } catch (e) {
       return false;
     }
@@ -114,7 +120,7 @@ export function createAuthApi(cache: AsyncCache, env: Env) {
         method: 'GET',
       });
 
-      return res.json() as Promise<User>;
+      return res.json() as Promise<User | AuthError>;
     } catch (e) {
       return false;
     }

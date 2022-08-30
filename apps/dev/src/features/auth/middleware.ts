@@ -4,9 +4,6 @@ import type { authSlice } from "./slice";
 
 export function createAuthMiddleware(auth: Auth, actions: ReturnType<typeof authSlice>['actions']) {
   return (api: MiddlewareAPI) => {
-    auth.on('user', (user) => {
-      api.dispatch(actions.setUser(user))
-    });
 
     return (next: Dispatch) => (action: Action) => {
       next(action);

@@ -1,18 +1,18 @@
 import type { CruxContext } from '@crux/app';
 import type { AuthAPI } from './api/api';
 import { createAuth } from './domain/auth';
-import { createAuthMiddleware } from './middleware';
 import { authSlice } from './slice';
 import { selectUserNavActions, selectUserNavData } from './views/user-nav/user-nav.selectors';
 
 export async function createAuthModule({ dispatch }: CruxContext, api: AuthAPI) {
   const auth = await createAuth(api);
   const { actions, reducer } = authSlice();
-  const middlewares = [createAuthMiddleware(auth, actions)];
+
+  auth.on('user', data => dispatch(actions.setUser(data)));
+  auth.on('stateChange', data => dispatch(actions.setMachineState(data.current)));
 
   return {
     actions,
-    middlewares,
     reducer,
     views: {
       userNav: {

@@ -3,7 +3,7 @@ import type { EventEmitter } from '@crux/event-emitter';
 import { machine } from "@crux/machine";
 import type { Events as MachineEvents } from '@crux/machine';
 
-import type { AuthAPI } from "../api/api";
+import type { AuthAPI, AuthError } from "../api/api";
 import type { Token, User } from "../api/types";
 
 const machineConfig = {
@@ -42,6 +42,8 @@ const machineConfig = {
   }
 };
 
+export type States = keyof typeof machineConfig;
+
 type Events = {
   newToken: Token;
   stateChange: MachineEvents<typeof machineConfig>['onEnter'];
@@ -78,13 +80,13 @@ export async function createAuth(api: AuthAPI): Promise<Auth> {
     try {
       const user = await api.user();
 
-      if (user) {
+      if (isAuthError(user)) {
+        auth.fetchUserFailure();
+      } else  {
         auth.fetchUserSuccess();
 
         emitter.emit('user', user);
-      } else {
-        auth.fetchUserFailure();
-      }      
+      }   
     } catch (e) {
       auth.fetchUserFailure();
     }
@@ -99,17 +101,16 @@ export async function createAuth(api: AuthAPI): Promise<Auth> {
   
         try {
           const response = await api.refreshToken();
-  
-          if (response) {
+
+          if (isAuthError(response)) {
+            auth.refreshTokenFailure();
+          } else {
             auth.refreshTokenSuccess();
   
             const { user, ...rest } = response;
 
             emitter.emit('newToken', rest);
-          } else {
-            auth.refreshTokenFailure();
           }
-          
         } catch (e) {
           auth.refreshTokenFailure();
   
@@ -152,4 +153,10 @@ export async function createAuth(api: AuthAPI): Promise<Auth> {
       auth.signupFailure();
     }
   }
+}
+
+function isAuthError(obj: unknown): obj is AuthError {
+  const anyObj = (obj as any);
+
+  return (typeof anyObj.code === 'number' && typeof anyObj.msg === 'string') || typeof anyObj.error === 'string' || anyObj === false; 
 }
