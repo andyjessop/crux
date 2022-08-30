@@ -1,5 +1,5 @@
 import { allDependenciesExist } from './all-dependencies-exist';
-import { byDependency } from './by-dependency';
+import { byDependency, sortByDependency } from './by-dependency';
 import { getDependents } from './get-dependents';
 
 export type Options<T> = { service: keyof T; singleton: true };
@@ -23,15 +23,14 @@ export type Model<T> = {
 export function di<T>(initialServices: T) {
   type Instance<K extends keyof T> = T[K] extends {factory: (() => Promise<(...args: any[]) => infer R>), deps?: string[] }
   ? R : any;
-  const services = new Map<string, Model<T>>();
+  const services = new Map<string, Model<T>>();  
 
   if (initialServices) {
-    Object.entries(initialServices)
-      // ensure dependent constructors are added after independent constructors
-      .sort(byDependency)
-      .forEach(([key, service]) => {
-        register(key as (keyof T & string), service);
-      });
+    const sorted = sortByDependency(Object.entries(initialServices));
+
+    sorted.forEach(([key, service]) => {
+      register(key as (keyof T & string), service);
+    });
   }
 
   return {

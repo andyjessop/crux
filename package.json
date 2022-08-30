@@ -1,6 +1,6 @@
 {
   "name": "crux",
-  "version": "0.0.39-alpha",
+  "version": "0.0.40-alpha",
   "license": "MIT",
   "scripts": {
     "build-packages": "npx nx run-many --target=prod --all --with-deps",
@@ -13,6 +13,7 @@
     "@reduxjs/toolkit": "1.8.3",
     "classnames": "^2.3.1",
     "core-js": "^3.6.5",
+    "idb-keyval": "^6.2.0",
     "lit-html": "^2.3.1",
     "path": "^0.12.7",
     "react": "18.2.0",
@@ -41,6 +42,7 @@
     "@rollup/plugin-commonjs": "^21.0.1",
     "@testing-library/react": "13.3.0",
     "@types/jest": "27.4.1",
+    "@types/jsdom": "^20.0.0",
     "@types/node": "18.0.0",
     "@types/react": "18.0.15",
     "@types/react-dom": "18.0.6",
@@ -57,6 +59,7 @@
     "eslint-plugin-react": "7.30.1",
     "eslint-plugin-react-hooks": "4.6.0",
     "jest": "27.5.1",
+    "msw": "^0.45.0",
     "nx": "14.5.4",
     "prettier": "2.7.1",
     "react-test-renderer": "18.2.0",
@@ -68,5 +71,8 @@
   "workspaces": [
     "apps/**",
     "packages/**"
-  ]
+  ],
+  "msw": {
+    "workerDirectory": "public"
+  }
 }

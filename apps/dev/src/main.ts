@@ -1,7 +1,9 @@
+import './main.css';
 import { createApp, LogLevel } from '@crux/app';
 import type { Logger } from '@crux/app';
-import { selectLayout } from './modules/layout/redux/selectors';
-import { selectToggleButtonActions, selectToggleButtonData } from './modules/toggle-button/redux/selectors';
+import { selectLayout } from './layout/layout.selectors';
+import { selectToggleButtonActions, selectToggleButtonData } from './features/dark-mode-toggle/dark-mode-toggle-button.selectors';
+import { selectUserData } from './features/users/user.selectors';
 
 main();
 
@@ -12,50 +14,94 @@ async function main() {
     throw 'No root found!!';
   }
   
-  const app = await createApp({
+  // If we're in development, start the mock server. This starts a ServiceWorker
+  // which intercepts fetch requests and returns mocks according to the contents
+  // of ./shared/mocks/handlers. See https://mswjs.io/ for more details.
+  if (import.meta.env.DEV) {    
+    const { createServer } = await import('./shared/mock/server');
+
+    (await createServer( import.meta.env.VITE_API_BASE_URL)).start({ onUnhandledRequest: "bypass", waitUntilReady: true });
+  }
+
+  await createApp({
+    /**
+     * MODULES
+     * =======
+     */
     modules: {
+      auth: {
+        deps: ['authApi'],
+        factory: () => import('./features/auth/auth.module').then(mod => mod.createAuthModule),
+      },
       darkMode: {
-        deps: ['darkMode', 'cache'],
-        enabled: () => true,
-        factory: () => import('./modules/dark-mode/redux').then(mod => mod.createDarkModeRedux),
+        deps: ['darkMode'],
+        factory: () => import('./shared/dark-mode/dark-mode.module').then(mod => mod.createDarkModeModule),
       },
       data: {
-        deps: ['data'],
-        enabled: () => true,
-        factory: () => import('./modules/data/redux').then(mod => mod.createDataRedux),
+        deps: ['usersApi'],
+        factory: () => import('./shared/data/data.module').then(mod => mod.createDataModule),
       },
       router: {
-        enabled: () => true,
-        factory: () => import('./modules/router/redux').then(mod => mod.createRouterRedux)
+        deps: ['cache'],
+        factory: () => import('./shared/router/router.module').then(mod => mod.createRouterModule)
       },
-      layout: {
-        enabled: () => true,
-        factory: () => import('./modules/layout/redux').then(mod => mod.createLayoutRedux),
+      users: {
+        deps: ['data.users'],
+        factory: () => import('./features/users/user.module').then(mod => mod.createUserModule),
       },
-      toggleButton: {
-        enabled: () => true,
-        factory: () => import('./modules/toggle-button/redux/slice').then(mod => mod.createToggleButtonRedux)
-      }
     },
-    root,
-    services: {
-      cache: { factory: () => import('./services/cache').then(mod => mod.createCacheService) },
-      darkMode: { factory: () => import('./modules/dark-mode/service').then(mod => mod.createDarkModeService), deps: ['cache'] },
-      data: { factory: () => import('./services/data').then(mod => mod.createDataService) },
-      usersApi: { factory: () => import('./services/api/users').then(mod => mod.createUsersApiService) },
-      usersData: { factory: () => import('./services/data/users').then(mod => mod.usersDataService), deps: ['data', 'usersApi'] }
-    },
-    views: {
-      layout: {
+
+    /**
+     * LAYOUT
+     * ======
+     */
+    layout: {
+      module: {
+        factory: () => import('./layout/layout.module').then(mod => mod.createLayoutModule),
+      },
+      view: {
         selectData: selectLayout,
-        factory: () => import('./modules/layout/views/layout').then(mod => mod.createLayoutView),
-      },
-      toggleButton: {
-        root: 'top-left',
-        selectActions: selectToggleButtonActions,
-        selectData: selectToggleButtonData,
-        factory: () => import('./modules/toggle-button/views/toggle-button').then(mod => mod.createToggleButtonView),
+        factory: () => import('./layout/layout.view').then(mod => mod.createLayoutView),
       }
+    },
+
+    /**
+     * ROOT
+     * ====
+     */
+    root,
+
+    /**
+     * SERVICES
+     * ========
+     */
+    services: {
+      asyncCache: { factory: () => import('./shared/cache/async-cache.service').then(mod => mod.createAsyncCacheService) },
+      authApi: { factory: () => import('./features/auth/api/api').then(mod => mod.createAuthApi), deps: ['asyncCache', 'env'] },
+      cache: { factory: () => import('./shared/cache/cache.service').then(mod => mod.createCacheService) },
+      darkMode: { factory: () => import('./shared/dark-mode/dark-mode.service').then(mod => mod.createDarkModeService), deps: ['cache'] },
+      env: { factory: () => import('./shared/env/env.service').then(mod => mod.env) },
+      featureFlags: { factory: () => import('./shared/feature-flags/feature-flags.service').then(mod => mod.createFeatureFlagsService) },
+      reporting: { factory: () => import('./shared/logging/logging.service').then(mod => mod.createReportingService) },
+      usersApi: { factory: () => import('./shared/api/users-api.service').then(mod => mod.createUsersApiService) },
+    },
+
+    /**
+     * VIEWS
+     * =====
+     */
+    views: {
+      // toggleButton: {
+      //   root: 'top-left',
+      //   selectActions: selectToggleButtonActions,
+      //   selectData: selectToggleButtonData,
+      //   factory: () => import('./features/dark-mode-toggle/dark-mode-toggle-button.view').then(mod => mod.createToggleButtonView),
+      // },
+      // user: {
+      //   root: 'top-right',
+      //   selectData: selectUserData,
+      //   factory: () => import('./features/users/user.view').then(mod => mod.createUserView),
+      // }
     }
   }, { logger: createLogger('debug') });
 }
@@ -64,7 +110,8 @@ export function createLogger(initialLevel: keyof typeof LogLevel): Logger {
   return {
     log: (level: keyof typeof LogLevel, data: string) => {
       if (LogLevel[level] <= LogLevel[initialLevel]) {
-        console.log(data);
+        const { data: logData, message } = JSON.parse(data) as any;
+        console.info(message, logData);
       }
     }
   }

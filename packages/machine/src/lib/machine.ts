@@ -105,7 +105,7 @@ type Config = {
   [key: string]: Record<string, (...params: any[]) => Promise<string> | string>;
 };
 
-type Events<T> = {
+export type Events<T> = {
   onEnter: { action: Actions<T>; current: keyof T; meta?: unknown; last: keyof T };
   onExit: { action: Actions<T>; current: keyof T, meta?: unknown; };
 };

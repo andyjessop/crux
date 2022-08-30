@@ -23,8 +23,8 @@ export function slice<T extends Record<string, (state: S, payload?: any) => S>, 
 
         return acc;
       }, {} as { [K in keyof T]: Parameters<T[K]>[1] extends undefined ?
-        { (): { payload: Parameters<T[K]>[1]; type: K; }; name: K; type: K; } :
-        { (payload: Parameters<T[K]>[1]): { payload: Parameters<T[K]>[1]; type: K; }; name: K; type: K; }
+        { (): { payload: Parameters<T[K]>[1]; type: K; }; name: string; type: string; } :
+        { (payload: Parameters<T[K]>[1]): { payload: Parameters<T[K]>[1]; type: string; }; name: K; type: string; }
       }),
 
     reducer: (state: S | undefined, action: AnyAction) => {

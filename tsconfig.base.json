@@ -34,7 +34,8 @@
       "@crux/store": ["packages/store/src/index.ts"],
       "@crux/string-utils": ["packages/string-utils/src/index.ts"],
       "@crux/sync-queue": ["packages/sync-queue/src/index.ts"],
-      "@crux/url-parser": ["packages/url-parser/src/index.ts"]
+      "@crux/url-parser": ["packages/url-parser/src/index.ts"],
+      "@crux/utils": ["packages/utils/src/index.ts"]
     },
     "types": ["node"]
   },

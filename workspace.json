@@ -19,6 +19,7 @@
     "store": "packages/store",
     "string-utils": "packages/string-utils",
     "sync-queue": "packages/sync-queue",
-    "url-parser": "packages/url-parser"
+    "url-parser": "packages/url-parser",
+    "utils": "packages/utils"
   }
 }

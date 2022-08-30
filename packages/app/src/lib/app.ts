@@ -1,29 +1,118 @@
 import { createAsyncQueue } from '@crux/async-queue'
-import type { Action, Dispatch, DispatchActionOrThunk, MiddlewareAPI } from '@crux/redux-types'
+import type { Action, Dispatch, DispatchActionOrThunk, Middleware, MiddlewareAPI, Reducer, Thunk } from '@crux/redux-types'
 import { di } from '@crux/di'
 import { slice as createSlice } from '@crux/redux-slice'
 import { createStore } from './redux-store';
 import { asymmetricDifference } from '@crux/set-utils';
 import type { Logger } from './logger';
-import type { Config, CoreState, LayoutView, Module, ModuleConfig, ModuleConfigCollection, ModuleReturn, Regions, View, ViewConfig, ViewConfigCollection } from './types';
 
-export async function createApp<S, V>({
-  modules: moduleConfigsCollection,
-  root,
-  services: serviceConfigsCollection,
-  views: viewConfigsCollection
-}: Config<S, V>, {
+export interface CoreState {
+  regions: Regions;
+}
+
+export type Regions = string[];
+
+type ModuleReturn = {
+  actions?: Record<string, (...args: any) => Action>,
+  destroy?: () => void;
+  middleware?: Middleware;
+  reducer?: Reducer;
+  services?: Record<string, { factory: ServiceFactory<any> }>;
+  views?: Record<string, {
+    root: string,
+    selectActions?: (state: any) => any,
+    selectData?: (state: any) => any, 
+    factory: ViewFactory
+  }>;
+};
+
+type ActionCreatorCollection<K extends string = any> = Record<K, (...args: any) => Action<any> | Thunk>;
+type ModuleFactory = () => Promise<(...args: any) => ModuleReturn | Promise<ModuleReturn>>;
+type ViewFactory = () => Promise<Render>;
+type ServiceFactory<Deps extends any[] = any[]> = () => Promise<(...args: Deps) => any>;
+type Render = (root: HTMLElement, data?: any, actions?: any) => Promise<void> | void;
+
+type ExtractModuleServiceKeys<T extends ModuleFactory> = keyof Awaited<ReturnType<Awaited<ReturnType<T>>>>['services'] & string;
+
+export async function createApp<
+  T extends {
+    modules: Record<string, {
+      deps?: ({ 
+        [K in (keyof T['modules'])]: `${K & string}.${ExtractModuleServiceKeys<T['modules'][K]["factory"]>}`
+      }[keyof T['modules']] | keyof T['services'])[],
+      enabled?: (state: any) => boolean;
+      factory: ModuleFactory
+    }>,
+    layout: {
+      module: {
+        deps?: ({ 
+          [K in (keyof T['modules'])]: `${K & string}.${ExtractModuleServiceKeys<T['modules'][K]["factory"]>}`
+        }[keyof T['modules']] | keyof T['services'])[],
+        factory: ModuleFactory
+      },
+      view: {
+        deps?: (keyof T['services'])[],
+        selectData?: (state: any) => any, 
+        factory: ViewFactory
+      }
+    },
+    root: HTMLElement;
+    services: {
+      [S in keyof T['services']]: {
+        deps?: (Exclude<keyof T['services'], S>)[],
+        factory: ServiceFactory
+      }
+    },
+    views: Record<string, {
+      root: string,
+      selectActions?: (state: any) => any,
+      selectData?: (state: any) => any, 
+      factory: ViewFactory
+    }>,
+  }
+>(config: T, {
   logger,
 }: {
   logger?: Logger,
 } = {}) {
+  type LayoutView = T['layout']['view'] & { currentData: any, render?: Render };
+  type LayoutModule = T['layout']['module'] & {
+    middleware?: Middleware;
+    reducer?: Reducer;
+  };
+
+  type Module = T['modules'][keyof T['modules']] & {
+    actions?: ActionCreatorCollection;
+    destroy?: () => void;
+    middleware?: Middleware;
+    reducer?: Reducer;
+    unregister?: () => void;
+  };
+
+  type View = T['views'][keyof T['views']] & {
+    currentActions: any,
+    currentData: any,
+    destroy?: () => void,
+    render?: Render,
+    rootEl?: HTMLElement;
+  };
+
   const { addMiddleware, addReducer, store } = createStore();
+  const {
+    layout: layoutConfig,
+    modules: moduleConfigsCollection,
+    root,
+    services: serviceConfigsCollection,
+    views: viewConfigsCollection
+  } = config;
 
   const servicesContainer = di(serviceConfigsCollection);
 
-  const modules = createModuleMap(moduleConfigsCollection);
-  const views = createViewMap(viewConfigsCollection);
-  const mountedViews = new Map<string, View<S>>();
+  const modules = createModuleMap();
+  const views = createViewMap();
+  const layoutView = createLayoutView();
+  const layoutModule = createLayoutModule();
+  const mountedViews = new Map<string, View>();
 
   const queue = createAsyncQueue();
 
@@ -32,7 +121,8 @@ export async function createApp<S, V>({
   let busy = true;
 
   const { actions: coreActions, reducer: coreReducer } = createSlice({
-    initReducer: (state: { regions: Regions }) => state,
+    initReducer: (state: { regions: Regions }, payload?: any) => state,
+    initSlice: (state: { regions: Regions }, payload?: any) => state,
     setRegions: (state: { regions: Regions }, payload: string[]) => ({
       ...state,
       regions: [...state.regions, ...payload],
@@ -59,21 +149,17 @@ export async function createApp<S, V>({
     /**
      * Module
      */
-    const layoutModule = modules.get('layout') as Module<S>;
-
     const createInstance = await layoutModule.factory();
 
     const { middleware, reducer } = createInstance() as ModuleReturn;
 
-    layoutModule.unregister = registerModule('layout', dispatch as DispatchActionOrThunk, { middleware, reducer });
+    registerModule('layout', dispatch as DispatchActionOrThunk, { middleware, reducer });
 
-    dispatch(coreActions.initReducer());
+    dispatch(coreActions.initReducer('layout'));
 
     /**
      * View
      */
-    const layoutView = views.get('layout') as LayoutView<S>;
-
     layoutView.render = await layoutView.factory();
   }
 
@@ -82,10 +168,12 @@ export async function createApp<S, V>({
       return async function handleAction(action: Action) {
         if (
           action.type === coreActions.initReducer.type ||
-          action.type === coreActions.setRegions.type) {
+          action.type === coreActions.setRegions.type ||
+          action.type === coreActions.initSlice.type) {
 
           logger?.log('info', JSON.stringify({
             message: 'Is core action. Passing to reducers.',
+            data: action,
           }));
 
           next(action);
@@ -96,6 +184,7 @@ export async function createApp<S, V>({
         if (busy) {
           logger?.log('info', JSON.stringify({
             message: 'Crux is busy. Adding action to queue.',
+            data: action
           }));
 
           queue.add(api.dispatch, action);
@@ -105,11 +194,10 @@ export async function createApp<S, V>({
 
         logger?.log('info', JSON.stringify({
           message: 'Crux is not busy. Passing to reducers',
+          data: action
         }));
 
         next(action);
-
-        busy = true;
 
         const newModules = await registerModules(api.getState(), api.dispatch);
 
@@ -118,8 +206,6 @@ export async function createApp<S, V>({
             message: 'New modules',
             data: newModules
           }));
-
-          api.dispatch(coreActions.initReducer());
         }
 
         const regions = await renderLayout(api.getState());
@@ -135,7 +221,10 @@ export async function createApp<S, V>({
 
         await mountViews(api.getState());
 
-        busy = false;
+        logger?.log('info', JSON.stringify({
+          message: 'Flushing queue',
+          data: queue.entries.map(fn => fn.fn.name)
+        }));
 
         queue.flush();
       }
@@ -150,7 +239,11 @@ export async function createApp<S, V>({
       return () => { /* */ };
     }
 
-    const { actions, middleware, reducer } = moduleReturn;
+    const { actions, middleware, reducer, services: moduleServices = {}, views: moduleViews = {} } = moduleReturn;
+
+    for (const [key, service] of Object.entries(moduleServices)) {
+      servicesContainer.register(`${name}.${key}` as keyof T['services'], service);
+    }
 
     if (actions) {
       registeredActions[name] = Object.entries(actions).reduce((acc, [key, actionCreator]) => {
@@ -167,10 +260,20 @@ export async function createApp<S, V>({
     if (reducer) {
       removeReducer = addReducer(name, reducer);
     }
+
+    for (const [key, view] of Object.entries(moduleViews)) {
+      views.set(key, createView(view as View));
+    }
+
+    dispatch(coreActions.initSlice(name));
  
     return function unregisterModule() {
       if (actions) {
         delete registeredActions[name];
+      }
+
+      for (const [key, view] of Object.entries(moduleViews)) {
+        views.delete(key);
       }
 
       removeMiddleware?.();
@@ -181,19 +284,20 @@ export async function createApp<S, V>({
   async function registerModules(state: any, dispatch: Dispatch) {
     const modulesAdded: string[] = [];
 
+    // Sort modules so that dependencies all appear in order. Error if circular dependency
+
     for (const moduleName of modules.keys()) {
-      const whichModule = modules.get(moduleName) as Module<S>;
+      const whichModule = modules.get(moduleName) as Module;
       
       const { deps = [], destroy, enabled, factory, unregister } = whichModule;
 
-      const shouldBeEnabled = enabled(state);
+      const shouldBeEnabled = enabled?.(state) ?? true;
 
       const isRegistered = unregister;
       const shouldRegister = shouldBeEnabled && !isRegistered;
       const shouldUnregister = !shouldBeEnabled && isRegistered;
 
       if (shouldUnregister) {
-        // debugger;
         unregister?.();
         destroy?.();
       }
@@ -202,11 +306,11 @@ export async function createApp<S, V>({
         continue;
       }
 
-      const createInstance = await factory();
+      const createInstance = await factory();      
       
-      const depInstances = await Promise.all(deps.map(dep => servicesContainer.get(dep as keyof S & string)));
+      const depInstances = await Promise.all(deps.map((dep => servicesContainer.get(dep as keyof T["services"] & string))));
 
-      const slice = createInstance(...depInstances);
+      const slice = await createInstance(...depInstances);
 
       whichModule.unregister = registerModule(moduleName, dispatch as DispatchActionOrThunk, slice);
 
@@ -219,19 +323,17 @@ export async function createApp<S, V>({
   }
 
   async function renderLayout(state: any) {
-    const layoutView = views.get('layout') as LayoutView<S>;
+    const { currentData, render, selectData } = layoutView;
 
-    const { currentState, render, selectData } = layoutView;
+    const newData = selectData?.(state);
 
-    const newState = selectData(state);
-
-    if (newState === currentState) {
+    if (newData === currentData) {
       return;
     }
 
-    layoutView.currentState = newState;
+    layoutView.currentData = newData;
 
-    await render?.({ ...newState, root });
+    await render?.(root, newData);
 
     // New state is rendered. Get regions from DOM.
     const regions = (Array.from(document.querySelectorAll('[data-crux-root]')))
@@ -287,68 +389,77 @@ export async function createApp<S, V>({
     }
 
     // Render views whose state has changed
-    for (const view of mountedViews.values()) {
-      const { currentState, render, root, rootEl, selectActions, selectData } = view;
+    for (const view of mountedViews.values()) {      
+      const { currentData, render, root, rootEl, selectActions, selectData } = view;
 
-      const newState = selectData(state);
+      const newData = selectData?.(state);
 
       logger?.log('debug', JSON.stringify({
         message: `Current state for view ${root}`,
-        data: JSON.stringify(newState),
+        data: JSON.stringify(newData),
       }));
 
-      if (newState === currentState) {
+      if (newData === currentData || rootEl === undefined) {
         return;
       }
 
-      view.currentState = newState;
+      view.currentData = newData;
 
-      await render?.({ ...newState, root: rootEl, ...selectActions?.(registeredActions) });
+      await render?.(rootEl, newData, selectActions?.(registeredActions));
     }
   }
 
   function selectRegions(state: { __cruxCore: CoreState }) {
     return state.__cruxCore.regions;
   }
-}
 
-function createModuleMap<S>(moduleConfigCollection: ModuleConfigCollection<S>) {
-  return Object.entries(moduleConfigCollection)
-  .reduce((acc, [key, value]) => {
-    acc.set(key, createModule(value));
+  // UTILS
 
-    return acc;
-  }, new Map<string, Module<S>>())
-}
-
-function createModule<S>(redux: ModuleConfig<S>): Module<S> {
-  return {
-    ...redux,
-    currentState: null,
-    global: Boolean(redux.global),
+  function createLayoutView(): LayoutView {
+    return {
+      ...layoutConfig.view,
+      currentData: null
+    };
   }
-}
 
-function createViewMap<S, V>(viewConfigCollection: ViewConfigCollection<S, V>) {
-  return Object.entries(viewConfigCollection)
+  function createLayoutModule(): LayoutModule {
+    return {
+      ...layoutConfig.module,
+    };
+  }
+
+  function createModuleMap() {
+    return Object.entries(moduleConfigsCollection)
     .reduce((acc, [key, value]) => {
-      acc.set(key, createView(value as ViewConfig<S>));
-
+      acc.set(key, value as Module);
+  
       return acc;
-    }, new Map<string, View<S>>())
-}
-
-function createView<S>(viewConfig: ViewConfig<S>): View<S> {
-  return {
-    ...viewConfig,
-    currentState: null,
+    }, new Map<string, Module>())
   }
-}
-
-function mapFind(map: Map<string, any>, prop: string, value: any) {
-  for (const [key, val] of map.entries()) {
-    if (val[prop] === value) {
-      return val;
+  
+  function createViewMap() {
+    return Object.entries(viewConfigsCollection)
+      .reduce((acc, [key, value]) => {
+        acc.set(key, createView(value as View));
+  
+        return acc;
+      }, new Map<string, View>())
+  }
+  
+  function createView(viewConfig: Omit<View, 'currentData' | 'currentActions' | 'rootEl' | 'render'>): View {
+    return {
+      ...viewConfig,
+      currentActions: null,
+      currentData: null,
+    } as View;
+  }
+  
+  function mapFind(map: Map<string, any>, prop: string, value: any) {
+    for (const [key, val] of map.entries()) {
+      if (val[prop] === value) {
+        return val;
+      }
     }
   }
 }
+

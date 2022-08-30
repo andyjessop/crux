@@ -22,10 +22,7 @@ export default defineConfig({
       { find: '@crux/string-utils', replacement: path.resolve(__dirname, '../../packages/string-utils/src/index.ts') },
       { find: '@crux/sync-queue', replacement: path.resolve(__dirname, '../../packages/sync-queue/src/index.ts') },
       { find: '@crux/url-parser', replacement: path.resolve(__dirname, '../../packages/url-parser/src/index.ts') },
+      { find: '@crux/utils', replacement: path.resolve(__dirname, '../../packages/utils/src/index.ts') },
     ],
   },
-  root: 'apps/dev',
-  server: {
-    port: 4242
-  }
 });

@@ -1,6 +1,6 @@
 {
   "name": "@crux/redux-router",
-  "version": "0.0.39-alpha",
+  "version": "0.0.40-alpha",
   "type": "commonjs",
   "devDependencies": {
     "react": "^17.0.2",
