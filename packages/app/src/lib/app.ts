@@ -1,5 +1,5 @@
 import { createAsyncQueue } from '@crux/async-queue'
-import type { Action, Dispatch, DispatchActionOrThunk, Middleware, MiddlewareAPI, Reducer, Thunk } from '@crux/redux-types'
+import type { Action, Dispatch, DispatchActionOrThunk, GetState, Middleware, MiddlewareAPI, Reducer, Thunk } from '@crux/redux-types'
 import { di } from '@crux/di'
 import { slice as createSlice } from '@crux/redux-slice'
 import { createStore } from './redux-store';
@@ -15,7 +15,7 @@ export type Regions = string[];
 type ModuleReturn = {
   actions?: Record<string, (...args: any) => Action>,
   destroy?: () => void;
-  middleware?: Middleware;
+  middlewares?: Middleware[];
   reducer?: Reducer;
   services?: Record<string, { factory: ServiceFactory<any> }>;
   views?: Record<string, {
@@ -27,12 +27,17 @@ type ModuleReturn = {
 };
 
 type ActionCreatorCollection<K extends string = any> = Record<K, (...args: any) => Action<any> | Thunk>;
-type ModuleFactory = () => Promise<(...args: any) => ModuleReturn | Promise<ModuleReturn>>;
+type ModuleFactory = () => Promise<(ctx: CruxContext, ...args: any) => ModuleReturn | Promise<ModuleReturn>>;
 type ViewFactory = () => Promise<Render>;
 type ServiceFactory<Deps extends any[] = any[]> = () => Promise<(...args: Deps) => any>;
 type Render = (root: HTMLElement, data?: any, actions?: any) => Promise<void> | void;
 
 type ExtractModuleServiceKeys<T extends ModuleFactory> = keyof Awaited<ReturnType<Awaited<ReturnType<T>>>>['services'] & string;
+
+export type CruxContext = {
+  dispatch: Dispatch;
+  getState: GetState;
+};
 
 export async function createApp<
   T extends {
@@ -98,6 +103,7 @@ export async function createApp<
   };
 
   const { addMiddleware, addReducer, store } = createStore();
+  const ctx = { dispatch: store.dispatch, getState: store.getState } as CruxContext;
   const {
     layout: layoutConfig,
     modules: moduleConfigsCollection,
@@ -151,9 +157,9 @@ export async function createApp<
      */
     const createInstance = await layoutModule.factory();
 
-    const { middleware, reducer } = createInstance() as ModuleReturn;
+    const { middlewares, reducer } = createInstance(ctx) as ModuleReturn;
 
-    registerModule('layout', dispatch as DispatchActionOrThunk, { middleware, reducer });
+    registerModule('layout', dispatch as DispatchActionOrThunk, { middlewares, reducer });
 
     dispatch(coreActions.initReducer('layout'));
 
@@ -232,14 +238,14 @@ export async function createApp<
   }
 
   function registerModule(name: string, dispatch: DispatchActionOrThunk, moduleReturn?: ModuleReturn): () => void {
-    let removeMiddleware: () => void;
     let removeReducer: () => void;
+    const removeMiddlewareArray = [] as Array<() => void>;
 
     if (!moduleReturn) {
       return () => { /* */ };
     }
 
-    const { actions, middleware, reducer, services: moduleServices = {}, views: moduleViews = {} } = moduleReturn;
+    const { actions, middlewares, reducer, services: moduleServices = {}, views: moduleViews = {} } = moduleReturn;
 
     for (const [key, service] of Object.entries(moduleServices)) {
       servicesContainer.register(`${name}.${key}` as keyof T['services'], service);
@@ -253,8 +259,10 @@ export async function createApp<
       }, {} as Record<string, (payload: Action['payload']) => void>);
     }
 
-    if (middleware) {
-      removeMiddleware = addMiddleware(middleware);
+    if (middlewares) {
+      for (const middleware of middlewares) {
+        removeMiddlewareArray.push(addMiddleware(middleware));
+      }
     }
 
     if (reducer) {
@@ -276,7 +284,10 @@ export async function createApp<
         views.delete(key);
       }
 
-      removeMiddleware?.();
+      for (const remove of removeMiddlewareArray) {
+        remove();
+      }
+      
       removeReducer?.();
     }
   }
@@ -310,7 +321,7 @@ export async function createApp<
       
       const depInstances = await Promise.all(deps.map((dep => servicesContainer.get(dep as keyof T["services"] & string))));
 
-      const slice = await createInstance(...depInstances);
+      const slice = await createInstance(ctx, ...depInstances);
 
       whichModule.unregister = registerModule(moduleName, dispatch as DispatchActionOrThunk, slice);
 

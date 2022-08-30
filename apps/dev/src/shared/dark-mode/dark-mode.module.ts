@@ -1,3 +1,4 @@
+import type { CruxContext } from "@crux/app";
 import { slice } from "@crux/redux-slice";
 import type { Action, Dispatch, MiddlewareAPI } from "@crux/redux-types";
 import { createDarkModeMiddleware } from "./dark-mode.middleware";
@@ -9,7 +10,7 @@ export interface State {
   isDark: boolean
 }
 
-export function createDarkModeModule(darkMode: DarkModeService) {
+export function createDarkModeModule(ctx: CruxContext, darkMode: DarkModeService) {
   const { actions, reducer } = createSlice(darkMode.isDark());
   const middleware = createDarkModeMiddleware(darkMode, actions.toggle.type);
 
