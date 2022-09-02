@@ -1,6 +1,6 @@
 # `@crux/redux-machine`
 
-`machine` is an asynchronous Finite State Machine for redux.
+`machine` is an asynchronous Finite State Machine for redux. It's fully-typed, with action names and params inferred from your reducer definitions.
 
 ## Installation
 

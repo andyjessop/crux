@@ -1,18 +1,16 @@
 import type { CruxContext } from '@crux/app';
-import type { AuthAPI } from './api/api';
-import { createAuth } from './domain/auth';
-import { authSlice } from './slice';
+import type { User } from './api/types';
+import type { AuthService, StateChangeData } from './services/auth.service';
+import { authSlice } from './auth.slice';
 import { selectUserNavActions, selectUserNavData } from './views/user-nav/user-nav.selectors';
 
-export async function createAuthModule({ dispatch }: CruxContext, api: AuthAPI) {
-  const auth = await createAuth(api);
-  const { actions, reducer } = authSlice();
-
-  auth.on('user', data => dispatch(actions.setUser(data)));
-  auth.on('stateChange', data => dispatch(actions.setMachineState(data.current)));
+export async function createAuthModule({ dispatch }: CruxContext, auth: AuthService) {
+  const { actions, reducer } = authSlice('auth');
 
   return {
     actions,
+    create,
+    destroy,
     reducer,
     views: {
       userNav: {
@@ -23,5 +21,23 @@ export async function createAuthModule({ dispatch }: CruxContext, api: AuthAPI) 
       }
     }
   };
+
+  function create() {
+    auth.on('user', setUser);
+    auth.on('stateChange', stateChange);
+  }
+
+  function destroy() {
+    auth.off('user', setUser);
+    auth.off('stateChange', stateChange);
+  }
+
+  function setUser(data: User) {
+    dispatch(actions.set({ user: data }));
+  }
+
+  function stateChange(data: StateChangeData) {
+    dispatch(actions.set({ machineState: data.current }));
+  }
 }
 

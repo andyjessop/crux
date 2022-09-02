@@ -11,10 +11,6 @@ const machineConfig = {
     tokenInvalid: () => 'refreshingToken',
     tokenValid: () => 'loggedIn',
   },
-  loginForm: {
-    cancelLogin: () => 'loggedOut',
-    submitLoginForm: () => 'loggingIn',
-  },
   loggedIn: {
     fetchUserFailure: () => 'loggedOut',
     logout: () => 'loggedOut',
@@ -27,37 +23,37 @@ const machineConfig = {
     clickLogin: () => 'loginForm',
     clickSignup: () => 'signupForm',
     fetchUserSuccess: () => 'loggedIn',
+    submitLoginForm: () => 'loggingIn',
+    submitSignupForm: () => 'signingUp',
   },
   refreshingToken: {
     refreshTokenSuccess: () => 'loggedIn',
-    refreshTokenFailure: () => 'loginForm',
-  },
-  signupForm: {
-    cancelSignup: () => 'loggedOut',
-    submitSignupForm: () => 'signingUp',
+    refreshTokenFailure: () => 'loggedOut',
   },
   signingUp: {
-    signupFailure: () => 'signupForm',
+    signupFailure: () => 'loggedOut',
     signupSuccess: () => 'unconfirmed',
   }
 };
 
 export type States = keyof typeof machineConfig;
 
+export type StateChangeData = MachineEvents<typeof machineConfig>['onEnter'];
+
 type Events = {
   newToken: Token;
-  stateChange: MachineEvents<typeof machineConfig>['onEnter'];
+  stateChange: StateChangeData;
   user: User;
 };
 
-export interface Auth extends EventEmitter<Events> {
+export interface AuthService extends EventEmitter<Events> {
   clickLogin(): void;
   clickSignup(): void;
   submitLoginForm(email: string, password: string): Promise<void>;
   submitSignupForm(email: string, password: string): Promise<void>;
 }
 
-export async function createAuth(api: AuthAPI): Promise<Auth> {
+export async function createAuth(api: AuthAPI): Promise<AuthService> {
   const emitter = createEventEmitter<Events>();
 
   const auth = machine(machineConfig, { initialState: 'initialising' });

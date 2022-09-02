@@ -1,18 +1,21 @@
-import type { Auth } from "../../domain/auth";
-import type { AuthState } from "../../slice";
+import type { AuthService } from "../../services/auth.service";
+import type { AuthState } from "../../auth.slice";
+import type { User } from "../../api/types";
 
-export function selectUserNavData(state: { auth: AuthState }) {
-  return state.auth;
+export type UserNavActions = Pick<AuthService, 'clickLogin' | 'clickSignup'>;
+
+export function selectUserNavActions(auth: AuthService): UserNavActions {
+  return {
+    clickLogin: auth.clickLogin,
+    clickSignup: auth.clickSignup
+  };
 }
 
-export type AuthActions = Pick<Auth, 'clickLogin' | 'clickSignup'>;
+export interface UserNavData {
+  user: User | null;
+}
 
-export function selectUserNavActions(auth: Auth): AuthActions {
-  const {
-    clickLogin, clickSignup
-  } = auth;
 
-  return {
-    clickLogin, clickSignup
-  };
+export function selectUserNavData(state: { auth: AuthState }): UserNavData {
+  return { user: state.auth.user };
 }

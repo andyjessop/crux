@@ -2,6 +2,7 @@ import './normalise.css';
 import { html, render } from 'lit-html';
 import type { LayoutState } from './types';
 import styles from './layout.module.scss';
+import type { LayoutData } from './layout.selectors';
 
 interface DefaultProps {
   root: HTMLElement;
@@ -11,26 +12,29 @@ interface Props extends DefaultProps {
   roots: LayoutState['roots'],
 }
 
-export function createLayoutView(root: HTMLElement, data: any) {
-  render(template(data.roots), root);
+export function createLayoutView(root: HTMLElement, data: LayoutData) {
+  render(template(data.layout.roots), root);
 
   function template(roots: LayoutState['roots']) {
     return html`
       <div class=${styles['app']}>
-      <div class=${styles['top']}>
-        <div class=${styles['left']} data-crux-root="top-left"></div>
-          <div class=${styles['middle']} data-crux-root="top-middle"></div>
-          <div class=${styles['right']} data-crux-root="user-nav"></div>
+        <div class=${styles['top']}>
+          <div class=${styles['left']} data-crux-root="top-left"></div>
+            ${data.auth.machineState === 'signupForm'
+              ? html`<div class=${styles['right']} data-crux-root="sign-up-form"></div>`
+              : null}
+            <div class=${styles['right']} data-crux-root="user-nav"></div>
+          </div>
+          
+          <div class=${styles['controls']} data-crux-root="controls"></div>
+          <div class=${styles['production']} data-crux-root="production"></div>
+          <div class=${styles['staging']} data-crux-root="staging"></div>
+          <div class=${styles['preview']} data-crux-root="preview"></div>
+          <div class=${styles['releases']} data-crux-root="releases"></div>
+          ${roots.sidebar
+            ? html`<div class=${styles['sidebar']} data-crux-root="sidebar"></div>`
+            : null}
         </div>
-        
-        <div class=${styles['controls']} data-crux-root="controls"></div>
-        <div class=${styles['production']} data-crux-root="production"></div>
-        <div class=${styles['staging']} data-crux-root="staging"></div>
-        <div class=${styles['preview']} data-crux-root="preview"></div>
-        <div class=${styles['releases']} data-crux-root="releases"></div>
-        ${roots.sidebar
-          ? html`<div class=${styles['sidebar']} data-crux-root="sidebar"></div>`
-          : null}
       </div>
     `;
   }

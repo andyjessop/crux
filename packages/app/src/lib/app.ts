@@ -14,7 +14,8 @@ export type Regions = string[];
 
 type ModuleReturn = {
   actions?: Record<string, (...args: any) => Action>,
-  destroy?: () => void;
+  create?: (ctx: CruxContext) => void;
+  destroy?: (ctx: CruxContext) => void;
   middlewares?: Middleware[];
   reducer?: Reducer;
   services?: Record<string, { factory: ServiceFactory<any> }>;
@@ -245,7 +246,7 @@ export async function createApp<
       return () => { /* */ };
     }
 
-    const { actions, middlewares, reducer, services: moduleServices = {}, views: moduleViews = {} } = moduleReturn;
+    const { actions, create, destroy, middlewares, reducer, services: moduleServices = {}, views: moduleViews = {} } = moduleReturn;
 
     for (const [key, service] of Object.entries(moduleServices)) {
       servicesContainer.register(`${name}.${key}` as keyof T['services'], service);
@@ -274,21 +275,26 @@ export async function createApp<
     }
 
     dispatch(coreActions.initSlice(name));
+
+    create?.(ctx);
  
     return function unregisterModule() {
       if (actions) {
         delete registeredActions[name];
       }
 
-      for (const [key, view] of Object.entries(moduleViews)) {
+      for (const key of Object.keys(moduleViews)) {
         views.delete(key);
       }
+
+      destroy?.(ctx);
 
       for (const remove of removeMiddlewareArray) {
         remove();
       }
       
       removeReducer?.();
+      
     }
   }
 
@@ -300,7 +306,7 @@ export async function createApp<
     for (const moduleName of modules.keys()) {
       const whichModule = modules.get(moduleName) as Module;
       
-      const { deps = [], destroy, enabled, factory, unregister } = whichModule;
+      const { deps = [], enabled, factory, unregister } = whichModule;
 
       const shouldBeEnabled = enabled?.(state) ?? true;
 
@@ -310,7 +316,6 @@ export async function createApp<
 
       if (shouldUnregister) {
         unregister?.();
-        destroy?.();
       }
 
       if ((isRegistered && shouldBeEnabled) || !shouldRegister) {

@@ -33,14 +33,14 @@ users: {
 }
 ```
 
-The config for our `users` resource looks like this:
+For the purposes of this example, let's assume we have an HTTP service called `user`, which as a `getAll` method, used to grab the users from the database.
 
 ```ts
-import { data } from './data-service';
+import { user } from './user-api';
 
 export const userResource = {
-  query: (options?: { since: number, until: number }) => data.user
-    .getAll(options)
+  query: () => user
+    .getAll()
     // Our endpoint returns the users as an object with `result` being the array of users
     // so here we transform it to the `data: []` array we need in the redux slice.
     .then(transformToData)
@@ -57,7 +57,7 @@ function transformToData(response) {
 Now create the resource and subscribe to it:
 
 ```ts
-const users = api.createResource(userResource);
+const users = api.createResource('users', userResource);
 
 const { refetch, unsubscribe } = users.subscribe();
 
@@ -104,7 +104,7 @@ There are a few things we want to happen:
 1. We don't want to immediately fire of another HTTP call if the components are mounted at similar times.
 2. We want to ensure that we keep one subscription even if the other is disposed.
 
-`@crux/query` keeps a record of the number of subscribers to a given subscription (note that `users.subscribe()` is a different subscription to `users.subscribe({ since: 1700 })`), and when that number of subscribers reaches zero, it starts a self-destruct timer for that slice. After 60 seconds (the default, configurable in the `options`), the data is cleared and the slice removed. If another subscription gets setup in that time, the self-descruct is cancelled.
+`@crux/query` keeps a record of the number of subscribers to a given subscription, and when that number of subscribers reaches zero, it starts a self-destruct timer for that slice. After 60 seconds (the default, configurable in the `options`), the data is cleared and the slice removed. If another subscription gets setup in that time, the self-descruct is cancelled.
 
 The self-destruct time can be configured in the resource options like so:
 
@@ -114,6 +114,32 @@ export const userResource = {
   options: {
     keepUnusedDataFor: 120, // 2 minute self-destruct timeout
   }
+}
+```
+
+One important thing to not is that that `users.subscribe()` is a different subscription to `users.subscribe({ since: 1700 })`, so they will be handled separately by `@crux/query`. This means they will have different self-destruct cycles as well as different state slices. For example, let's assume our `user.getAll()` can accept a `name` parameter, to search on, we can define this query as:
+
+```ts
+export const userResource = {
+  query: (name: string) => user
+    .getAll(name)
+    .then(transformToData)
+    .catch(e => { throw e }),
+}
+```
+And we subscribe like this:
+
+```ts
+const subscription = users.subscribe('john');
+```
+This will create a separate slice called `users|john`:
+
+```ts
+users: {
+  data: [{ id: 1, name: 'john' }, { id: 2, name: 'john' }],
+  loading: false,
+  error: null,
+  updating: false,
 }
 ```
 
@@ -188,8 +214,6 @@ export function updateUser(data: User[] | null, user: PutUser) {
   return data;
 }
 ```
-
-**See below ([Updating state optimistically](#updating-state-optimistically)) for why we're returning `undefined` in the examples above**
 
 Each of the mutations above has a `query` property, where we call our API, and some optional `options` (of course they're optional, they're options...).
 

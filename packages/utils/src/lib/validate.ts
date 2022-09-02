@@ -14,8 +14,8 @@ export async function validate<T>(value: T, validators: ((val: T) => Promise<Val
   const res = await Promise.all(results);
 
   return {
-    errors: res.filter(r => !r.success).map(validation => validation.message),
-    messages: res.filter(r => r.success).map(validation => validation.message),
+    errors: res.filter(r => r && !r.success).map(validation => validation.message),
+    messages: res.filter(r => r && r.success).map(validation => validation.message),
   }
 }
 

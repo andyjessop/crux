@@ -31,7 +31,6 @@ export async function createMocks(dbName: string, apiBaseUrl: string) {
   // another one is being handled, the reads and writes to the store are sequential.
   const queuedHandler = (handler: (req: RestRequest, res: ResponseComposition, ctx: RestContext, s: UseStore) => void) => {
     return function handle(req: RestRequest, res: ResponseComposition, ctx: RestContext) {
-      console.log('handling');
       const returnPromise = queue.add(handler, req, res, ctx, store) as AsyncResponseResolverReturnType<MockedResponse<any>>;
       
       queue.flush();
@@ -82,7 +81,8 @@ async function token(req: RestRequest, res: ResponseComposition, ctx: RestContex
  * Login.
  */
 async function login(req: RestRequest, res: ResponseComposition, ctx: RestContext, store: UseStore) {
-  const { params: { email, password } } = req as any;
+  const { email, password } = await req.json();
+
   const users = await get('users', store) as Users;
   const tokens = await get('tokens', store) as Tokens;
   const confirmationTokens = await get('confirmation-tokens', store) as ConfirmationTokens;
@@ -126,14 +126,14 @@ async function login(req: RestRequest, res: ResponseComposition, ctx: RestContex
  * Refresh Token.
  */
 async function refreshToken(req: RestRequest, res: ResponseComposition, ctx: RestContext, store: UseStore) {
-  const { params } = req as any;
+  const { refresh_token } = await req.json();
 
   const users = await get('users', store) as Users;
   const tokens = await get('tokens', store) as Tokens;
 
   // Get the email from the token
   const email = Object.entries(tokens).find(([key, value]) => {
-    return value.refresh_token === params.refresh_token;
+    return value.refresh_token === refresh_token;
   })?.[0];
 
   if (!email) {
@@ -167,7 +167,7 @@ async function refreshToken(req: RestRequest, res: ResponseComposition, ctx: Res
  * Signup.
  */
 async function signup(req: RestRequest, res: ResponseComposition, ctx: RestContext, store: UseStore) {
-  const { params: { email, password } } = req as any;
+  const { email, password } = await req.json();
 
   if (!email || !password) {
     return res(

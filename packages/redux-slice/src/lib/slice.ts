@@ -1,7 +1,13 @@
 import { generateRandomId } from "@crux/string-utils";
+import { RecursivePartial } from "@crux/utils";
 import { AnyAction } from "redux";
 
-export function slice<T extends Record<string, (state: S, payload?: any) => S>, S = any>(config: T, { initialState, name }: { initialState: S, name?: string; }) {
+export function slice<T extends Record<string, (state: S, payload?: any) => S>, S = any>(
+  config: T,
+  { initialState, name }: { initialState: S, name?: string; },
+  // Optionally specify a `merge` function that will immutably merge the action return into the state
+  merge?: (state: S, source: RecursivePartial<S>) => S,
+) {
   const keys = Object.keys(config) as unknown as (keyof T & string)[];
   const id = name || generateRandomId(20);
 
@@ -36,7 +42,10 @@ export function slice<T extends Record<string, (state: S, payload?: any) => S>, 
         return state ?? initialState;
       }
 
-      return config[key](state || initialState, action['payload']);
+      const dest = state || initialState;
+      const res = config[key](dest, action['payload']);
+
+      return merge ? merge(dest, res) : res;
     },
   }
 

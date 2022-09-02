@@ -1,8 +1,7 @@
 import { html, render } from "lit-html";
-import type { AuthState } from "../../slice";
-import type { AuthActions } from "./user-nav.selectors";
+import type { UserNavActions, UserNavData } from "./user-nav.selectors";
 
-export function createUserNavView(root: HTMLElement, data: AuthState, actions: AuthActions) {
+export function createUserNavView(root: HTMLElement, data: UserNavData, actions: UserNavActions) {
   const {
     user
   } = data;

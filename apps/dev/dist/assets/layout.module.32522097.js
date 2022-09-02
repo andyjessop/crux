@@ -1,1 +1,0 @@
-import{s as r}from"./index.b4ef96aa.js";const t={roots:{sidebar:!0,top:!0}};function i(){return r({toggleSidebar:o=>({...o,roots:{...o.roots,sidebar:!o.roots.sidebar}})},{initialState:t})}export{i as createLayoutModule};

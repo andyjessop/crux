@@ -1,4 +1,5 @@
 import { slice } from '@crux/redux-slice'
+import { merge } from '@crux/utils';
 import type { LayoutState } from './types';
 
 const initialState: LayoutState = {
@@ -10,10 +11,8 @@ const initialState: LayoutState = {
 
 export function createLayoutModule() {
   return slice({
-    toggleSidebar: (state: LayoutState) => ({
-      ...state,
+    toggleSidebar: (state: LayoutState) => merge(state, {
       roots: {
-        ...state.roots,
         sidebar: !state.roots.sidebar
       },
     }),
