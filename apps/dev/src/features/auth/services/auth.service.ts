@@ -23,8 +23,10 @@ const machineConfig = {
     clickLogin: () => 'loginForm',
     clickSignup: () => 'signupForm',
     fetchUserSuccess: () => 'loggedIn',
+  },
+  loginForm: {
+    cancelLogin: () => 'loggedOut',
     submitLoginForm: () => 'loggingIn',
-    submitSignupForm: () => 'signingUp',
   },
   refreshingToken: {
     refreshTokenSuccess: () => 'loggedIn',
@@ -32,8 +34,12 @@ const machineConfig = {
   },
   signingUp: {
     signupFailure: () => 'loggedOut',
-    signupSuccess: () => 'unconfirmed',
-  }
+    signupSuccess: () => 'loggedOut',
+  },
+  signupForm: {
+    cancelSignup: () => 'loggedOut',
+    submitSignupForm: () => 'signingUp',
+  },
 };
 
 export type States = keyof typeof machineConfig;
@@ -47,10 +53,12 @@ type Events = {
 };
 
 export interface AuthService extends EventEmitter<Events> {
+  cancelLogin(): void;
+  cancelSignup(): void;
   clickLogin(): void;
   clickSignup(): void;
-  submitLoginForm(email: string, password: string): Promise<void>;
-  submitSignupForm(email: string, password: string): Promise<void>;
+  submitLoginForm(email?: string, password?: string): Promise<void>;
+  submitSignupForm(email?: string, password?: string): Promise<void>;
 }
 
 export async function createAuth(api: AuthAPI): Promise<AuthService> {
@@ -66,6 +74,8 @@ export async function createAuth(api: AuthAPI): Promise<AuthService> {
 
   return {
     ...emitter,
+    cancelLogin: () => { auth.cancelLogin(); },
+    cancelSignup: () => { auth.cancelSignup(); },
     clickLogin: () => { auth.clickLogin(); },
     clickSignup: () => { auth.clickSignup(); },
     submitLoginForm,

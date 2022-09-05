@@ -1,0 +1,1 @@
+import{c as n}from"./event-emitter.2752b338.js";function i(){const e=n();return{...e,toast:c,toastAlert:r};function r(t){var o;(o=document.querySelector(`#${t.id}`))==null||o.toast(),e.emit("alertToasted",t)}async function c(t){e.emit("toastAdded",t)}}export{i as createToastSevice};

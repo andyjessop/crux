@@ -5,12 +5,14 @@ import type { SignupFormState } from './sign-up-form.slice';
 import { emailValidators, passwordValidators } from './sign-up.form.validators';
 
 export interface SignupFormActions {
+  onCancel(): string;
   onChangePassword(value: string): void;
   onChangeEmail(value: string): void;
   onSubmit(email: string, password: string): void;
 }
 
 export type Events = {
+  reset: null,
   update: RecursivePartial<SignupFormState>
 }
 
@@ -21,8 +23,13 @@ export function signupForm() {
 
   return {
     ...emitter,
+    onCancel,
     onChangePassword,
     onChangeEmail
+  }
+
+  async function onCancel() {
+    emitter.emit('reset', null);
   }
   
   async function onChangePassword(value: string) {
@@ -47,8 +54,8 @@ export function signupForm() {
     emitter.emit('update', {
       email: {
         isPristine: false,
+        value,
       },
-      emailValue: value
     });
 
     debounce(async () => {

@@ -7,7 +7,7 @@ export interface SignupFormState {
     name: string;
     placeholder: string;
     successMessage: string | null;
-    // value is taken from AuthState
+    value: string;
   },
   password: {
     errorMessages: string[];
@@ -17,16 +17,16 @@ export interface SignupFormState {
     successMessage: string | null;
     value: string | null;
   },
-  emailValue: string | null;
 }
 
-const initialState: SignupFormState = {
+export const initialState: SignupFormState = {
   email: {
     errorMessages: [],
     isPristine: true,
     name: 'email',
     placeholder: 'Your email address',
     successMessage: null,
+    value: null,
   },
   password: {
     errorMessages: [],
@@ -36,7 +36,6 @@ const initialState: SignupFormState = {
     successMessage: null,
     value: null,
   },
-  emailValue: null,
 };
 
 export function signupFormSlice(name: string) {

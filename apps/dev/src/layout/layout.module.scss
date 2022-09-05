@@ -1,48 +1,27 @@
 .app {
   height: 100%;
   display: grid; 
-  grid-template-columns: 1fr minmax(200px, 300px) minmax(200px, 300px) minmax(200px, 300px) minmax(200px, 300px) minmax(400px, 500px) 1fr; 
-  grid-template-rows: 70px minmax(20px, max-content) 1fr var(--gap-3); 
+  grid-template-columns: minmax(200px, 300px) 1fr; 
+  grid-template-rows: 70px 1fr; 
   gap: 0px var(--gap-1); 
   grid-template-areas: 
-    "top top top top top top top"
-    ". controls controls controls controls controls ."
-    ". releases preview staging production sidebar ."
-    ". . . . . . .";
+    "top top"
+    "sidebar main";
 }
 
-.column {
-  height: 100%;
-  overflow-y: scroll;
+.sidebar {
+  grid-area: sidebar;
 }
-
-.production { grid-area: production; }
-
-.staging { grid-area: staging; }
-
-.preview { grid-area: preview; }
-
-.sidebar { grid-area: sidebar; }
 
 .top {
   grid-area: top;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 var(--gap-2);
-  border-bottom: 2px solid var(--sl-color-primary-500);
-  background: rgba(0,0,0,0.2);
-
-  .left, .right {
-    flex: 1;
-  }
 }
 
-.releases { grid-area: releases; }
-
-.controls { grid-area: controls; }
-
-.production, .staging, .preview, .releases {
+.main {
+  grid-area: main;
   height: 100%;
   overflow-y: scroll;
 }

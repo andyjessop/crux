@@ -5,6 +5,7 @@ import { slice as createSlice } from '@crux/redux-slice'
 import { createStore } from './redux-store';
 import { asymmetricDifference } from '@crux/set-utils';
 import type { Logger } from './logger';
+import { merge } from '@crux/utils';
 
 export interface CoreState {
   regions: Regions;
@@ -92,6 +93,7 @@ export async function createApp<
     destroy?: () => void;
     middleware?: Middleware;
     reducer?: Reducer;
+    registered?: boolean;
     unregister?: () => void;
   };
 
@@ -130,9 +132,8 @@ export async function createApp<
   const { actions: coreActions, reducer: coreReducer } = createSlice({
     initReducer: (state: { regions: Regions }, payload?: any) => state,
     initSlice: (state: { regions: Regions }, payload?: any) => state,
-    setRegions: (state: { regions: Regions }, payload: string[]) => ({
-      ...state,
-      regions: [...state.regions, ...payload],
+    setRegions: (state: { regions: Regions }, payload: string[]) => merge(state, {
+      regions: [...payload],
     }),
   }, { initialState: { regions: [] as Regions }, name: '__crux' });
 
@@ -149,6 +150,7 @@ export async function createApp<
   return {
     addMiddleware,
     addReducer,
+    services: servicesContainer,
     store,
   }
 
@@ -208,7 +210,7 @@ export async function createApp<
 
         const newModules = await registerModules(api.getState(), api.dispatch);
 
-        if (newModules.length) {         
+        if (newModules?.length) {         
           logger?.log('info', JSON.stringify({
             message: 'New modules',
             data: newModules
@@ -303,24 +305,29 @@ export async function createApp<
 
     // Sort modules so that dependencies all appear in order. Error if circular dependency
 
-    for (const moduleName of modules.keys()) {
+    const keys = [...modules.keys()];
+    
+    for (let i = 0; i < keys.length; i++) {
+      const moduleName = keys[i];
+
       const whichModule = modules.get(moduleName) as Module;
-      
-      const { deps = [], enabled, factory, unregister } = whichModule;
+
+      const { deps = [], enabled, factory, registered, unregister } = whichModule;
 
       const shouldBeEnabled = enabled?.(state) ?? true;
 
-      const isRegistered = unregister;
-      const shouldRegister = shouldBeEnabled && !isRegistered;
-      const shouldUnregister = !shouldBeEnabled && isRegistered;
+      const shouldRegister = shouldBeEnabled && !registered;
+      const shouldUnregister = !shouldBeEnabled && registered;
 
       if (shouldUnregister) {
         unregister?.();
       }
 
-      if ((isRegistered && shouldBeEnabled) || !shouldRegister) {
+      if ((registered && shouldBeEnabled) || !shouldRegister) {
         continue;
       }
+
+      whichModule.registered = true;
 
       const createInstance = await factory();      
       
@@ -331,6 +338,8 @@ export async function createApp<
       whichModule.unregister = registerModule(moduleName, dispatch as DispatchActionOrThunk, slice);
 
       modulesAdded.push(moduleName);
+
+      modules.set(moduleName, whichModule);
 
       continue;
     }
@@ -405,24 +414,25 @@ export async function createApp<
     }
 
     // Render views whose state has changed
-    for (const view of mountedViews.values()) {      
-      const { currentData, render, root, rootEl, selectActions, selectData } = view;
-
-      const newData = selectData?.(state);
-
-      logger?.log('debug', JSON.stringify({
-        message: `Current state for view ${root}`,
-        data: JSON.stringify(newData),
-      }));
-
-      if (newData === currentData || rootEl === undefined) {
-        return;
-      }
-
-      view.currentData = newData;
-
-      await render?.(rootEl, newData, selectActions?.(registeredActions));
-    }
+    [...mountedViews.values()]
+      .forEach(async view => {
+        const { currentData, render, root, rootEl, selectActions, selectData } = view;
+  
+        const newData = selectData?.(state);
+  
+        logger?.log('debug', JSON.stringify({
+          message: `Current state for view ${root}`,
+          data: JSON.stringify(newData),
+        }));
+  
+        if (newData === currentData || rootEl === undefined) {
+          return;
+        }
+  
+        view.currentData = newData;
+  
+        await render?.(rootEl, newData, selectActions?.(registeredActions));
+      });
   }
 
   function selectRegions(state: { __cruxCore: CoreState }) {

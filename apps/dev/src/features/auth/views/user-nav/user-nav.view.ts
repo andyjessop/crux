@@ -14,8 +14,8 @@ export function createUserNavView(root: HTMLElement, data: UserNavData, actions:
     return user
       ? html`<div>Logged in as ${user.email}</div>`
       : html`
-        <button @click=${clickLogin}>Log in</button>
-        <button @click=${clickSignup}>Sign up</button>
+        <sl-button @click=${clickLogin}>Log in</sl-button>
+        <sl-button @click=${clickSignup}>Sign up</sl-button>
       `;
   }
 }

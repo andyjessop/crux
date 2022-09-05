@@ -20,21 +20,17 @@ export function createLayoutView(root: HTMLElement, data: LayoutData) {
       <div class=${styles['app']}>
         <div class=${styles['top']}>
           <div class=${styles['left']} data-crux-root="top-left"></div>
-            ${data.auth.machineState === 'signupForm'
-              ? html`<div class=${styles['right']} data-crux-root="sign-up-form"></div>`
-              : null}
-            <div class=${styles['right']} data-crux-root="user-nav"></div>
-          </div>
-          
-          <div class=${styles['controls']} data-crux-root="controls"></div>
-          <div class=${styles['production']} data-crux-root="production"></div>
-          <div class=${styles['staging']} data-crux-root="staging"></div>
-          <div class=${styles['preview']} data-crux-root="preview"></div>
-          <div class=${styles['releases']} data-crux-root="releases"></div>
-          ${roots.sidebar
-            ? html`<div class=${styles['sidebar']} data-crux-root="sidebar"></div>`
+          ${data.auth.machineState === 'signupForm'
+            ? html`<div class=${styles['right']} data-crux-root="sign-up-form"></div>`
             : null}
+          <div class=${styles['right']} data-crux-root="user-nav"></div>
         </div>
+        ${roots.sidebar
+          ? html`<div class=${styles['sidebar']} data-crux-root="sidebar"></div>`
+          : null}
+        
+        <div class=${styles['main']} data-crux-root="main"></div>
+        <div data-crux-root="toast"></div>
       </div>
     `;
   }

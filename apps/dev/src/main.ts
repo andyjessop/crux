@@ -2,7 +2,16 @@ import './main.css';
 import { createApp, LogLevel } from '@crux/app';
 import type { Logger } from '@crux/app';
 import { selectLayoutData } from './layout/layout.selectors';
-import { html, render } from 'lit-html';
+import '@shoelace-style/shoelace/dist/themes/light.css';
+import '@shoelace-style/shoelace/dist/components/alert/alert.js';
+import '@shoelace-style/shoelace/dist/components/button/button.js';
+import '@shoelace-style/shoelace/dist/components/icon/icon.js';
+import '@shoelace-style/shoelace/dist/components/input/input.js';
+import '@shoelace-style/shoelace/dist/components/dialog/dialog.js';
+import { setBasePath } from '@shoelace-style/shoelace/dist/utilities/base-path.js';
+
+// Set the base path to the folder you copied Shoelace's assets to
+setBasePath('/path/to/shoelace/dist');
 
 main();
 
@@ -12,7 +21,7 @@ async function main() {
   if (!root) {
     throw 'No root found!!';
   }
-  
+
   // If we're in development, start the mock server. This starts a ServiceWorker
   // which intercepts fetch requests and returns mocks according to the contents
   // of ./shared/mocks/handlers. See https://mswjs.io/ for more details.
@@ -22,7 +31,7 @@ async function main() {
     (await createServer( import.meta.env.VITE_API_BASE_URL)).start({ onUnhandledRequest: "bypass", waitUntilReady: true });
   }
 
-  await createApp({
+  const { services } = await createApp({
     /**
      * MODULES
      * =======
@@ -47,6 +56,10 @@ async function main() {
       signupForm: {
         deps: ['auth', 'signupForm'],
         factory: () => import('./features/sign-up-form/sign-up-form.module').then(mod => mod.createSignupFormModule)
+      },
+      toast: {
+        deps: ['toast'],
+        factory: () => import('./features/toaster/toaster.module').then(mod => mod.createToastModule),
       },
       users: {
         deps: ['data.users'],
@@ -88,6 +101,7 @@ async function main() {
       featureFlags: { factory: () => import('./shared/feature-flags/feature-flags.service').then(mod => mod.createFeatureFlagsService) },
       reporting: { factory: () => import('./shared/logging/logging.service').then(mod => mod.createReportingService) },
       signupForm: { factory: () => import('./features/sign-up-form/sign-up-form.service').then(mod => mod.signupForm) },
+      toast: { factory: () => import('./features/toaster/toaster.service').then(mod => mod.createToasterSevice) },
       usersApi: { factory: () => import('./shared/api/users-api.service').then(mod => mod.createUsersApiService) },
     },
 
@@ -97,6 +111,8 @@ async function main() {
      */
     views: {}
   }, { logger: createLogger('debug') });
+
+  (window as any).services = services;
 }
 
 export function createLogger(initialLevel: keyof typeof LogLevel): Logger {
