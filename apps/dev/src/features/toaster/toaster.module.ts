@@ -1,14 +1,13 @@
 import type { CruxContext } from '@crux/app';
-import { createSelectActions, selectData } from './toaster.selectors';
-import type { ToasterService } from './toaster.service';
+import { selectActions, selectData } from './toaster.selectors';
 import { createToasterSlice } from './toaster.slice';
 import type { Alert } from './toaster.slice';
 
-export async function createToastModule({ dispatch }: CruxContext, toaster: ToasterService) {
-  const { actions, reducer } = createToasterSlice();
+export async function createToastModule({ dispatch }: CruxContext) {
+  const { actions, api, middleware, reducer } = createToasterSlice();
 
   setTimeout(() => {
-    toaster.toast({
+    api.toast({
       id: 'sdf',
       html: '<div>test</div>',
       variant: 'primary',
@@ -19,35 +18,21 @@ export async function createToastModule({ dispatch }: CruxContext, toaster: Toas
 
   return {
     actions,
-    create,
-    destroy,
+    middleware,
     reducer,
+    services: {
+      api: {
+        factory: () => Promise.resolve(() => api),
+      },
+    },
     views: {
       toast: {
-        selectActions: createSelectActions(toaster),
+        selectActions,
         selectData,
         factory: () => import('./toaster.view').then(mod => mod.createToastView),
         root: 'toast',
       }
     }
   };
-
-  function create() {
-    toaster.on('alertToasted', removeAlert);
-    toaster.on('toastAdded', toastAdded);
-  }
-
-  function destroy() {
-    toaster.off('alertToasted', removeAlert);
-    toaster.off('toastAdded', toastAdded);
-  }
-
-  function removeAlert(alert: Alert) {
-    dispatch(actions.remove(alert));
-  }
-
-  function toastAdded(alert: Alert) {
-    dispatch(actions.add(alert));
-  }
 }
 

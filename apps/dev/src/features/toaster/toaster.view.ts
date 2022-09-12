@@ -9,15 +9,7 @@ export function createToastView(root: HTMLElement, data: ToasterState, actions: 
     alerts,
   } = data;
 
-  const {
-    toastAlert
-  } = actions;
-
   render(template(alerts), root);
-
-  for (const alert of alerts) {
-    toastAlert(alert);
-  }
 
   function template(toRender: Alert[]) {
     return map(toRender, (alert: Alert) => html`

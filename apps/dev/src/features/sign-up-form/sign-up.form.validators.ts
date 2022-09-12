@@ -53,3 +53,8 @@ export const passwordValidators = [
     }
   }
 ];
+
+export const validators = {
+  email: emailValidators,
+  password: passwordValidators,
+};

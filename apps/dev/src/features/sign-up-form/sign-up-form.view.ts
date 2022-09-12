@@ -2,15 +2,14 @@ import type ShoelaceElement from "@shoelace-style/shoelace/dist/internal/shoelac
 import { html, render } from "lit-html";
 import { map } from 'lit-html/directives/map.js';
 import { createRef, ref } from 'lit-html/directives/ref.js';
-import type { SignupFormActions } from "./sign-up-form.service";
-import type { SignupFormState } from "./sign-up-form.slice";
+import type { SignupFormAPI, SignupFormState } from "./sign-up-form.slice";
 
-export function createSignupFormView(root: HTMLElement, data: SignupFormState, actions: SignupFormActions): void {
+export function createSignupFormView(root: HTMLElement, data: SignupFormState, actions: SignupFormAPI): void {
   const {
-    email, password,
+    email, password, formState,
   } = data;
 
-  const { onCancel, onChangeEmail, onChangePassword, onSubmit } = actions;
+  const { onChange, onSubmit, reset } = actions;
 
   if (email == undefined || password === undefined) {
     return null;
@@ -25,11 +24,11 @@ export function createSignupFormView(root: HTMLElement, data: SignupFormState, a
   function handleSubmit(event: Event) {
     event.preventDefault();
 
-    onSubmit(emailRef.value?.value, passwordRef.value?.value)
+    onSubmit({ email: emailRef.value?.value, password: passwordRef.value?.value });
   }
 
   dialogRef.value.addEventListener('sl-request-close', event => {
-    onCancel();
+    reset();
   });
 
   function template() {
@@ -44,22 +43,26 @@ export function createSignupFormView(root: HTMLElement, data: SignupFormState, a
           ${ref(emailRef)}
           type="text"
           name="${email.name}"
-          @input=${(e: Event) => onChangeEmail((e.target as HTMLInputElement).value)}
+          @input=${(e: Event) => onChange({ field: email.name, value: (e.target as HTMLInputElement).value })}
           .value="${email.value}"></sl-input>
-        ${email.errorMessages.length && !email.isPristine
-          ? html`${map(email.errorMessages, error => html`<div>${error}</div>`)}`
+        ${email.errors.length && !email.isPristine
+          ? html`${map(email.errors, error => html`<div>${error}</div>`)}`
           : null
         }
         <sl-input
           ${ref(passwordRef)}
           type="password"
           name="${password.name}"
-          @input=${(e: Event) => onChangePassword((e.target as HTMLInputElement).value)}
+          @input=${(e: Event) => onChange({ field: password.name, value: (e.target as HTMLInputElement).value })}
           .value="${password.value}"></sl-input>
-        ${password.successMessage?.length && !password.isPristine
-          ? html`<div>${password.successMessage}</div>`
+        ${password.messages?.length && !password.isPristine
+          ? html`<div>${password.messages}</div>`
           : null}
-        <sl-button type="submit">Sign up</sl-button>
+        <sl-button
+          .disabled=${formState === 'submitting'}
+          type="submit">
+          ${formState === 'submitting' ? 'Signing up...' :  'Sign up'}
+        </sl-button>
       </form>
     </sl-dialog>
     `;

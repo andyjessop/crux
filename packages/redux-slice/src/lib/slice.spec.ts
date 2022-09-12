@@ -1,4 +1,4 @@
-import { slice } from './slice';
+import { createSlice } from './slice';
 
 describe('reduxQuery', () => {
   it('should work', () => {
@@ -8,7 +8,10 @@ describe('reduxQuery', () => {
     
     const initial: State = { count: 0 };
     
-    const { actions, reducer } = slice({
+    const { actions, reducer } = createSlice<{
+      add: number,
+      subtract: number,
+    }>()('counter', initial, {
       add: (state: State, payload: number) => ({
         ...state,
         count: state.count + payload
@@ -17,7 +20,7 @@ describe('reduxQuery', () => {
         ...state,
         count: state.count - payload
       }),
-    }, { initialState: initial, name: 'counter' });
+    });
 
     expect(reducer(undefined, { type: 'counter/add', payload: 1 })).toEqual({ count: 1 });
     expect(reducer(initial, { type: 'counter/add', payload: 1 })).toEqual({ count: 1});

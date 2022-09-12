@@ -1,5 +1,6 @@
-export interface Action<Payload = any> {
-  meta?: any;
+export interface Action<Payload = any, Meta = any> {
+  error?: boolean;
+  meta?: Meta;
   payload?: Payload;
   type: string;
 }

@@ -8,7 +8,9 @@ import '@shoelace-style/shoelace/dist/components/button/button.js';
 import '@shoelace-style/shoelace/dist/components/icon/icon.js';
 import '@shoelace-style/shoelace/dist/components/input/input.js';
 import '@shoelace-style/shoelace/dist/components/dialog/dialog.js';
+import '@shoelace-style/shoelace/dist/components/switch/switch.js';
 import { setBasePath } from '@shoelace-style/shoelace/dist/utilities/base-path.js';
+import { stat } from 'fs';
 
 // Set the base path to the folder you copied Shoelace's assets to
 setBasePath('/path/to/shoelace/dist');
@@ -37,13 +39,14 @@ async function main() {
      * =======
      */
     modules: {
+      // auth: [() => import('./features/auth/auth.module'), 'auth'],
       auth: {
-        deps: ['auth'],
+        deps: ['authApi'],
         factory: () => import('./features/auth/auth.module').then(mod => mod.createAuthModule),
       },
       darkMode: {
-        deps: ['darkMode'],
-        factory: () => import('./shared/dark-mode/dark-mode.module').then(mod => mod.createDarkModeModule),
+        deps: ['cache'],
+        factory: () => import('./features/dark-mode/dark-mode.module').then(mod => mod.createDarkModeModule),
       },
       data: {
         deps: ['usersApi'],
@@ -54,11 +57,11 @@ async function main() {
         factory: () => import('./shared/router/router.module').then(mod => mod.createRouterModule)
       },
       signupForm: {
-        deps: ['auth', 'signupForm'],
+        deps: ['auth.api'],
         factory: () => import('./features/sign-up-form/sign-up-form.module').then(mod => mod.createSignupFormModule)
       },
       toast: {
-        deps: ['toast'],
+        deps: [],
         factory: () => import('./features/toaster/toaster.module').then(mod => mod.createToastModule),
       },
       users: {
@@ -94,22 +97,12 @@ async function main() {
     services: {
       asyncCache: { factory: () => import('./shared/cache/async-cache.service').then(mod => mod.createAsyncCacheService) },
       authApi: { factory: () => import('./features/auth/api/api').then(mod => mod.createAuthApi), deps: ['asyncCache', 'env'] },
-      auth: { factory: () => import('./features/auth/services/auth.service').then(mod => mod.createAuth), deps: ['authApi'] },
       cache: { factory: () => import('./shared/cache/cache.service').then(mod => mod.createCacheService) },
-      darkMode: { factory: () => import('./shared/dark-mode/dark-mode.service').then(mod => mod.createDarkModeService), deps: ['cache'] },
       env: { factory: () => import('./shared/env/env.service').then(mod => mod.env) },
       featureFlags: { factory: () => import('./shared/feature-flags/feature-flags.service').then(mod => mod.createFeatureFlagsService) },
       reporting: { factory: () => import('./shared/logging/logging.service').then(mod => mod.createReportingService) },
-      signupForm: { factory: () => import('./features/sign-up-form/sign-up-form.service').then(mod => mod.signupForm) },
-      toast: { factory: () => import('./features/toaster/toaster.service').then(mod => mod.createToasterSevice) },
       usersApi: { factory: () => import('./shared/api/users-api.service').then(mod => mod.createUsersApiService) },
     },
-
-    /**
-     * VIEWS
-     * =====
-     */
-    views: {}
   }, { logger: createLogger('debug') });
 
   (window as any).services = services;

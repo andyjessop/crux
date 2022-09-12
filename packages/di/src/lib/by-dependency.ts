@@ -1,29 +1,6 @@
 import { findLastIndex } from "@crux/utils";
 import { Service } from "./di";
 
-/**
- * > 0	sort a after b
- * < 0	sort a before b
- * === 0	keep original order of a and b
-*/
-export function byDependency(
-  a: [string, Service<unknown>],
-  b: [string, Service<unknown>],
-) {  
-  const [aKey, aService] = a; // [key of serviceA, serviceA]
-  const [bKey, bService] = b; // [key of serviceB, serviceB]
-
-  if ((aService.deps || [] as string[]).includes(bKey)) {
-    return 1;
-  }
-
-  if ((bService.deps || [] as string[]).includes(aKey)) {
-    return -1;
-  }
-
-  return 0;
-}
-
 export function sortByDependency(
   services: [string, Service<unknown>][]
 ): [string, Service<unknown>][] {

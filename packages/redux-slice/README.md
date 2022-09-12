@@ -8,37 +8,53 @@ npm install --save @crux/redux-slice
 
 ## `slice`
 
-`slice` is a shorthand way of creating actions and reducers, with minimal boilerplate. There is no shorter-hand way of defining a slice than this.
+`slice` is a shorthand way of creating actions, reducers, and side-effects with minimal boilerplate. Normally, Redux leaves the side-effects up to you, and it's often messy, with no clear official direction. `@crux/redux-slice` replaces the need for sagas, and ensures your code is succinct, easy to read, easy to test, and decoupled for maximum longevity.
+
+The one downside to having all this functionality baked-in is that you have to define the parameters of your payloads separately. However, as you'll see, this is a small price to pay. Let's take a look at a simple example that covers all our needs (actions, reducers, and side-effects).
 
 ```ts
 import { createSlice } from '@crux/redux-slice';
 
-interface State {
+interface CounterState {
   count: number;
 }
 
-const initial: State = { count: 0 };
+const initialState: CounterState = { count: 0 };
 
-export const { actions, reducer } = slice({
-  add: (state: State, payload: number) => ({
-    ...state,
+// This is where we define the payloads for our actions
+type CounterSlice = {
+  add: number;
+  subtract: number;
+}
+
+// Note we have to provide the `CounterSlice` so that crux can work out the API. It's an unfortunate limitation of
+// TypeScript that we can't infer the type of `api` here. Hopefully future versions will allow this.
+export const { actions, middleware, reducer } = createSlice<CounterSlice>()('counter', initialState, {
+  add: (state, payload) => merge(state, {
     count: state.count + payload
   }),
-  subtract: (state: State, payload: number) => ({
-    ...state,
+  subtract: (state, payload) => merge(state, {
     count: state.count - payload
   }),
-}, { initialState: initial, name: 'counter' });
+  randomAddOrSubtract: (state, payload) => async ({ api }) => {
+    const shouldAdd = Math.random() > 0.5;
+
+    if (shouldAdd) {
+      api.add(payload);
+    } else {
+      api.subtract(payload);
+    }
+  }
+};
 ```
 
-Ok, maybe there _is_ a shorter-hand way of doing it. See `Using merge` below.
-
-You can then add your reducer as normal:
+You can then add your reducer and middleware as normal:
 
 ```ts
-import { reducer } from 'counter/slice.ts';
+import { middleware, reducer } from 'counter/slice.ts';
 
 configureStore({
+  middleware: [middleware],
   reducer: {
     counter: reducer
   }
@@ -53,13 +69,21 @@ import { actions } from 'counter/slice.ts';
 dispatch(actions.add(5)); // dispatches { type: 'counter/add', payload: 5 }
 ```
 
-The payload of the action is fully typed, taken from your payload definition in the `createSlice` config. If you need access to the action type (to use in a saga, for example), you can use the `type` property on the action:
+If you need access to the action type (to use in a saga, for example), you can use the `type` property on the action:
 
 ```ts
 actions.add.type // `counter/add`
 ```
 
-## Using `merge` to further reduce boilerplate and errors
+`createSlice` also returns a handy `api` object (which is what is provided in your async callback above), whereby `dispatch` is called for you. This is great for reducing imports and coupling around your app. If you want to get the type of your API, you can do it like this:
+
+```ts
+import { ApiOf } from '@crux/redux-slice';
+
+export type CounterAPI = ApiOf<CounterSlice>;
+```
+
+## Using `merge` to reduce boilerplate and errors
 
 Other than the boilerplate involved with creating actions, the other thing that Redux users often hate is "spread hell":
 

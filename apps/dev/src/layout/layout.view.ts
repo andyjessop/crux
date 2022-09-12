@@ -19,11 +19,14 @@ export function createLayoutView(root: HTMLElement, data: LayoutData) {
     return html`
       <div class=${styles['app']}>
         <div class=${styles['top']}>
-          <div class=${styles['left']} data-crux-root="top-left"></div>
+          <div data-crux-root="top-left"></div>
           ${data.auth.machineState === 'signupForm'
             ? html`<div class=${styles['right']} data-crux-root="sign-up-form"></div>`
             : null}
-          <div class=${styles['right']} data-crux-root="user-nav"></div>
+          <div>
+            <div data-crux-root="user-nav"></div>
+            <div data-crux-root="dark-mode-toggle"></div>
+          </div>
         </div>
         ${roots.sidebar
           ? html`<div class=${styles['sidebar']} data-crux-root="sidebar"></div>`

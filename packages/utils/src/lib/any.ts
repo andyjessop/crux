@@ -7,6 +7,8 @@ export type RecursivePartial<T> = {
     T[P];
 };
 
+export type Merge<T extends Record<string, any>> = (dest: T, source: RecursivePartial<T>) => T; 
+
 export function merge<T extends Record<string, any>>(dest: T, source: RecursivePartial<T>): T {
   const obj = { ...dest } as Record<string, any>;
 

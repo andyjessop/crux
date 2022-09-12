@@ -1,5 +1,5 @@
 import { allDependenciesExist } from './all-dependencies-exist';
-import { byDependency, sortByDependency } from './by-dependency';
+import { sortByDependency } from './by-dependency';
 import { getDependents } from './get-dependents';
 
 export type Options<T> = { service: keyof T; singleton: true };

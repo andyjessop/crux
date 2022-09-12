@@ -1,5 +1,4 @@
-import type { AuthService } from "../../services/auth.service";
-import type { AuthState } from "../../auth.slice";
+import type { AuthService, AuthState } from "../../auth.slice";
 import type { User } from "../../api/types";
 
 export type UserNavActions = Pick<AuthService, 'clickLogin' | 'clickSignup'>;

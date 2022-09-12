@@ -1,55 +1,146 @@
-import { generateRandomId } from "@crux/string-utils";
-import { RecursivePartial } from "@crux/utils";
-import { AnyAction } from "redux";
+import { Action, Dispatch, MiddlewareAPI } from "@crux/redux-types";
 
-export function slice<T extends Record<string, (state: S, payload?: any) => S>, S = any>(
-  config: T,
-  { initialState, name }: { initialState: S, name?: string; },
-  // Optionally specify a `merge` function that will immutably merge the action return into the state
-  merge?: (state: S, source: RecursivePartial<S>) => S,
-) {
+export const createSlice = 
+  <T extends Record<keyof T, unknown>>() => <N extends string, S>(
+    name: N,
+    initialState: S,
+    config: {
+      [K in keyof T]: (state: S, param: T[K]) => 
+        S |
+        (({ api }: { api: { [P in keyof T]: (param: T[P]) => Promise<void> } }) => Promise<void>)
+    },
+) => {
+  let dispatch: Dispatch;
+  type SliceActionType = `${N}/${keyof T & string}`;
+
   const keys = Object.keys(config) as unknown as (keyof T & string)[];
-  const id = name || generateRandomId(20);
+
+  const actionTypes = keys.reduce((acc, key) => {
+    acc[key] = getType(key) as SliceActionType;
+
+    return acc;
+  }, {} as Record<keyof T & string, SliceActionType>);
+
+  const keysFromActionTypes = inverse(actionTypes);
+
+  const actions = keys
+    .reduce((acc, key) => {
+      const actionCreator = function<K extends keyof T>(param: T[K]) {
+        return {
+          payload: param,
+          type: actionTypes[key],
+        }
+      };
+
+      actionCreator.type = actionTypes[key];
+
+      // eslint-disable-next-line
+      // @ts-ignore
+      acc[key] = actionCreator;
+
+      return acc;
+    }, {} as {
+      [K in keyof T]: T[K] extends undefined
+        ? {
+          (): {
+            payload: undefined;
+            type: `${N}/${K & string}`;
+          }; name: K; type: `${N}/${K & string}`; }
+        : {
+          (param: T[K]): {
+            payload: T[K];
+            type: `${N}/${K & string}`;
+          }; name: K; type: `${N}/${K & string}`; }
+    });
+
+  const api = (Object.entries(actions) as Array<[keyof T & string, (param?: any) => Action]>)
+    .reduce((acc, [key, actionCreator]) => {
+      acc[key] = async function<K extends keyof T & string>(
+        param?: T[K]
+      ) {
+        if (!dispatch) {
+          throw `${name} slice middleware has not yet been registered with the store. Dispatch is not available.`;
+        }
+        
+        dispatch(actionCreator(param));
+      }
+
+      return acc;
+    }, {} as {
+      [P in keyof T]: (param: T[P]) => Promise<void>
+    });
+
+  const middleware = (middlewareApi: MiddlewareAPI) => {
+    if (!dispatch) {
+      dispatch = middlewareApi.dispatch;
+    }
+
+    return (next: Dispatch) => (action: Action) => {
+      next(action);
+
+      if (isSliceActionType(action.type)) {
+        const state = middlewareApi.getState().id;
+        const key = keysFromActionTypes[action.type];
+    
+        const res = config[key](state, action.payload);
+        
+        // If it's not a state object, then it's an effect and we should call it with the api.
+        if (!isState(res)) {
+          res({ api });
+        }
+      }
+    };
+  };
 
   return {
-    actions: keys
-      .reduce((acc, key) => {
-        const type = getType(key);
+    actions,
 
-        const actionCreator = function<K extends keyof T & string>(payload?: Parameters<T[K]>[1]) {
-          return {
-            payload,
-            type,
-          }
-        };
+    api,
 
-        actionCreator.type = type;
+    middleware,
 
-        acc[key] = actionCreator;
-
-        return acc;
-      }, {} as { [K in keyof T]: Parameters<T[K]>[1] extends undefined ?
-        { (): { payload: Parameters<T[K]>[1]; type: K; }; name: string; type: string; } :
-        { (payload: Parameters<T[K]>[1]): { payload: Parameters<T[K]>[1]; type: string; }; name: K; type: string; }
-      }),
-
-    reducer: (state: S | undefined, action: AnyAction) => {
+    reducer: (state: S | undefined, action: Action) => {
       const [namespace, ...rest] = action.type.split('/');
 
-      const key = rest.join('/');
+      const actionType = rest.join('/') as SliceActionType;
+      const key = keysFromActionTypes[actionType];
 
-      if (namespace !== id || !config[key]) {
+      if (namespace !== name || !config[key]) {
         return state ?? initialState;
       }
 
       const dest = state || initialState;
+
       const res = config[key](dest, action['payload']);
 
-      return merge ? merge(dest, res) : res;
+      // If it's not a state object, then it's an async call. Don't handle that in the reducer.
+      if (!isState(res)) {
+        return;
+      }
+
+      return res;
     },
   }
 
-  function getType(key: keyof T & string) {
-    return `${id}/${key}`;
+  function getType(key: keyof T & string): SliceActionType {
+    return `${name}/${key}`;
   } 
+
+  function isState(obj: unknown): obj is S {
+    return typeof obj !== 'function';
+  }
+
+  function isSliceActionType(type: string): type is SliceActionType {
+    return keysFromActionTypes[type as SliceActionType] !== undefined;
+  }
+}
+
+function inverse<T extends string, U extends string>(obj: Record<T, U>): Record<U, T> {
+  const ret = {} as Record<U, T>;
+
+  for(const key in obj){
+    ret[obj[key]] = key;
+  }
+
+  return ret;
 }

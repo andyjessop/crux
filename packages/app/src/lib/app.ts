@@ -1,7 +1,7 @@
 import { createAsyncQueue } from '@crux/async-queue'
 import type { Action, Dispatch, DispatchActionOrThunk, GetState, Middleware, MiddlewareAPI, Reducer, Thunk } from '@crux/redux-types'
 import { di } from '@crux/di'
-import { slice as createSlice } from '@crux/redux-slice'
+import { createSlice } from '@crux/redux-slice'
 import { createStore } from './redux-store';
 import { asymmetricDifference } from '@crux/set-utils';
 import type { Logger } from './logger';
@@ -17,7 +17,7 @@ type ModuleReturn = {
   actions?: Record<string, (...args: any) => Action>,
   create?: (ctx: CruxContext) => void;
   destroy?: (ctx: CruxContext) => void;
-  middlewares?: Middleware[];
+  middleware?: Middleware;
   reducer?: Reducer;
   services?: Record<string, { factory: ServiceFactory<any> }>;
   views?: Record<string, {
@@ -69,13 +69,7 @@ export async function createApp<
         deps?: (Exclude<keyof T['services'], S>)[],
         factory: ServiceFactory
       }
-    },
-    views: Record<string, {
-      root: string,
-      selectActions?: (state: any) => any,
-      selectData?: (state: any) => any, 
-      factory: ViewFactory
-    }>,
+    }
   }
 >(config: T, {
   logger,
@@ -97,7 +91,15 @@ export async function createApp<
     unregister?: () => void;
   };
 
-  type View = T['views'][keyof T['views']] & {
+  type ViewConfig = {
+    deps?: (keyof T['services'])[],
+    selectActions?: (state: any) => any, 
+    selectData?: (state: any) => any, 
+    factory: ViewFactory,
+    root: string;
+  };
+
+  type View = ViewConfig & {
     currentActions: any,
     currentData: any,
     destroy?: () => void,
@@ -112,16 +114,18 @@ export async function createApp<
     modules: moduleConfigsCollection,
     root,
     services: serviceConfigsCollection,
-    views: viewConfigsCollection
   } = config;
 
   const servicesContainer = di(serviceConfigsCollection);
 
   const modules = createModuleMap();
-  const views = createViewMap();
+  const views = new Map<string, View>();
   const layoutView = createLayoutView();
   const layoutModule = createLayoutModule();
   const mountedViews = new Map<string, View>();
+
+  // Add module dependencies and service dependencies here. Don't do it during the unregister/register phase
+  // Build graph here
 
   const queue = createAsyncQueue();
 
@@ -129,13 +133,19 @@ export async function createApp<
 
   let busy = true;
 
-  const { actions: coreActions, reducer: coreReducer } = createSlice({
+  type CoreSlice = {
+    initReducer: any;
+    initSlice: any;
+    setRegions: string[];
+  }
+
+  const { actions: coreActions, reducer: coreReducer } = createSlice<CoreSlice>()('__crux', { regions: [] as Regions }, {
     initReducer: (state: { regions: Regions }, payload?: any) => state,
     initSlice: (state: { regions: Regions }, payload?: any) => state,
     setRegions: (state: { regions: Regions }, payload: string[]) => merge(state, {
       regions: [...payload],
     }),
-  }, { initialState: { regions: [] as Regions }, name: '__crux' });
+  });
 
   addReducer('__cruxCore', coreReducer);
 
@@ -160,9 +170,9 @@ export async function createApp<
      */
     const createInstance = await layoutModule.factory();
 
-    const { middlewares, reducer } = createInstance(ctx) as ModuleReturn;
+    const { middleware, reducer } = createInstance(ctx) as ModuleReturn;
 
-    registerModule('layout', dispatch as DispatchActionOrThunk, { middlewares, reducer });
+    registerModule('layout', dispatch as DispatchActionOrThunk, { middleware, reducer });
 
     dispatch(coreActions.initReducer('layout'));
 
@@ -242,13 +252,13 @@ export async function createApp<
 
   function registerModule(name: string, dispatch: DispatchActionOrThunk, moduleReturn?: ModuleReturn): () => void {
     let removeReducer: () => void;
-    const removeMiddlewareArray = [] as Array<() => void>;
+    let removeMiddleware: () => void;
 
     if (!moduleReturn) {
       return () => { /* */ };
     }
 
-    const { actions, create, destroy, middlewares, reducer, services: moduleServices = {}, views: moduleViews = {} } = moduleReturn;
+    const { actions, create, destroy, middleware, reducer, services: moduleServices = {}, views: moduleViews = {} } = moduleReturn;
 
     for (const [key, service] of Object.entries(moduleServices)) {
       servicesContainer.register(`${name}.${key}` as keyof T['services'], service);
@@ -262,10 +272,8 @@ export async function createApp<
       }, {} as Record<string, (payload: Action['payload']) => void>);
     }
 
-    if (middlewares) {
-      for (const middleware of middlewares) {
-        removeMiddlewareArray.push(addMiddleware(middleware));
-      }
+    if (middleware) {
+      removeMiddleware = addMiddleware(middleware);
     }
 
     if (reducer) {
@@ -273,7 +281,7 @@ export async function createApp<
     }
 
     for (const [key, view] of Object.entries(moduleViews)) {
-      views.set(key, createView(view as View));
+      views.set(key, createView(view));
     }
 
     dispatch(coreActions.initSlice(name));
@@ -291,10 +299,7 @@ export async function createApp<
 
       destroy?.(ctx);
 
-      for (const remove of removeMiddlewareArray) {
-        remove();
-      }
-      
+      removeMiddleware?.();      
       removeReducer?.();
       
     }
@@ -414,25 +419,26 @@ export async function createApp<
     }
 
     // Render views whose state has changed
-    [...mountedViews.values()]
-      .forEach(async view => {
-        const { currentData, render, root, rootEl, selectActions, selectData } = view;
+    const viewsToRender = [...mountedViews.values()];
+
+    for (let i = 0; i < viewsToRender.length; i++) {
+      const { currentData, render, root, rootEl, selectActions, selectData } = viewsToRender[i];
   
-        const newData = selectData?.(state);
-  
-        logger?.log('debug', JSON.stringify({
-          message: `Current state for view ${root}`,
-          data: JSON.stringify(newData),
-        }));
-  
-        if (newData === currentData || rootEl === undefined) {
-          return;
-        }
-  
-        view.currentData = newData;
-  
-        await render?.(rootEl, newData, selectActions?.(registeredActions));
-      });
+      const newData = selectData?.(state);
+
+      logger?.log('debug', JSON.stringify({
+        message: `Current state for view ${root}`,
+        data: JSON.stringify(newData),
+      }));
+
+      if (newData === currentData || rootEl === undefined) {
+        continue;
+      }
+
+      viewsToRender[i].currentData = newData;
+
+      await render?.(rootEl, newData, selectActions?.(registeredActions));
+    }
   }
 
   function selectRegions(state: { __cruxCore: CoreState }) {
@@ -463,16 +469,7 @@ export async function createApp<
     }, new Map<string, Module>())
   }
   
-  function createViewMap() {
-    return Object.entries(viewConfigsCollection)
-      .reduce((acc, [key, value]) => {
-        acc.set(key, createView(value as View));
-  
-        return acc;
-      }, new Map<string, View>())
-  }
-  
-  function createView(viewConfig: Omit<View, 'currentData' | 'currentActions' | 'rootEl' | 'render'>): View {
+  function createView(viewConfig: ViewConfig): View {
     return {
       ...viewConfig,
       currentActions: null,
