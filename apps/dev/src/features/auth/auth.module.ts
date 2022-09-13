@@ -20,7 +20,7 @@ export async function createAuthModule({ roots }: CruxContext, auth: AuthAPI) {
         selectActions: () => selectUserNavActions(api),
         selectData: selectUserNavData,
         factory: () => import('./views/user-nav/user-nav.view').then(mod => mod.createUserNavView),
-        root: roots.userNav,
+        root: 'user-nav',
       }
     }
   };

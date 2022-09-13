@@ -26,7 +26,7 @@ export async function createSignupFormModule(
         selectActions: () => selectSignupFormActions(api),
         selectData: selectSignupFormData,
         factory: () => import('./sign-up-form.view').then(mod => mod.createSignupFormView),
-        root: ctx.roots.signupForm
+        root: 'sign-up-form'
       },
     }
   };

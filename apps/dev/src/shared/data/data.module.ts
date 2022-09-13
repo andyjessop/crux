@@ -7,7 +7,7 @@ export function createDataModule(ctx: CruxContext, users: UsersAPI) {
   const { createResource, middleware, reducer } = query('data');
 
   return {
-    middlewares: [middleware],
+    middleware,
     reducer,
     services: {
       users: {

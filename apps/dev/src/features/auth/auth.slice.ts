@@ -1,5 +1,6 @@
 import { machine } from "@crux/machine";
-import { ApiOf, createSlice } from "@crux/redux-slice";
+import { createSlice } from "@crux/redux-slice";
+import type { ApiOf } from "@crux/redux-slice";
 import { merge } from "@crux/utils";
 import type { AuthAPI, AuthError } from "./api/api";
 import type { User } from "./api/types";
@@ -70,10 +71,18 @@ export function createAuthSlice(name: string, authAPI: AuthAPI) {
   const authMachine = machine(machineConfig, { initialState: 'initialising' });
 
   const slice = createSlice<AuthSlice>()(name, initialState, {
-    cancelLogin: () => async ({ api }) => api.cancelLogin(),
-    cancelSignup: () =>  async ({ api }) => api.cancelSignup(),
-    clickLogin: () =>  async ({ api }) => api.clickLogin(),
-    clickSignup: () =>  async ({ api }) => api.clickSignup(),
+    cancelLogin: () => async ({ api }) => {
+      authMachine.cancelLogin();
+    },
+    cancelSignup: () =>  async ({ api }) => {
+      authMachine.cancelSignup();
+    },
+    clickLogin: () =>  async ({ api }) => {
+      authMachine.clickLogin();
+    },
+    clickSignup: () =>  async ({ api }) => {
+      authMachine.clickSignup();
+    },
     fetchUser: () => async () => {
       try {
         const user = await authAPI.user();

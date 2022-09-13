@@ -1,4 +1,5 @@
-import { ApiOf, createSlice } from "@crux/redux-slice";
+import { createSlice } from "@crux/redux-slice";
+import type { ApiOf } from '@crux/redux-slice';
 import { debounce, merge, validate } from "@crux/utils";
 import type { AuthService } from "../auth/auth.slice";
 import { validators } from "./sign-up.form.validators";

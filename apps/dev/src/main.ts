@@ -10,7 +10,6 @@ import '@shoelace-style/shoelace/dist/components/input/input.js';
 import '@shoelace-style/shoelace/dist/components/dialog/dialog.js';
 import '@shoelace-style/shoelace/dist/components/switch/switch.js';
 import { setBasePath } from '@shoelace-style/shoelace/dist/utilities/base-path.js';
-import { stat } from 'fs';
 
 // Set the base path to the folder you copied Shoelace's assets to
 setBasePath('/path/to/shoelace/dist');

@@ -95,7 +95,7 @@ export const createSlice =
       next(action);
 
       if (isSliceActionType(action.type)) {
-        const state = middlewareApi.getState().id;
+        const state = middlewareApi.getState()[name];
         const key = keysFromActionTypes[action.type];
     
         const res = config[key](state, action.payload);
@@ -116,25 +116,27 @@ export const createSlice =
     middleware,
 
     reducer: (state: S | undefined, action: Action) => {
-      const [namespace, ...rest] = action.type.split('/');
-
-      const actionType = rest.join('/') as SliceActionType;
-      const key = keysFromActionTypes[actionType];
-
-      if (namespace !== name || !config[key]) {
-        return state ?? initialState;
-      }
-
+      const [namespace] = action.type.split('/');
       const dest = state || initialState;
 
-      const res = config[key](dest, action['payload']);
-
-      // If it's not a state object, then it's an async call. Don't handle that in the reducer.
-      if (!isState(res)) {
-        return;
+      if (isSliceActionType(action.type)) {
+        const key = keysFromActionTypes[action.type];
+  
+        if (namespace !== name || !config[key]) {
+          return state ?? initialState;
+        }
+  
+        const res = config[key](dest, action['payload']);
+  
+        // If it's not a state object, then it's an async call. Don't handle that in the reducer.
+        if (!isState(res)) {
+          return dest;
+        }
+  
+        return res;
       }
-
-      return res;
+      
+      return dest;
     },
   }
 

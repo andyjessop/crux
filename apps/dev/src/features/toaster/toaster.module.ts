@@ -30,7 +30,7 @@ export async function createToastModule({ roots }: CruxContext) {
         selectActions,
         selectData,
         factory: () => import('./toaster.view').then(mod => mod.createToastView),
-        root: roots.toaster,
+        root: 'toaster',
       }
     }
   };

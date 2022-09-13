@@ -20,7 +20,7 @@ export function createDarkModeModule({ roots }: CruxContext, cache: Cache) {
         selectActions: () => api,
         selectData: selectDarkModeData,
         factory: () => import('./dark-mode.view').then(mod => mod.createDarkModeView),
-        root: roots.darkModeToggle,
+        root: 'dark-mode-toggle',
       }
     }
   };

@@ -1,4 +1,5 @@
-import { ApiOf, createSlice } from "@crux/redux-slice";
+import { createSlice } from "@crux/redux-slice";
+import type { ApiOf } from '@crux/redux-slice';
 import { merge } from "@crux/utils";
 import type { SlAlert } from "@shoelace-style/shoelace";
 
