@@ -8,7 +8,7 @@ describe('reduxQuery', () => {
     
     const initial: State = { count: 0 };
     
-    const { actions, reducer } = createSlice<{
+    const { actions, api, reducer } = createSlice<{
       add: number,
       subtract: number,
     }>()('counter', initial, {

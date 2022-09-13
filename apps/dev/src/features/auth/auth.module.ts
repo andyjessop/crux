@@ -3,7 +3,7 @@ import { createAuthSlice } from './auth.slice';
 import { selectUserNavActions, selectUserNavData } from './views/user-nav/user-nav.selectors';
 import type { AuthAPI } from './api/api';
 
-export async function createAuthModule({ dispatch }: CruxContext, auth: AuthAPI) {
+export async function createAuthModule({ roots }: CruxContext, auth: AuthAPI) {
   const { actions, api, middleware, reducer } = createAuthSlice('auth', auth);
 
   return {
@@ -20,7 +20,7 @@ export async function createAuthModule({ dispatch }: CruxContext, auth: AuthAPI)
         selectActions: () => selectUserNavActions(api),
         selectData: selectUserNavData,
         factory: () => import('./views/user-nav/user-nav.view').then(mod => mod.createUserNavView),
-        root: 'user-nav',
+        root: roots.userNav,
       }
     }
   };

@@ -1,16 +1,19 @@
 import type { CruxContext } from '@crux/app';
 import { createSignupFormSlice } from './sign-up-form.slice';
 import { selectSignupFormActions, selectSignupFormData } from './sign-up-form.selectors';
-import type { AuthService } from '../auth/auth.slice';
+import type { AuthService, States } from '../auth/auth.slice';
 
 export async function createSignupFormModule(
-  { dispatch }: CruxContext,
+  ctx: CruxContext,
   auth: AuthService,
 ) {
   const { actions, api, middleware, reducer } = createSignupFormSlice(auth, 'signupForm');
 
+  const unsubscribe = auth.on('setMachineState', onAuthMachineStateChange);
+
   return {
     actions,
+    destroy: () => unsubscribe(),
     middleware,
     reducer,
     services: {
@@ -23,9 +26,15 @@ export async function createSignupFormModule(
         selectActions: () => selectSignupFormActions(api),
         selectData: selectSignupFormData,
         factory: () => import('./sign-up-form.view').then(mod => mod.createSignupFormView),
-        root: 'sign-up-form',
+        root: ctx.roots.signupForm
       },
     }
   };
+
+  function onAuthMachineStateChange(newState: States) {
+    if (newState === 'signingUp') {
+      api.setFormState('submitting');
+    }
+  }
 }
 

@@ -3,7 +3,7 @@ import { selectActions, selectData } from './toaster.selectors';
 import { createToasterSlice } from './toaster.slice';
 import type { Alert } from './toaster.slice';
 
-export async function createToastModule({ dispatch }: CruxContext) {
+export async function createToastModule({ roots }: CruxContext) {
   const { actions, api, middleware, reducer } = createToasterSlice();
 
   setTimeout(() => {
@@ -30,7 +30,7 @@ export async function createToastModule({ dispatch }: CruxContext) {
         selectActions,
         selectData,
         factory: () => import('./toaster.view').then(mod => mod.createToastView),
-        root: 'toast',
+        root: roots.toaster,
       }
     }
   };

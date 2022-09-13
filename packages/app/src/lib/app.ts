@@ -39,6 +39,7 @@ type ExtractModuleServiceKeys<T extends ModuleFactory> = keyof Awaited<ReturnTyp
 export type CruxContext = {
   dispatch: Dispatch;
   getState: GetState;
+  roots: Record<string, string>;
 };
 
 export async function createApp<

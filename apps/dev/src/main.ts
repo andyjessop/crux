@@ -58,7 +58,7 @@ async function main() {
       },
       signupForm: {
         deps: ['auth.api'],
-        factory: () => import('./features/sign-up-form/sign-up-form.module').then(mod => mod.createSignupFormModule)
+        factory: () => import('./features/sign-up-form/sign-up-form.module').then(mod => mod.createSignupFormModule),
       },
       toast: {
         deps: [],

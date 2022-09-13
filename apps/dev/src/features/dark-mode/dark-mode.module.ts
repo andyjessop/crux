@@ -3,7 +3,7 @@ import type { Cache } from "../../shared/cache/types";
 import { selectDarkModeData } from "./dark-mode.selectors";
 import { createDarkModeSlice } from "./dark-mode.slice";
 
-export function createDarkModeModule(ctx: CruxContext, cache: Cache) {
+export function createDarkModeModule({ roots }: CruxContext, cache: Cache) {
   const { actions, api, middleware, reducer } = createDarkModeSlice(cache);
 
   return {
@@ -20,7 +20,7 @@ export function createDarkModeModule(ctx: CruxContext, cache: Cache) {
         selectActions: () => api,
         selectData: selectDarkModeData,
         factory: () => import('./dark-mode.view').then(mod => mod.createDarkModeView),
-        root: 'dark-mode-toggle',
+        root: roots.darkModeToggle,
       }
     }
   };

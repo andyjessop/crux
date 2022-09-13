@@ -1,3 +1,4 @@
+import { createEventEmitter, EventEmitter } from "@crux/event-emitter";
 import { Action, Dispatch, MiddlewareAPI } from "@crux/redux-types";
 
 export const createSlice = 
@@ -7,7 +8,9 @@ export const createSlice =
     config: {
       [K in keyof T]: (state: S, param: T[K]) => 
         S |
-        (({ api }: { api: { [P in keyof T]: (param: T[P]) => Promise<void> } }) => Promise<void>)
+        (({ api }: { api: { [P in keyof T]: (param: T[P]) => Promise<void> }  & EventEmitter<{
+          [K in keyof T]: T[K];
+        }> }) => Promise<void>)
     },
 ) => {
   let dispatch: Dispatch;
@@ -53,22 +56,35 @@ export const createSlice =
           }; name: K; type: `${N}/${K & string}`; }
     });
 
+  type Events = {
+    [K in keyof T]: T[K];
+  };
+
   const api = (Object.entries(actions) as Array<[keyof T & string, (param?: any) => Action]>)
     .reduce((acc, [key, actionCreator]) => {
+      // eslint-disable-next-line
+      // @ts-ignore
       acc[key] = async function<K extends keyof T & string>(
         param?: T[K]
       ) {
         if (!dispatch) {
           throw `${name} slice middleware has not yet been registered with the store. Dispatch is not available.`;
         }
+
+        const action = actionCreator(param) as {
+          payload: T[K];
+          type: `${N}/${K & string}`;
+        };
         
         dispatch(actionCreator(param));
+
+        acc.emit(key, action.payload);
       }
 
       return acc;
-    }, {} as {
+    }, { ...createEventEmitter<Events>() } as {
       [P in keyof T]: (param: T[P]) => Promise<void>
-    });
+    } & EventEmitter<Events>);
 
   const middleware = (middlewareApi: MiddlewareAPI) => {
     if (!dispatch) {
