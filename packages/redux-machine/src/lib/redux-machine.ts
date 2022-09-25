@@ -1,4 +1,4 @@
-import { slice } from '@crux/redux-slice';
+import { createSlice } from '@crux/redux-slice';
 import { Dispatch } from '@crux/redux-types';
 
 export function machine<T extends Config<D>, D extends DefaultData>(name: string, config: T, data: D) {   
@@ -15,7 +15,7 @@ export function machine<T extends Config<D>, D extends DefaultData>(name: string
     }, {} as ActionConfig<D>);
 
   // Create new slice from actions
-  const { reducer } = slice(actionsConfig, { initialState: data, name: name });
+  const { reducer } = createSlice<any>()(name, data, actionsConfig);
 
   // Create API
   const actionKeys = 

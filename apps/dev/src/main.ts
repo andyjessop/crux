@@ -38,7 +38,6 @@ async function main() {
      * =======
      */
     modules: {
-      // auth: [() => import('./features/auth/auth.module'), 'auth'],
       auth: {
         deps: ['authApi'],
         factory: () => import('./features/auth/auth.module').then(mod => mod.createAuthModule),
@@ -102,7 +101,7 @@ async function main() {
       reporting: { factory: () => import('./shared/logging/logging.service').then(mod => mod.createReportingService) },
       usersApi: { factory: () => import('./shared/api/users-api.service').then(mod => mod.createUsersApiService) },
     },
-  }, { logger: createLogger('debug') });
+  });
 
   (window as any).services = services;
 }

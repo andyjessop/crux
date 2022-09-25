@@ -20,7 +20,6 @@ export function query(reducerId = 'crux') {
 
     if (!dispatch || !getState) {
       dispatch = ((action: Action) => {
-        console.log('query dispatch: ', action);
         return api.dispatch(action);
       }) as Dispatch<Action>;
       getState = api.getState; 

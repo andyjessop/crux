@@ -1,11 +1,11 @@
 import { createAsyncQueue } from '@crux/async-queue'
 import type { Action, Dispatch, DispatchActionOrThunk, GetState, Middleware, MiddlewareAPI, Reducer, Thunk } from '@crux/redux-types'
-import { di } from '@crux/di'
 import { createSlice } from '@crux/redux-slice'
 import { createStore } from './redux-store';
 import { asymmetricDifference } from '@crux/set-utils';
 import type { Logger } from './logger';
 import { merge } from '@crux/utils';
+import { createResolver } from './resolver';
 
 export interface CoreState {
   regions: Regions;
@@ -13,7 +13,7 @@ export interface CoreState {
 
 export type Regions = string[];
 
-type ModuleReturn = {
+type Module = {
   actions?: Record<string, (...args: any) => Action>,
   create?: (ctx: CruxContext) => void;
   destroy?: (ctx: CruxContext) => void;
@@ -26,14 +26,13 @@ type ModuleReturn = {
     selectData?: (state: any) => any, 
     factory: ViewFactory
   }>;
+  unregister?: () => void;
 };
 
-type ActionCreatorCollection<K extends string = any> = Record<K, (...args: any) => Action<any> | Thunk>;
-type ModuleFactory = () => Promise<(ctx: CruxContext, ...args: any) => ModuleReturn | Promise<ModuleReturn>>;
+type ModuleFactory = () => Promise<(...args: any) => Module | Promise<Module>>;
 type ViewFactory = () => Promise<Render>;
 type ServiceFactory<Deps extends any[] = any[]> = () => Promise<(...args: Deps) => any>;
 type Render = (root: HTMLElement, data?: any, actions?: any) => Promise<void> | void;
-
 type ExtractModuleServiceKeys<T extends ModuleFactory> = keyof Awaited<ReturnType<Awaited<ReturnType<T>>>>['services'] & string;
 
 export type CruxContext = {
@@ -47,7 +46,7 @@ export async function createApp<
     modules: Record<string, {
       deps?: ({ 
         [K in (keyof T['modules'])]: `${K & string}.${ExtractModuleServiceKeys<T['modules'][K]["factory"]>}`
-      }[keyof T['modules']] | keyof T['services'])[],
+      }[keyof T['modules']] | keyof T['services'] & string)[],
       enabled?: (state: any) => boolean;
       factory: ModuleFactory
     }>,
@@ -59,7 +58,6 @@ export async function createApp<
         factory: ModuleFactory
       },
       view: {
-        deps?: (keyof T['services'])[],
         selectData?: (state: any) => any, 
         factory: ViewFactory
       }
@@ -67,7 +65,7 @@ export async function createApp<
     root: HTMLElement;
     services: {
       [S in keyof T['services']]: {
-        deps?: (Exclude<keyof T['services'], S>)[],
+        deps?: (Exclude<keyof T['services'] & string, S>)[],
         factory: ServiceFactory
       }
     }
@@ -77,19 +75,16 @@ export async function createApp<
 }: {
   logger?: Logger,
 } = {}) {
-  type LayoutView = T['layout']['view'] & { currentData: any, render?: Render };
+  type LayoutView = {
+    currentData: any,
+    selectData?: (state: any) => any, 
+    factory: ViewFactory
+    render?: Render;
+  };
+
   type LayoutModule = T['layout']['module'] & {
     middleware?: Middleware;
     reducer?: Reducer;
-  };
-
-  type Module = T['modules'][keyof T['modules']] & {
-    actions?: ActionCreatorCollection;
-    destroy?: () => void;
-    middleware?: Middleware;
-    reducer?: Reducer;
-    registered?: boolean;
-    unregister?: () => void;
   };
 
   type ViewConfig = {
@@ -117,17 +112,16 @@ export async function createApp<
     services: serviceConfigsCollection,
   } = config;
 
-  const servicesContainer = di(serviceConfigsCollection);
+  const container = createResolver(serviceConfigsCollection, moduleConfigsCollection);
 
-  const modules = createModuleMap();
   const views = new Map<string, View>();
-  const layoutView = createLayoutView();
+  const layoutView = {
+    ...layoutConfig.view,
+    currentData: null,
+  } as LayoutView;
   const layoutModule = createLayoutModule();
   const mountedViews = new Map<string, View>();
-
-  // Add module dependencies and service dependencies here. Don't do it during the unregister/register phase
-  // Build graph here
-
+  const registeredModules = new Set<string>();
   const queue = createAsyncQueue();
 
   const registeredActions: Record<string, Record<string, (...args: any) => void>> = {};
@@ -161,7 +155,7 @@ export async function createApp<
   return {
     addMiddleware,
     addReducer,
-    services: servicesContainer,
+    services: container,
     store,
   }
 
@@ -171,7 +165,7 @@ export async function createApp<
      */
     const createInstance = await layoutModule.factory();
 
-    const { middleware, reducer } = createInstance(ctx) as ModuleReturn;
+    const { middleware, reducer } = createInstance(ctx) as Module;
 
     registerModule('layout', dispatch as DispatchActionOrThunk, { middleware, reducer });
 
@@ -219,7 +213,7 @@ export async function createApp<
 
         next(action);
 
-        const newModules = await registerModules(api.getState(), api.dispatch);
+        const newModules = await registerModules(api.getState(), api.dispatch as DispatchActionOrThunk);
 
         if (newModules?.length) {         
           logger?.log('info', JSON.stringify({
@@ -251,19 +245,11 @@ export async function createApp<
     }
   }
 
-  function registerModule(name: string, dispatch: DispatchActionOrThunk, moduleReturn?: ModuleReturn): () => void {
+  function registerModule(name: string, dispatch: DispatchActionOrThunk, mod: Module): Module {
     let removeReducer: () => void;
     let removeMiddleware: () => void;
 
-    if (!moduleReturn) {
-      return () => { /* */ };
-    }
-
-    const { actions, create, destroy, middleware, reducer, services: moduleServices = {}, views: moduleViews = {} } = moduleReturn;
-
-    for (const [key, service] of Object.entries(moduleServices)) {
-      servicesContainer.register(`${name}.${key}` as keyof T['services'], service);
-    }
+    const { actions, create, destroy, middleware, reducer, views: moduleViews = {} } = mod;
 
     if (actions) {
       registeredActions[name] = Object.entries(actions).reduce((acc, [key, actionCreator]) => {
@@ -283,13 +269,13 @@ export async function createApp<
 
     for (const [key, view] of Object.entries(moduleViews)) {
       views.set(key, createView(view));
-    }
+    } 
 
     dispatch(coreActions.initSlice(name));
 
     create?.(ctx);
  
-    return function unregisterModule() {
+    mod.unregister = () => {
       if (actions) {
         delete registeredActions[name];
       }
@@ -299,58 +285,47 @@ export async function createApp<
       }
 
       destroy?.(ctx);
-
       removeMiddleware?.();      
       removeReducer?.();
-      
     }
+
+    return mod;
   }
 
-  async function registerModules(state: any, dispatch: Dispatch) {
-    const modulesAdded: string[] = [];
+  async function registerModules(state: any, dispatch: DispatchActionOrThunk) {
+    const toUnregister = [] as string[];
+    const toRegister = [] as string[];
 
-    // Sort modules so that dependencies all appear in order. Error if circular dependency
-
-    const keys = [...modules.keys()];
-    
-    for (let i = 0; i < keys.length; i++) {
-      const moduleName = keys[i];
-
-      const whichModule = modules.get(moduleName) as Module;
-
-      const { deps = [], enabled, factory, registered, unregister } = whichModule;
-
-      const shouldBeEnabled = enabled?.(state) ?? true;
-
-      const shouldRegister = shouldBeEnabled && !registered;
-      const shouldUnregister = !shouldBeEnabled && registered;
-
-      if (shouldUnregister) {
-        unregister?.();
+    Object.entries(moduleConfigsCollection).forEach(([key, value]) => {
+      if (value.enabled?.(state) === false && registeredModules.has(key)) {
+        return toUnregister.push(key);
+      } else if (
+        (!value.enabled || value.enabled?.(state) === true) && !registeredModules.has(key)) {
+        return toRegister.push(key);
       }
+    });
 
-      if ((registered && shouldBeEnabled) || !shouldRegister) {
-        continue;
-      }
+    const promises = [];
 
-      whichModule.registered = true;
+    for (const key of toUnregister) {
+      promises.push(
+        container.getModule(key, async (name: string, instance: Promise<Module>) => (await instance).unregister?.())
+      );
 
-      const createInstance = await factory();      
-      
-      const depInstances = await Promise.all(deps.map((dep => servicesContainer.get(dep as keyof T["services"] & string))));
-
-      const slice = await createInstance(ctx, ...depInstances);
-
-      whichModule.unregister = registerModule(moduleName, dispatch as DispatchActionOrThunk, slice);
-
-      modulesAdded.push(moduleName);
-
-      modules.set(moduleName, whichModule);
-
-      continue;
+      registeredModules.delete(key)
     }
 
-    return modulesAdded;
+    for (const key of toRegister) {
+      promises.push(
+        container.getModule(key, async (name: string, instance: Promise<Module>) => registerModule(name, dispatch, await instance))
+      );
+
+      registeredModules.add(key);
+    }
+
+    await Promise.all(promises);
+    
+    return toRegister;
   }
 
   async function renderLayout(state: any) {
@@ -446,28 +421,10 @@ export async function createApp<
     return state.__cruxCore.regions;
   }
 
-  // UTILS
-
-  function createLayoutView(): LayoutView {
-    return {
-      ...layoutConfig.view,
-      currentData: null
-    };
-  }
-
   function createLayoutModule(): LayoutModule {
     return {
       ...layoutConfig.module,
     };
-  }
-
-  function createModuleMap() {
-    return Object.entries(moduleConfigsCollection)
-    .reduce((acc, [key, value]) => {
-      acc.set(key, value as Module);
-  
-      return acc;
-    }, new Map<string, Module>())
   }
   
   function createView(viewConfig: ViewConfig): View {

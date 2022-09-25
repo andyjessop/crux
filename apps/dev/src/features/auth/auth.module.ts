@@ -3,11 +3,12 @@ import { createAuthSlice } from './auth.slice';
 import { selectUserNavActions, selectUserNavData } from './views/user-nav/user-nav.selectors';
 import type { AuthAPI } from './api/api';
 
-export async function createAuthModule({ roots }: CruxContext, auth: AuthAPI) {
+export async function createAuthModule(auth: AuthAPI) {
   const { actions, api, middleware, reducer } = createAuthSlice('auth', auth);
 
   return {
     actions,
+    create,
     middleware,
     reducer,
     services: {
@@ -24,5 +25,9 @@ export async function createAuthModule({ roots }: CruxContext, auth: AuthAPI) {
       }
     }
   };
+
+  function create() {
+    api.init();
+  }
 }
 

@@ -3,17 +3,11 @@ import { createSignupFormSlice } from './sign-up-form.slice';
 import { selectSignupFormActions, selectSignupFormData } from './sign-up-form.selectors';
 import type { AuthService, States } from '../auth/auth.slice';
 
-export async function createSignupFormModule(
-  ctx: CruxContext,
-  auth: AuthService,
-) {
+export async function createSignupFormModule(auth: AuthService) {
   const { actions, api, middleware, reducer } = createSignupFormSlice(auth, 'signupForm');
-
-  const unsubscribe = auth.on('setMachineState', onAuthMachineStateChange);
 
   return {
     actions,
-    destroy: () => unsubscribe(),
     middleware,
     reducer,
     services: {
@@ -30,11 +24,5 @@ export async function createSignupFormModule(
       },
     }
   };
-
-  function onAuthMachineStateChange(newState: States) {
-    if (newState === 'signingUp') {
-      api.setFormState('submitting');
-    }
-  }
 }
 

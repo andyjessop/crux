@@ -162,7 +162,9 @@ export function createAuthSlice(name: string, authAPI: AuthAPI) {
     },
   });
 
-  authMachine.onEnter(data => slice.api.setMachineState(data.current));
+  authMachine.onEnter(data => {
+    slice.api.setMachineState(data.current);
+  });
 
   return slice;
 }

@@ -3,7 +3,7 @@ import type { Cache } from "../../shared/cache/types";
 import { selectDarkModeData } from "./dark-mode.selectors";
 import { createDarkModeSlice } from "./dark-mode.slice";
 
-export function createDarkModeModule({ roots }: CruxContext, cache: Cache) {
+export function createDarkModeModule(cache: Cache) {
   const { actions, api, middleware, reducer } = createDarkModeSlice(cache);
 
   return {

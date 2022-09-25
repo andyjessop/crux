@@ -1,9 +1,7 @@
-import type { CruxContext } from '@crux/app';
 import { selectActions, selectData } from './toaster.selectors';
 import { createToasterSlice } from './toaster.slice';
-import type { Alert } from './toaster.slice';
 
-export async function createToastModule({ roots }: CruxContext) {
+export async function createToastModule() {
   const { actions, api, middleware, reducer } = createToasterSlice();
 
   setTimeout(() => {

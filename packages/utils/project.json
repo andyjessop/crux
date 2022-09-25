@@ -32,7 +32,7 @@
     "publish": {
       "executor": "@nrwl/workspace:run-commands",
       "options": {
-        "command": "./node_modules/.bin/ts-node tools/scripts/packages/publish-single.ts di"
+        "command": "./node_modules/.bin/ts-node tools/scripts/packages/publish-single.ts utils"
       }
     },
     "lint": {

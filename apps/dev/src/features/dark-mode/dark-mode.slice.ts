@@ -22,7 +22,7 @@ export function createDarkModeSlice(cache: Cache) {
     isDark: valueFromCache(),
   };
 
-  return createSlice<DarkModeSlice>()('dark-mode', initialState, {
+  return createSlice<DarkModeSlice>()('darkMode', initialState, {
     set: (state, isDark) => async ({ api }) => {
       cache.set(DARK_MODE_CACHE_KEY, isDark);
   
@@ -32,13 +32,23 @@ export function createDarkModeSlice(cache: Cache) {
         document.body.classList.remove('dark');
       }
         
-      api.setState(isDark);
+      await api.setState(isDark);
     },
     setState: (state, payload: boolean) => merge(state, {
       isDark: payload
     }),
     toggle: (state) => async ({ api }) => {
-      await api.set(!state.isDark);
+      const isDark = !state.isDark;
+
+      cache.set(DARK_MODE_CACHE_KEY, isDark);
+  
+      if (isDark) {
+        document.body.classList.add('dark');
+      } else {
+        document.body.classList.remove('dark');
+      }
+        
+      await api.setState(isDark);
     },
   });
 

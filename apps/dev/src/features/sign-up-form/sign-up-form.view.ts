@@ -9,7 +9,7 @@ export function createSignupFormView(root: HTMLElement, data: SignupFormState, a
     email, password, formState,
   } = data;
 
-  const { onChange, onSubmit, reset } = actions;
+  const { close, onChange, onSubmit } = actions;
 
   if (email == undefined || password === undefined) {
     return null;
@@ -28,7 +28,7 @@ export function createSignupFormView(root: HTMLElement, data: SignupFormState, a
   }
 
   dialogRef.value.addEventListener('sl-request-close', event => {
-    reset();
+    close();
   });
 
   function template() {

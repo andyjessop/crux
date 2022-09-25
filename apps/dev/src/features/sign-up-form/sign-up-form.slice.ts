@@ -46,6 +46,7 @@ export const initialState: SignupFormState = {
 
 type SignupFormSlice = {
   onChange: { field: 'email' | 'password', value: string },
+  close: void,
   onSubmit: { email: string, password: string },
   reset: void,
   setFormState: 'idle' | 'submitting',
@@ -58,6 +59,11 @@ export type SignupFormAPI = ApiOf<SignupFormSlice>;
 export function createSignupFormSlice(auth: AuthService, name: string) {
   return createSlice<SignupFormSlice>()(name, initialState, {
     onChange: (state, { field, value }) => async ({ api }) => onChange(api, { field, value }),
+    close: (state) => async ({ api }) => {
+      api.reset();
+
+      auth.cancelSignup();
+    },
     onSubmit: (state, { email, password }) => async ({ api }) => onSubmit(api, auth, { email, password }),
     reset: () => initialState,
     setFormState: (state, formState) => merge(state, { formState }),
@@ -94,7 +100,9 @@ async function onSubmit(
   auth: AuthService,
   { email, password }: { email: string, password: string },
 ) {
-  await api.reset(); // reset the store
+  api.setFormState('submitting');
 
-  auth.submitSignupForm({ email, password });
+  await auth.submitSignupForm({ email, password });
+
+  api.close();
 }

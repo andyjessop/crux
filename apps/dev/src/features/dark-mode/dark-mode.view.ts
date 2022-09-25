@@ -19,7 +19,9 @@ export function createDarkModeView(root: HTMLElement, data: Data, actions: Actio
     <sl-switch ${ref(switchRef)} .checked=${isDark}>${isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}</sl-switch>
   `, root);
 
-  switchRef.value.addEventListener('sl-change', (data) => {
+  switchRef.value.addEventListener('sl-change', (event) => {
+    event.stopImmediatePropagation();
+
     toggle();
   });
 }

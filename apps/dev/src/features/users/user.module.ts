@@ -1,6 +1,4 @@
-import type { CruxContext } from "@crux/app";
-
-export function createUserModule(ctx: CruxContext, subscribe: any) {
+export function createUserModule(subscribe: any) {
   const { refetch } = subscribe();
 
   refetch();

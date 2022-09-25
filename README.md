@@ -1,7 +1,5 @@
 # Crux
 
-**NB: `crux` is not yet ready for prime-time. I'm in the process of building out various modules that `crux` will use, and will then pull them all together in a coherent framework. Stay tuned!**
-
 `crux` is a system for building web apps that are designed to be small, fast, and decoupled. It helps you to ensure the code you write is long-lived, low in technical debt, and low in churn.
 
 `crux` is a framework that brings Redux front-and-centre of your app. Rather than "you might not need Redux", `crux` posits that "you might not need React". It allows you to use any view library (even multiple frameworks), and simplifies the rendering of a view such that you will probably opt for a library that is much simpler and less capable (read "smaller and less complex") than React. For example, something like `lit` is a perfect fit.

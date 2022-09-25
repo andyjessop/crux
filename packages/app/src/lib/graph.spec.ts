@@ -1,3 +1,0 @@
-describe('graph', {
-  it('should')
-})
