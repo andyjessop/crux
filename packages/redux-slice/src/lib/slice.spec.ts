@@ -12,25 +12,27 @@ describe('reduxQuery', () => {
       add: number,
       subtract: number,
     }>()('counter', initial, {
-      add: (state: State, payload) => ({
+      add: (state, payload) => ({
         ...state,
         count: state.count + payload
       }),
-      subtract: (state: State, payload: number) => ({
+      subtract: (state, payload) => ({
         ...state,
         count: state.count - payload
       }),
     });
 
-    expect(reducer(undefined, { type: 'counter/add', payload: 1 })).toEqual({ count: 1 });
-    expect(reducer(initial, { type: 'counter/add', payload: 1 })).toEqual({ count: 1});
-    expect(reducer(initial, { type: 'counter/add', payload: undefined })).toEqual({ count: NaN });
+    const { add, subtract } = actions;
+
+    expect(reducer(undefined, { type: add.type, payload: 1 })).toEqual({ count: 1 });
+    expect(reducer(initial, { type: add.type, payload: 1 })).toEqual({ count: 1});
+    expect(reducer(initial, { type: add.type, payload: undefined })).toEqual({ count: NaN });
 
     expect(actions.add.name).toEqual('actionCreator');
-    expect(actions.add.type).toEqual('counter/add');
+    expect(actions.add.type).toEqual(add.type);
 
-    expect(actions.add(1)).toEqual({ payload: 1, type: 'counter/add' });
-    expect(actions.subtract(2)).toEqual({ payload: 2, type: 'counter/subtract' });
+    expect(actions.add(1)).toEqual({ payload: 1, type: add.type });
+    expect(actions.subtract(2)).toEqual({ payload: 2, type: subtract.type });
   });
 
   it('should handle multiple parameters', () => {
@@ -43,14 +45,16 @@ describe('reduxQuery', () => {
     const { actions, reducer } = createSlice<{
       add: [number, number],
     }>()('counter', initial, {
-      add: (state: State, one, two) => ({
+      add: (state, one, two) => ({
         ...state,
         count: state.count + one + two
       }),
     });
 
-    expect(actions.add(1, 2)).toEqual({ payload: [1, 2], type: 'counter/add' });
-    expect(reducer(initial, { type: 'counter/add', payload: [1, 2] })).toEqual({ count: 3 });
+    const { add } = actions;
+
+    expect(add(1, 2)).toEqual({ payload: [1, 2], type: add.type });
+    expect(reducer(initial, { type: add.type, payload: [1, 2] })).toEqual({ count: 3 });
   });
 
   it('should handle multiple parameters (2)', () => {
@@ -64,24 +68,26 @@ describe('reduxQuery', () => {
       add: [undefined, number],
       addOptional: [number, number?],
     }>()('counter', initial, {
-      add: (state: State, one, two) => ({
+      add: (state, one, two) => ({
         ...state,
         count: state.count + two
       }),
-      addOptional: (state: State, one, two) => ({
+      addOptional: (state, one, two) => ({
         ...state,
         count: state.count + one + (two ?? 0)
       }),
     });
 
-    expect(actions.add(undefined, 2)).toEqual({ payload: [undefined, 2], type: 'counter/add' });
-    expect(reducer(initial, { type: 'counter/add', payload: [1, 2] })).toEqual({ count: 2 });
+    const { add, addOptional } = actions;
 
-    expect(actions.addOptional(2)).toEqual({ payload: [2], type: 'counter/addOptional' });
-    expect(reducer(initial, { type: 'counter/addOptional', payload: [2] })).toEqual({ count: 2 });
+    expect(add(undefined, 2)).toEqual({ payload: [undefined, 2], type: add.type });
+    expect(reducer(initial, { type: add.type, payload: [1, 2] })).toEqual({ count: 2 });
 
-    expect(actions.addOptional(2, 1)).toEqual({ payload: [2, 1], type: 'counter/addOptional' });
-    expect(reducer(initial, { type: 'counter/addOptional', payload: [2, 1] })).toEqual({ count: 3 });
+    expect(addOptional(2)).toEqual({ payload: [2], type: addOptional.type });
+    expect(reducer(initial, { type: addOptional.type, payload: [2] })).toEqual({ count: 2 });
+
+    expect(addOptional(2, 1)).toEqual({ payload: [2, 1], type: addOptional.type });
+    expect(reducer(initial, { type: addOptional.type, payload: [2, 1] })).toEqual({ count: 3 });
   });
 
   it('should handle optional parameters (1)', () => {
@@ -94,17 +100,19 @@ describe('reduxQuery', () => {
     const { actions, reducer } = createSlice<{
       addOptional: number | void,
     }>()('counter', initial, {
-      addOptional: (state: State, one) => ({
+      addOptional: (state, one) => ({
         ...state,
         count: state.count + (one ?? 0)
       }),
     });
 
-    expect(actions.addOptional(2)).toEqual({ payload: 2, type: 'counter/addOptional' });
-    expect(reducer(initial, { type: 'counter/addOptional', payload: 2 })).toEqual({ count: 2 });
+    const { addOptional } = actions;
 
-    expect(actions.addOptional()).toEqual({ payload: undefined, type: 'counter/addOptional' });
-    expect(reducer(initial, { type: 'counter/addOptional', payload: undefined })).toEqual({ count: 0 });
+    expect(addOptional(2)).toEqual({ payload: 2, type: addOptional.type });
+    expect(reducer(initial, { type: addOptional.type, payload: 2 })).toEqual({ count: 2 });
+
+    expect(addOptional()).toEqual({ payload: undefined, type: addOptional.type });
+    expect(reducer(initial, { type: addOptional.type, payload: undefined })).toEqual({ count: 0 });
   });
 
   it('should handle optional parameters (2)', () => {
@@ -117,16 +125,19 @@ describe('reduxQuery', () => {
     const { actions, reducer } = createSlice<{
       addOptional: [number, number?],
     }>()('counter', initial, {
-      addOptional: (state: State, one, two) => ({
+      addOptional: (state, one, two) => ({
         ...state,
         count: state.count + one + (two ?? 0)
       }),
     });
 
-    expect(actions.addOptional(2)).toEqual({ payload: [2], type: 'counter/addOptional' });
-    expect(reducer(initial, { type: 'counter/addOptional', payload: [2] })).toEqual({ count: 2 });
+    const { addOptional } = actions;
 
-    expect(actions.addOptional(2, 1)).toEqual({ payload: [2, 1], type: 'counter/addOptional' });
-    expect(reducer(initial, { type: 'counter/addOptional', payload: [2, 1] })).toEqual({ count: 3 });
+    // redux-slice will always pass the payload as an array if there are multiple parameters in the config
+    expect(actions.addOptional(2)).toEqual({ payload: [2], type: addOptional.type });
+    expect(reducer(initial, { type: addOptional.type, payload: [2] })).toEqual({ count: 2 });
+
+    expect(actions.addOptional(2, 1)).toEqual({ payload: [2, 1], type: addOptional.type });
+    expect(reducer(initial, { type: addOptional.type, payload: [2, 1] })).toEqual({ count: 3 });
   });
 });
