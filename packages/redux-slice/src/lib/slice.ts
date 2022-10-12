@@ -6,11 +6,17 @@ export const createSlice =
     name: N,
     initialState: S,
     config: {
-      [K in keyof T]: (state: S, param: T[K]) => 
-        S |
-        (({ api }: { api: { [P in keyof T]: (param: T[P]) => Promise<void> }  & EventEmitter<{
-          [K in keyof T]: T[K];
-        }> }) => Promise<void>)
+      [K in keyof T]: T[K] extends Array<any>
+        ? (state: S, ...params: T[K]) => 
+          S |
+          (({ api }: { api: { [P in keyof T]: T[P] extends Array<any> ? (...params: T[P]) => Promise<void> : (params: T[P]) => Promise<void> } & EventEmitter<{
+            [K in keyof T]: T[K];
+          }> }) => Promise<void>)
+        : (state: S, param: T[K]) => 
+          S |
+          (({ api }: { api: { [P in keyof T]: T[P] extends Array<any> ? (...params: T[P]) => Promise<void> : (params: T[P]) => Promise<void> } & EventEmitter<{
+            [K in keyof T]: T[K];
+          }> }) => Promise<void>)
     },
 ) => {
   let dispatch: Dispatch;
@@ -28,17 +34,15 @@ export const createSlice =
 
   const actions = keys
     .reduce((acc, key) => {
-      const actionCreator = function<K extends keyof T>(param: T[K]) {
+      const actionCreator = function(...params: any[]) {
         return {
-          payload: param,
+          payload: config[key].length > 2 ? params : params[0],
           type: actionTypes[key],
         }
-      };
+      } as any;
 
       actionCreator.type = actionTypes[key];
 
-      // eslint-disable-next-line
-      // @ts-ignore
       acc[key] = actionCreator;
 
       return acc;
@@ -49,8 +53,12 @@ export const createSlice =
             payload: undefined;
             type: `${N}/${K & string}`;
           }; name: K; type: `${N}/${K & string}`; }
-        : {
-          (param: T[K]): {
+        : T[K] extends Array<any>
+          ? { (...params: T[K]): {
+              payload: T[K];
+              type: `${N}/${K & string}`;
+            }; name: K; type: `${N}/${K & string}`; }
+          : { (param: T[K]): {
             payload: T[K];
             type: `${N}/${K & string}`;
           }; name: K; type: `${N}/${K & string}`; }
@@ -62,8 +70,6 @@ export const createSlice =
 
   const api = (Object.entries(actions) as Array<[keyof T & string, (param?: any) => Action]>)
     .reduce((acc, [key, actionCreator]) => {
-      // eslint-disable-next-line
-      // @ts-ignore
       acc[key] = async function<K extends keyof T & string>(
         param?: T[K]
       ) {
@@ -79,11 +85,11 @@ export const createSlice =
         dispatch(actionCreator(param));
 
         acc.emit(key, action.payload);
-      }
+      } as any;
 
       return acc;
     }, { ...createEventEmitter<Events>() } as {
-      [P in keyof T]: (param: T[P]) => Promise<void>
+      [P in keyof T]: T[P] extends Array<any> ? (...params: T[P]) => Promise<void> : (params: T[P]) => Promise<void>
     } & EventEmitter<Events>);
 
   const middleware = (middlewareApi: MiddlewareAPI) => {
@@ -126,7 +132,10 @@ export const createSlice =
           return state ?? initialState;
         }
   
-        const res = config[key](dest, action['payload']);
+        // Spread payload into handler, but only if the config handler is expecting more than one argument.
+        const res = config[key].length > 2
+          ? config[key](dest, ...(action['payload'] as [any]))
+          : config[key](dest, action['payload']);
   
         // If it's not a state object, then it's an async call. Don't handle that in the reducer.
         if (!isState(res)) {
