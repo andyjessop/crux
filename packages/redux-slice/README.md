@@ -191,17 +191,20 @@ export function createAuthSlice(name: string, auth: AuthHttp) {
       const user = await auth.login(email, remember);
   
       if (user) {
-        api.loginSuccess(user); // fully typed acording to the `AuthSlice` definition above
+        api.loginSuccess(user); // type inferred from the `AuthSlice` definition above
       } else {
         api.loginFailure();
       }
     },
+
     loginFailure: (state) => ({
       user: null,
     }),
+    
     loginSuccess: (state, user) => ({
       user,
     }),
+
     logout: () => async ({ api }) => {
       const success = await auth.logout();
 
@@ -209,6 +212,7 @@ export function createAuthSlice(name: string, auth: AuthHttp) {
         api.logoutSuccess();
       }
     },
+
     logoutSuccess: (state) => ({
       user: null,
     }),
@@ -241,8 +245,6 @@ function login(api: AuthApi, authHttp: AuthHttp, email: string, remember?: boole
   }
 }
 ```
-
-This function can now be extracted and unit-tested.
 
 ### Using `merge` to reduce boilerplate and errors
 
