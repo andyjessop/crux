@@ -8,14 +8,10 @@ export async function createAuthModule(auth: AuthAPI) {
 
   return {
     actions,
+    api,
     create,
     middleware,
     reducer,
-    services: {
-      api: {
-        factory: () => Promise.resolve(() => api),
-      },
-    },
     views: {
       userNav: {
         selectActions: () => selectUserNavActions(api),

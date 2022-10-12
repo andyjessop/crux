@@ -56,6 +56,7 @@ async function main() {
       },
       signupForm: {
         deps: ['auth.api'],
+        enabled: (state: any) => state.auth.user === null,
         factory: () => import('./features/sign-up-form/sign-up-form.module').then(mod => mod.createSignupFormModule),
       },
       toast: {

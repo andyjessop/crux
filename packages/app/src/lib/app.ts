@@ -15,6 +15,7 @@ export type Regions = string[];
 
 type Module = {
   actions?: Record<string, (...args: any) => Action>,
+  api?: any,
   create?: (ctx: CruxContext) => void;
   destroy?: (ctx: CruxContext) => void;
   middleware?: Middleware;
@@ -44,16 +45,19 @@ export type CruxContext = {
 export async function createApp<
   T extends {
     modules: Record<string, {
-      deps?: ({ 
-        [K in (keyof T['modules'])]: `${K & string}.${ExtractModuleServiceKeys<T['modules'][K]["factory"]>}`
-      }[keyof T['modules']] | keyof T['services'] & string)[],
+      deps?: (
+        { 
+          [K in (keyof T['modules'])]: `${K & string}.${ExtractModuleServiceKeys<T['modules'][K]["factory"]>}` | `${K & string}.api`
+        }[keyof T['modules']]
+        | keyof T['services'] & string
+      )[],
       enabled?: (state: any) => boolean;
       factory: ModuleFactory
     }>,
     layout: {
       module: {
         deps?: ({ 
-          [K in (keyof T['modules'])]: `${K & string}.${ExtractModuleServiceKeys<T['modules'][K]["factory"]>}`
+          [K in (keyof T['modules'])]: `${K & string}.${ExtractModuleServiceKeys<T['modules'][K]["factory"]>}` | `${K & string}.api`
         }[keyof T['modules']] | keyof T['services'])[],
         factory: ModuleFactory
       },
@@ -249,7 +253,7 @@ export async function createApp<
     let removeReducer: () => void;
     let removeMiddleware: () => void;
 
-    const { actions, create, destroy, middleware, reducer, views: moduleViews = {} } = mod;
+    const { actions, api, create, destroy, middleware, reducer, views: moduleViews = {} } = mod;
 
     if (actions) {
       registeredActions[name] = Object.entries(actions).reduce((acc, [key, actionCreator]) => {

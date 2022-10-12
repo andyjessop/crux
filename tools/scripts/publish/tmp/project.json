@@ -83,7 +83,7 @@
             },
             {
               "file": "packages/redux-registry/package.json",
-              "hash": "2335c6d0630ac656aea8ddaf753b60ff57db5a65",
+              "hash": "46689eb85da80147a731dfc9c0a98718a35ea0d7",
               "deps": [
                 "npm:redux"
               ]
@@ -224,7 +224,7 @@
             },
             {
               "file": "packages/event-emitter/package.json",
-              "hash": "c4d035240a87547248548fa3b4e087e38c1b9112"
+              "hash": "914bb7fdd332ca7c774ff55365b1d7210eb65e70"
             },
             {
               "file": "packages/event-emitter/project.json",
@@ -358,7 +358,7 @@
             },
             {
               "file": "packages/redux-machine/package.json",
-              "hash": "445782605fcf3b0fd8e3bf98a77cb85443d82e29"
+              "hash": "6064196a01945833cee38f29314c3bb84c8b9fd7"
             },
             {
               "file": "packages/redux-machine/project.json",
@@ -600,7 +600,7 @@
             },
             {
               "file": "packages/redux-router/package.json",
-              "hash": "a54526e3bcf65881f94e7217d544cd29c3273624",
+              "hash": "e69378654333a4867b85cfe92b1192f451c6d617",
               "deps": [
                 "npm:react",
                 "npm:redux"
@@ -623,19 +623,21 @@
             },
             {
               "file": "packages/redux-router/src/index.ts",
-              "hash": "2b36e34967351791b0a946eabead804c94722114"
+              "hash": "5cfc7e53d5145aea30ec6bfb891c12c307c8d58e",
+              "deps": [
+                "router"
+              ]
             },
             {
               "file": "packages/redux-router/src/lib/redux-router.spec.ts",
-              "hash": "fa78a01f66b92781c82e842a4291599f35f1b82f"
+              "hash": "8d5aeb508de840a7489954438956ac7dfc0ccbe2"
             },
             {
               "file": "packages/redux-router/src/lib/redux-router.ts",
-              "hash": "f0012568a7ca8dc97507498eed731a2fb03fcc35",
+              "hash": "fec06958d7934960e68dedd3815f30e539b0c258",
               "deps": [
                 "redux-types",
-                "router",
-                "npm:react"
+                "router"
               ]
             },
             {
@@ -739,7 +741,7 @@
             },
             {
               "file": "packages/string-utils/package.json",
-              "hash": "b354d28532c3f9f37fdc835a39988b8b9a63458c"
+              "hash": "efd0a45d7d0d9a6655122e74bccc1c73579e6094"
             },
             {
               "file": "packages/string-utils/project.json",
@@ -873,7 +875,7 @@
             },
             {
               "file": "packages/async-queue/package.json",
-              "hash": "9cb5c1e3ea9c7f9dc30ec27a3c6b7e1fdecdea21"
+              "hash": "24a877f9f2a9e15aa7f0e175e5efcac72ae0f070"
             },
             {
               "file": "packages/async-queue/project.json",
@@ -1003,7 +1005,7 @@
             },
             {
               "file": "packages/redux-slice/package.json",
-              "hash": "247f21a46a40c4362e1bdf911e075f6b4b0bc1ba"
+              "hash": "0b672bf652c30eb4b02f49348831dfb3bf6587ad"
             },
             {
               "file": "packages/redux-slice/project.json",
@@ -1141,7 +1143,7 @@
             },
             {
               "file": "packages/redux-types/package.json",
-              "hash": "dc4ad6e813c81cd5e645f2b572d9d461055cdffc"
+              "hash": "97a7ef4550a81061daea608e65efa151a8884506"
             },
             {
               "file": "packages/redux-types/project.json",
@@ -1271,7 +1273,7 @@
             },
             {
               "file": "packages/redux-utils/package.json",
-              "hash": "9ec0e1fa9a5370e74fa5117d4c9a279d5ba98743"
+              "hash": "d69c98be43d477534e5b0cdecc9145f72af52879"
             },
             {
               "file": "packages/redux-utils/project.json",
@@ -1411,7 +1413,7 @@
             },
             {
               "file": "packages/sync-queue/package.json",
-              "hash": "97588f4f18520a1c8d0b33354823d8ed506e6437"
+              "hash": "d52561f62989983874e916b19ff3c3f6c902cd43"
             },
             {
               "file": "packages/sync-queue/project.json",
@@ -1541,7 +1543,7 @@
             },
             {
               "file": "packages/url-parser/package.json",
-              "hash": "12e3e7752f9ed9405c6dd0ddd76d23fbd8519567"
+              "hash": "09156ad9f23d5d4981bda62730237074d129e562"
             },
             {
               "file": "packages/url-parser/project.json",
@@ -1739,7 +1741,7 @@
             },
             {
               "file": "packages/set-utils/package.json",
-              "hash": "d08862270d114f1ff7d591cbdad0102ad45cd2c0"
+              "hash": "2ede3d0f83bb3349a4b0d54df8b2367bab2a0896"
             },
             {
               "file": "packages/set-utils/project.json",
@@ -1901,7 +1903,7 @@
             },
             {
               "file": "packages/machine/package.json",
-              "hash": "886cb4e088652f1b66f1f098af109a32a41158cc"
+              "hash": "34742cb567cb55429641064a651bc7767e841ddb"
             },
             {
               "file": "packages/machine/project.json",
@@ -2038,7 +2040,7 @@
             },
             {
               "file": "packages/router/package.json",
-              "hash": "9de8e7e05a95b9e7c24a1a0a15de76e2712d4981"
+              "hash": "5681764ed6a408f303bf9fc637cb5a4bfad0e7d4"
             },
             {
               "file": "packages/router/project.json",
@@ -2176,7 +2178,7 @@
             },
             {
               "file": "packages/query/package.json",
-              "hash": "bb80e5b852d5df4a52ddcf87618c5dec3d95ccbc"
+              "hash": "193461b084cb303c5cbb2f17162cd07d1d560a64"
             },
             {
               "file": "packages/query/project.json",
@@ -2210,7 +2212,7 @@
             },
             {
               "file": "packages/query/src/lib/query/query.ts",
-              "hash": "aad81dff738b5cc03706b41a78ec9012667dafe4",
+              "hash": "08dc20e99c63c534a4a6d823cb887e12fade914d",
               "deps": [
                 "event-emitter",
                 "redux-types"
@@ -2379,7 +2381,7 @@
             },
             {
               "file": "packages/store/package.json",
-              "hash": "f191c2face200d286e0d7bf647b672d4613329b6"
+              "hash": "b474fa02b797677e47eb1ff67c8d4f2d64075bc2"
             },
             {
               "file": "packages/store/project.json",
@@ -2484,7 +2486,7 @@
             "publish": {
               "executor": "@nrwl/workspace:run-commands",
               "options": {
-                "command": "./node_modules/.bin/ts-node tools/scripts/packages/publish-single.ts di"
+                "command": "./node_modules/.bin/ts-node tools/scripts/packages/publish-single.ts utils"
               }
             },
             "lint": {
@@ -2525,11 +2527,11 @@
             },
             {
               "file": "packages/utils/package.json",
-              "hash": "ab57eb6d1d9ba24b3baedd308191f32789754c6e"
+              "hash": "1d0f58da0d0c918ce909428e2b0171c2cb7587fc"
             },
             {
               "file": "packages/utils/project.json",
-              "hash": "8ed96b7e72d9fb2e953e745e477661aee044278d"
+              "hash": "8b113af8cc66fa69b00a88f3604c08010cb3463b"
             },
             {
               "file": "packages/utils/README.md",
@@ -2567,6 +2569,14 @@
               "hash": "e4c7e7271c8fd1537f60e5149935609a61cd0379"
             },
             {
+              "file": "packages/utils/src/lib/promise/create-externally-resolvable-promise.spec.ts",
+              "hash": "4886ba1de8da61b73517ab95461cfb61760b0aeb"
+            },
+            {
+              "file": "packages/utils/src/lib/promise/create-externally-resolvable-promise.ts",
+              "hash": "6d879d6b2a2cff19d1fea4fadfa746201e14973f"
+            },
+            {
               "file": "packages/utils/src/lib/validate.ts",
               "hash": "157b7164203b1509f16a7bab359a9465ecfc15e4"
             },
@@ -2581,18 +2591,6 @@
             {
               "file": "packages/utils/tsconfig.spec.json",
               "hash": "f95b08f8f79e54f596db3da65676c4dc00ac9dea"
-            },
-            {
-              "file": "packages/utils/src/lib/promise/config/types.ts",
-              "hash": "0695a0c3dc3abbf4fd2332961f06269bcdb1f812"
-            },
-            {
-              "file": "packages/utils/src/lib/promise/create-externally-resolvable-promise.ts",
-              "hash": "6d879d6b2a2cff19d1fea4fadfa746201e14973f"
-            },
-            {
-              "file": "packages/utils/src/lib/promise/create-externally-resolvable-promise.spec.ts",
-              "hash": "4886ba1de8da61b73517ab95461cfb61760b0aeb"
             }
           ]
         }
@@ -2687,7 +2685,7 @@
             },
             {
               "file": "packages/app/package.json",
-              "hash": "b4f4a2890aa3366e9050432982c78ddec20b358f"
+              "hash": "d0f0c9af323a677ac196049ee811746e3eea9499"
             },
             {
               "file": "packages/app/project.json",
@@ -2737,6 +2735,17 @@
               ]
             },
             {
+              "file": "packages/app/src/lib/resolver.spec.ts",
+              "hash": "2102ab62e4ebbf3bbc245ebd62ceb324f9fbdb3e"
+            },
+            {
+              "file": "packages/app/src/lib/resolver.ts",
+              "hash": "27e9e4c06812a2e88a36a723c92098f3e15d93a6",
+              "deps": [
+                "utils"
+              ]
+            },
+            {
               "file": "packages/app/tsconfig.json",
               "hash": "cac0d9db4e50a5cbccc2a2c031f197f670dae19f"
             },
@@ -2747,17 +2756,6 @@
             {
               "file": "packages/app/tsconfig.spec.json",
               "hash": "f95b08f8f79e54f596db3da65676c4dc00ac9dea"
-            },
-            {
-              "file": "packages/app/src/lib/resolver.ts",
-              "hash": "7adddf18c94f0dab0cb1a253c28f6fc315e61e8f",
-              "deps": [
-                "utils"
-              ]
-            },
-            {
-              "file": "packages/app/src/lib/resolver.spec.ts",
-              "hash": "2102ab62e4ebbf3bbc245ebd62ceb324f9fbdb3e"
             }
           ]
         }
@@ -2857,7 +2855,7 @@
             },
             {
               "file": "packages/di/package.json",
-              "hash": "835271bb56b6c26c6ef4607b8083dfe962c45a23"
+              "hash": "621c4b3a373ef800dd98779b6dd30029c765f32a"
             },
             {
               "file": "packages/di/project.json",
@@ -2946,6 +2944,126 @@
             }
           },
           "files": [
+            {
+              "file": "apps/dev/dist/assets/api.86e3c4b7.js",
+              "hash": "e26e2ac7942525ef98958365515997d5cf786d43"
+            },
+            {
+              "file": "apps/dev/dist/assets/async-cache.service.eafbb6c5.js",
+              "hash": "d25d7a2c157ec036d07359b9e990aad466bcc706"
+            },
+            {
+              "file": "apps/dev/dist/assets/auth.module.e78024b7.js",
+              "hash": "972aa3d54e1c50b01190fcc417396c0f6cf8cd3f"
+            },
+            {
+              "file": "apps/dev/dist/assets/cache.service.a5a72e72.js",
+              "hash": "c0527ac5ae3a8d7c2ee171309ac0dab2026fa9f9"
+            },
+            {
+              "file": "apps/dev/dist/assets/dark-mode.module.ce5f9b6e.js",
+              "hash": "095b0cd08062e0f312f2b177dba534b0bddb61e9"
+            },
+            {
+              "file": "apps/dev/dist/assets/dark-mode.view.d4b75ce8.js",
+              "hash": "fa66c3793c29f45b393912cbc22577b0be57c7d4"
+            },
+            {
+              "file": "apps/dev/dist/assets/data.module.3b4232a0.js",
+              "hash": "52b08bf71018f02fd6756a7ba6d6deb072be6c94"
+            },
+            {
+              "file": "apps/dev/dist/assets/directive.9b57a945.js",
+              "hash": "aacf027604c185e5d47d88a86b12d50eff09d079"
+            },
+            {
+              "file": "apps/dev/dist/assets/env.service.e4b665b8.js",
+              "hash": "a623ac49fac293d6c5bfcd1149fcfd0307f86273"
+            },
+            {
+              "file": "apps/dev/dist/assets/favicon.17e50649.svg",
+              "hash": "de4aeddc12bdfe6c668dd57c6b457a659c058914"
+            },
+            {
+              "file": "apps/dev/dist/assets/feature-flags.service.acbfde49.js",
+              "hash": "5ee7db57038002fa0d3a14bc56cccfbdf8976211"
+            },
+            {
+              "file": "apps/dev/dist/assets/index.791a460c.js",
+              "hash": "0d82e83c6f66ac8fd405c1846ada6d3d763e6a7c"
+            },
+            {
+              "file": "apps/dev/dist/assets/index.ab216954.css",
+              "hash": "77d40f482f21f0b89205a6c91a399692e09a0b07"
+            },
+            {
+              "file": "apps/dev/dist/assets/layout.module.7e34acc0.js",
+              "hash": "93e8e88d0b23e253bf528a70138d79f2bb086d1d"
+            },
+            {
+              "file": "apps/dev/dist/assets/layout.view.156c63d8.css",
+              "hash": "0eb2c6ce5d2a3693feee63e70ff379d7bc1adacd"
+            },
+            {
+              "file": "apps/dev/dist/assets/layout.view.e57d8e3d.js",
+              "hash": "899b3d1337118c7ba1587e289a4790230e48029b"
+            },
+            {
+              "file": "apps/dev/dist/assets/lit-html.9b9017eb.js",
+              "hash": "485eb0523f11810ff601aa3b5e7ba019d414bf47"
+            },
+            {
+              "file": "apps/dev/dist/assets/logging.service.d183d238.js",
+              "hash": "fc64978fc1f13e37ba661c647457ed76478f6167"
+            },
+            {
+              "file": "apps/dev/dist/assets/machine.26234c57.js",
+              "hash": "d47a1b132b23fd03a489847358e7aff81293cedf"
+            },
+            {
+              "file": "apps/dev/dist/assets/map.a4f06f37.js",
+              "hash": "1d7ef86fc099d32d621bb735a809257c6d4f8fab"
+            },
+            {
+              "file": "apps/dev/dist/assets/ref.7a167248.js",
+              "hash": "cba9073af7087d06856442645dbe560d714c32cf"
+            },
+            {
+              "file": "apps/dev/dist/assets/router.module.31ea6156.js",
+              "hash": "3ae23f160d2d1391e1524317cee0951432f3a2cb"
+            },
+            {
+              "file": "apps/dev/dist/assets/sign-up-form.module.ab20a2ce.js",
+              "hash": "f0168ee7b934803d2465ae9ab0bec4f063d47d07"
+            },
+            {
+              "file": "apps/dev/dist/assets/sign-up-form.view.ccb42b9b.js",
+              "hash": "4767934d08fe19465e6550017505155d815038fd"
+            },
+            {
+              "file": "apps/dev/dist/assets/toaster.module.65d21cf2.js",
+              "hash": "6082c66227ddbdc3ab13f50d8ac2b7f11297b4d1"
+            },
+            {
+              "file": "apps/dev/dist/assets/toaster.view.647f3256.js",
+              "hash": "926104a53dd63ecd5d90b4fb06c77f618855e543"
+            },
+            {
+              "file": "apps/dev/dist/assets/user-nav.view.7dea13d6.js",
+              "hash": "b805b65a613ccbe03c6600f9fb6730a45c4de765"
+            },
+            {
+              "file": "apps/dev/dist/assets/user.module.ff8d3fe7.js",
+              "hash": "654932c67a161da6acfed82ab2bc242148af1d17"
+            },
+            {
+              "file": "apps/dev/dist/assets/users-api.service.7d765f0a.js",
+              "hash": "5ff3ab0ac0c8c25506d60f818e41d2d295b58109"
+            },
+            {
+              "file": "apps/dev/dist/index.html",
+              "hash": "c072b88a92d5b228a332d5d00aec38ad4817dc51"
+            },
             {
               "file": "apps/dev/index.html",
               "hash": "a2ca88f8720a8cc173a68f80ac52892d48eb91f4"
@@ -3522,126 +3640,6 @@
                 "npm:vite",
                 "npm:path"
               ]
-            },
-            {
-              "file": "apps/dev/dist/assets/api.86e3c4b7.js",
-              "hash": "e26e2ac7942525ef98958365515997d5cf786d43"
-            },
-            {
-              "file": "apps/dev/dist/assets/async-cache.service.eafbb6c5.js",
-              "hash": "d25d7a2c157ec036d07359b9e990aad466bcc706"
-            },
-            {
-              "file": "apps/dev/dist/assets/auth.module.e78024b7.js",
-              "hash": "972aa3d54e1c50b01190fcc417396c0f6cf8cd3f"
-            },
-            {
-              "file": "apps/dev/dist/assets/cache.service.a5a72e72.js",
-              "hash": "c0527ac5ae3a8d7c2ee171309ac0dab2026fa9f9"
-            },
-            {
-              "file": "apps/dev/dist/assets/dark-mode.module.ce5f9b6e.js",
-              "hash": "095b0cd08062e0f312f2b177dba534b0bddb61e9"
-            },
-            {
-              "file": "apps/dev/dist/assets/dark-mode.view.d4b75ce8.js",
-              "hash": "fa66c3793c29f45b393912cbc22577b0be57c7d4"
-            },
-            {
-              "file": "apps/dev/dist/assets/data.module.3b4232a0.js",
-              "hash": "52b08bf71018f02fd6756a7ba6d6deb072be6c94"
-            },
-            {
-              "file": "apps/dev/dist/assets/directive.9b57a945.js",
-              "hash": "aacf027604c185e5d47d88a86b12d50eff09d079"
-            },
-            {
-              "file": "apps/dev/dist/assets/env.service.e4b665b8.js",
-              "hash": "a623ac49fac293d6c5bfcd1149fcfd0307f86273"
-            },
-            {
-              "file": "apps/dev/dist/assets/favicon.17e50649.svg",
-              "hash": "de4aeddc12bdfe6c668dd57c6b457a659c058914"
-            },
-            {
-              "file": "apps/dev/dist/assets/feature-flags.service.acbfde49.js",
-              "hash": "5ee7db57038002fa0d3a14bc56cccfbdf8976211"
-            },
-            {
-              "file": "apps/dev/dist/assets/index.791a460c.js",
-              "hash": "0d82e83c6f66ac8fd405c1846ada6d3d763e6a7c"
-            },
-            {
-              "file": "apps/dev/dist/assets/index.ab216954.css",
-              "hash": "77d40f482f21f0b89205a6c91a399692e09a0b07"
-            },
-            {
-              "file": "apps/dev/dist/assets/layout.module.7e34acc0.js",
-              "hash": "93e8e88d0b23e253bf528a70138d79f2bb086d1d"
-            },
-            {
-              "file": "apps/dev/dist/assets/layout.view.156c63d8.css",
-              "hash": "0eb2c6ce5d2a3693feee63e70ff379d7bc1adacd"
-            },
-            {
-              "file": "apps/dev/dist/assets/layout.view.e57d8e3d.js",
-              "hash": "899b3d1337118c7ba1587e289a4790230e48029b"
-            },
-            {
-              "file": "apps/dev/dist/assets/lit-html.9b9017eb.js",
-              "hash": "485eb0523f11810ff601aa3b5e7ba019d414bf47"
-            },
-            {
-              "file": "apps/dev/dist/assets/logging.service.d183d238.js",
-              "hash": "fc64978fc1f13e37ba661c647457ed76478f6167"
-            },
-            {
-              "file": "apps/dev/dist/assets/machine.26234c57.js",
-              "hash": "d47a1b132b23fd03a489847358e7aff81293cedf"
-            },
-            {
-              "file": "apps/dev/dist/assets/map.a4f06f37.js",
-              "hash": "1d7ef86fc099d32d621bb735a809257c6d4f8fab"
-            },
-            {
-              "file": "apps/dev/dist/assets/ref.7a167248.js",
-              "hash": "cba9073af7087d06856442645dbe560d714c32cf"
-            },
-            {
-              "file": "apps/dev/dist/assets/router.module.31ea6156.js",
-              "hash": "3ae23f160d2d1391e1524317cee0951432f3a2cb"
-            },
-            {
-              "file": "apps/dev/dist/assets/sign-up-form.module.ab20a2ce.js",
-              "hash": "f0168ee7b934803d2465ae9ab0bec4f063d47d07"
-            },
-            {
-              "file": "apps/dev/dist/assets/sign-up-form.view.ccb42b9b.js",
-              "hash": "4767934d08fe19465e6550017505155d815038fd"
-            },
-            {
-              "file": "apps/dev/dist/assets/toaster.module.65d21cf2.js",
-              "hash": "6082c66227ddbdc3ab13f50d8ac2b7f11297b4d1"
-            },
-            {
-              "file": "apps/dev/dist/assets/toaster.view.647f3256.js",
-              "hash": "926104a53dd63ecd5d90b4fb06c77f618855e543"
-            },
-            {
-              "file": "apps/dev/dist/assets/user-nav.view.7dea13d6.js",
-              "hash": "b805b65a613ccbe03c6600f9fb6730a45c4de765"
-            },
-            {
-              "file": "apps/dev/dist/assets/user.module.ff8d3fe7.js",
-              "hash": "654932c67a161da6acfed82ab2bc242148af1d17"
-            },
-            {
-              "file": "apps/dev/dist/assets/users-api.service.7d765f0a.js",
-              "hash": "5ff3ab0ac0c8c25506d60f818e41d2d295b58109"
-            },
-            {
-              "file": "apps/dev/dist/index.html",
-              "hash": "c072b88a92d5b228a332d5d00aec38ad4817dc51"
             }
           ]
         }
@@ -3676,12 +3674,12 @@
       "redux-router": [
         {
           "source": "redux-router",
-          "target": "redux-types",
+          "target": "router",
           "type": "static"
         },
         {
           "source": "redux-router",
-          "target": "router",
+          "target": "redux-types",
           "type": "static"
         }
       ],

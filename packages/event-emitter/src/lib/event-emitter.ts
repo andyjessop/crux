@@ -106,7 +106,7 @@ export function createEventEmitter<
   function once<K extends keyof T>(type: K, handler: EventHandler<T[K]>): void {
     const listener: EventListener<T, K> = {
       handler: (...args) => {
-        off(type, handler);
+        off(type, listener.handler);
         handler(...args);
       },
       type,

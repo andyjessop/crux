@@ -74,6 +74,10 @@ export function createResolver(services: ResolverConfig, modules: ResolverConfig
           configs[`${parts[0]}.${key}`] = value as ResolverEntry;
         });
       }
+
+      if (i.api) {
+        configs[`${parts[0]}.api`] = i.api;
+      }
     }
 
     const deps = [];
@@ -86,7 +90,7 @@ export function createResolver(services: ResolverConfig, modules: ResolverConfig
         await get(parts[0], callback);
       }
       
-      const instance = instances[dep] ?? await get(dep, callback);      
+      const instance = await instances[dep] ?? await get(dep, callback);      
 
       if (dep.startsWith('module-') && dep.split('.').length < 2) {
         continue;
@@ -108,6 +112,10 @@ export function createResolver(services: ResolverConfig, modules: ResolverConfig
       Object.entries(instance.services).forEach(([key, value]) => {
         configs[`${name}.${key}`] = value as ResolverEntry;
       });
+    }
+
+    if (instance.api) {
+      configs[`${parts[0]}.api`] = instance.api;
     }
 
     resolve(instance);

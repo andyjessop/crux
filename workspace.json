@@ -3,6 +3,7 @@
   "projects": {
     "app": "packages/app",
     "async-queue": "packages/async-queue",
+    "create-store": "packages/create-store",
     "dev": "apps/dev",
     "di": "packages/di",
     "event-emitter": "packages/event-emitter",
@@ -20,6 +21,7 @@
     "string-utils": "packages/string-utils",
     "sync-queue": "packages/sync-queue",
     "url-parser": "packages/url-parser",
-    "utils": "packages/utils"
+    "utils": "packages/utils",
+    "xapp": "packages/xapp"
   }
 }
