@@ -6,9 +6,9 @@
 npm install --save @crux/redux-slice
 ```
 
-## `slice`
+## `createSlice`
 
-`slice` is a shorthand way of creating actions, reducers, and side-effects with minimal boilerplate. Normally, Redux leaves the side-effects up to you, and it's often messy, with no clear official direction. `@crux/redux-slice` replaces the need for sagas, and ensures your code is succinct, easy to read, easy to test, and decoupled for maximum longevity.
+`createSlice` is a shorthand way of creating actions, reducers, and side-effects with minimal boilerplate. Normally, Redux leaves the side-effects up to you, and it's often messy, with no clear official direction. `@crux/redux-slice` replaces the need for sagas, and ensures your code is succinct, easy to read, easy to test, and decoupled for maximum longevity.
 
 The one downside to having all this functionality baked-in is that you have to define the parameters of your payloads separately. However, as you'll see, this is a small price to pay. Let's take a look at a simple example that covers all our needs (actions, reducers, and side-effects).
 
@@ -21,7 +21,7 @@ interface CounterState {
 
 const initialState: CounterState = { count: 0 };
 
-// This is where we define the payloads for our actions
+// This is where we define the parms for our actions
 type CounterSlice = {
   add: number;
   subtract: number;
@@ -51,7 +51,10 @@ export const { actions, middleware, reducer } = createSlice<CounterSlice>()('cou
 All types within the config are inferred from:
 
 a) `initialState`, which determines the shape of the `state`, and
+
 b) `CounterSlice`, which determines the shape of the `payload`
+
+### Registering your slice
 
 In order to register your slice, you need to add both the reducer and the middleware that are returned from `createSlice`:
 
@@ -66,6 +69,8 @@ configureStore({
 });
 ```
 
+### Dispatching actions
+
 Now you can dispatch your actions as normal:
 
 ```ts
@@ -73,6 +78,8 @@ import { actions } from 'counter/slice.ts';
 
 dispatch(actions.add(5)); // dispatches { type: 'counter/add', payload: 5 }
 ```
+
+### Multiple parameters
 
 You can provide multiple parameters to your actions like this:
 
@@ -97,6 +104,8 @@ dispatch(actions.add('str'));
 dispatch(actions.add(1, 2, 3));
 ```
 
+### Optional parameters
+
 You can also have optional parameters like this:
 
 ```ts
@@ -120,13 +129,15 @@ dispatch(actions.add(1)); // no error this time
 dispatch(actions.add(1, 2)); // still works
 ```
 
+### Action type
+
 If you need access to the action type (to use in a saga, for example), you can use the `type` property on the action:
 
 ```ts
 actions.add.type // `counter/add`
 ```
 
-### API
+### The API
 
 `createSlice` also returns a handy `api` object (which is what is provided in your async callback above), whereby `dispatch` is called for you. This is great for reducing imports and coupling around your app. You still need to add the reducer and middleware as previously, but once that's done, you can now call this from anywhere without calling `dispatch`:
 
@@ -147,7 +158,7 @@ import { ApiOf } from '@crux/redux-slice';
 export type CounterAPI = ApiOf<CounterSlice>;
 ```
 
-## Side-effects
+### Side-effects
 
 `createSlice` has another trick up its sleeve. Redux has many solutions for side-effects, but most of them fall short in a number of areas. Either TypeScript support is not great, or it results in messy, hard-to-reason-about code, or the API is polarising.
 
@@ -233,7 +244,7 @@ function login(api: AuthApi, authHttp: AuthHttp, email: string, remember?: boole
 
 This function can now be extracted and unit-tested.
 
-## Using `merge` to reduce boilerplate and errors
+### Using `merge` to reduce boilerplate and errors
 
 Other than the boilerplate involved with creating actions, the other thing that Redux users often hate is "spread hell":
 

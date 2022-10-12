@@ -31,6 +31,7 @@ export type ViewInstance<D = any, A = any> = (root: HTMLElement) => (data: D, ac
 
 export type View<D = any, A = any> = {
   get: () => Promise<ViewInstance<D, A>>,
+  getCurrentData: () => D | undefined,
   instance?: ViewInstance<D, A>,
   promise?: Promise<ViewInstance<D, A>>,
   render: (root: HTMLElement, state: any) => void | Promise<void>,

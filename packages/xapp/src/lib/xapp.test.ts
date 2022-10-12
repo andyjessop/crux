@@ -6,7 +6,7 @@ import {
 } from './mock/two';
 import { xappWithEmitter as xapp } from './xapp-with-emitter';
 
-import { layoutSelector, layoutView } from './mock/layout';
+import { layoutView } from './mock/layout';
 
 describe('xapp', () => {
   it('should create an xapp', (done) => {
@@ -27,11 +27,10 @@ describe('xapp', () => {
     ];
     
     const app = xapp({
-      layoutSelector,
       slices,
       subscriptions,
       views,
-    }, { headless: true });
+    });
 
     app.once('afterSubscriptions', (data) => {
       const state = app.store.getState();

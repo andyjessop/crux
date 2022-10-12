@@ -6,7 +6,6 @@ import type { Slice, View } from './types';
 
 export interface Options {
   emitter?: EventEmitter<Events>;
-  headless?: boolean;
   store?: DynamicStore;
 }
 
@@ -19,24 +18,17 @@ export type Events<State = any> = {
 }
 
 export function xapp({
-  layoutSelector, root, slices, subscriptions, views
+  root, slices, subscriptions, views
 }: {
-  layoutSelector?: (state: any) => { [key: string]: string },
   root?: HTMLElement;
   slices: Slice[];
   subscriptions: Subscription[];
   views: View[];
 }, {
-  emitter, headless, store = createStore(),
+  emitter, store = createStore(),
 }: Options = {}) {
-  if (!headless) {
-    if (!root) {
-      throw new Error('Root element is required if not in headless mode.');
-    }
-
-    if (!layoutSelector) {
-      throw new Error('Layout selector is required if not in headless mode.');
-    }
+  if (!root) {
+    console.info('No root element provided. Running in headless mode.');
   }
   
   const middleware = (api: MiddlewareAPI) => (next: Dispatch) => async (action: Action) => {
@@ -79,22 +71,16 @@ export function xapp({
 
     /**
      * LAYOUT
-     */
-    const layouts = layoutSelector?.(api.getState());
-
-    if (!layouts) {
-      throw new Error('No layouts found');
-    }
-    
+     */    
     const layoutView = views.find(view => view.root === 'root');
 
     if (!layoutView) {
       throw new Error('No layout view found');
     }
 
-    const layoutRoot = headless ? { id: 'root' } : root;
+    const layoutRoot = root ?? { id: 'root' };
 
-    await layoutView.render(layoutRoot as HTMLElement, layouts);
+    await layoutView.render(layoutRoot as HTMLElement, api.getState());
 
     emitter?.emit('afterLayout', { action, state });
 
@@ -102,11 +88,11 @@ export function xapp({
      * VIEWS
      */
     for (const view of views) {
-      const shouldRender = Boolean(layouts[view.root]);
+      const shouldRender = Boolean(layoutView.getCurrentData()?.[view.root]);
       const shouldUpdate = view.updateData(api.getState());
 
       if (shouldRender && shouldUpdate) {
-        const viewRoot = headless ? { id: view.root } : document.querySelector(`data-crux-root=${view.root}`);
+        const viewRoot = root ? { id: view.root } : document.querySelector(`data-crux-root=${view.root}`);
 
         if (!viewRoot) {
           throw new Error(`Could not find root element with data-crux-root=${view.root}`);

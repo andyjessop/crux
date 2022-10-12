@@ -18,6 +18,7 @@ export function view<S, D, A>(
 
   return {
     get,
+    getCurrentData: () => currentData,
     instance,
     promise,
     render,
