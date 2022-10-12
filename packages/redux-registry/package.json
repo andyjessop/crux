@@ -1,6 +1,6 @@
 {
   "name": "@crux/redux-registry",
-  "version": "0.0.44-alpha",
+  "version": "0.0.45-alpha",
   "type": "commonjs",
   "devDependencies": {
     "redux": "^4.1.2"

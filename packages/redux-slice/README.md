@@ -30,19 +30,19 @@ type CounterSlice = {
 // Note we have to provide the `CounterSlice` so that crux can work out the API. It's an unfortunate limitation of
 // TypeScript that we can't infer the type of `api` here. Hopefully future versions will allow this.
 export const { actions, middleware, reducer } = createSlice<CounterSlice>()('counter', initialState, {
-  add: (state, payload) => merge(state, {
-    count: state.count + payload
+  add: (state, num) => merge(state, {
+    count: state.count + num
   }),
-  subtract: (state, payload) => merge(state, {
-    count: state.count - payload
+  subtract: (state, num) => merge(state, {
+    count: state.count - num
   }),
-  randomAddOrSubtract: (state, payload) => async ({ api }) => {
+  randomAddOrSubtract: (state, num) => async ({ api }) => {
     const shouldAdd = Math.random() > 0.5;
 
     if (shouldAdd) {
-      api.add(payload);
+      api.add(num);
     } else {
-      api.subtract(payload);
+      api.subtract(num);
     }
   }
 };
@@ -216,7 +216,7 @@ Notice how clean the code is. Because all the dependencies are injected, and the
 
 ```ts
     ...
-    login: (state, email, remember = false) => async ({ api }) => login(api, auth,   email, remember),
+    login: (state, email, remember = false) => async ({ api }) => login(api, auth, email, remember),
   });
 }
 
@@ -264,11 +264,11 @@ type CounterSlice = {
 }
 
 export const { actions, reducer } = createSlice<CounterSlice>()('counter', initialState, {
-  add: (state, payload) => merge(state, {
-    count: state.count + payload
+  add: (state, num) => merge(state, {
+    count: state.count + num
   }),
   subtract: (state, payload) =>  merge(state, {
-    count: state.count - payload
+    count: state.count - num
   }),
 });
 ```

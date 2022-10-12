@@ -140,4 +140,47 @@ describe('reduxQuery', () => {
     expect(actions.addOptional(2, 1)).toEqual({ payload: [2, 1], type: addOptional.type });
     expect(reducer(initial, { type: addOptional.type, payload: [2, 1] })).toEqual({ count: 3 });
   });
+
+  it('should work with array type params', () => {
+    interface State {
+      count: number;
+    }
+    
+    const initial: State = { count: 0 };
+    
+    const { actions, reducer } = createSlice<{
+      add: number[],
+    }>()('counter', initial, {
+      add: (state, one) => ({
+        ...state,
+        count: state.count + one.reduce((acc, cur) => acc + cur, 0),
+      }),
+    });
+
+    const { add } = actions;
+
+    expect(add([1, 2])).toEqual({ payload: [1, 2], type: add.type });
+    expect(reducer(initial, { type: add.type, payload: [1, 2] })).toEqual({ count: 2 });
+  });
+
+  it('should produce API from actions', () => {
+    interface State {
+      count: number;
+    }
+    
+    const initial: State = { count: 0 };
+    
+    const { api, reducer } = createSlice<{
+      add: number[],
+    }>()('counter', initial, {
+      add: (state, one) => ({
+        ...state,
+        count: state.count + one.reduce((acc, cur) => acc + cur, 0),
+      }),
+    });
+
+    const { add } = api;
+
+    expect(add([1, 2])).not.toBeUndefined();
+  });
 });

@@ -1,6 +1,6 @@
 {
   "name": "@crux/redux-slice",
-  "version": "0.0.44-alpha",
+  "version": "0.0.45-alpha",
   "type": "commonjs",
   "dependencies": {}
 }

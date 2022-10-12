@@ -6,15 +6,15 @@ export const createSlice =
     name: N,
     initialState: S,
     config: {
-      [K in keyof T]: T[K] extends Array<any>
-        ? (state: S, ...params: T[K]) => 
+      [K in keyof T]: IsTuple<T[K]> extends true
+        ? (state: S, ...params: Extract<T[K], readonly unknown[]>) => 
           S |
-          (({ api }: { api: { [P in keyof T]: T[P] extends Array<any> ? (...params: T[P]) => Promise<void> : (params: T[P]) => Promise<void> } & EventEmitter<{
+          (({ api }: { api: { [P in keyof T]: IsTuple<T[P]> extends true ? (...params: Extract<T[P], readonly unknown[]>) => Promise<void>  : (params: T[P]) => Promise<void> } & EventEmitter<{
             [K in keyof T]: T[K];
           }> }) => Promise<void>)
         : (state: S, param: T[K]) => 
           S |
-          (({ api }: { api: { [P in keyof T]: T[P] extends Array<any> ? (...params: T[P]) => Promise<void> : (params: T[P]) => Promise<void> } & EventEmitter<{
+          (({ api }: { api: { [P in keyof T]: IsTuple<T[P]> extends true ? (...params: Extract<T[P], readonly unknown[]>) => Promise<void>  : (params: T[P]) => Promise<void> } & EventEmitter<{
             [K in keyof T]: T[K];
           }> }) => Promise<void>)
     },
@@ -53,8 +53,8 @@ export const createSlice =
             payload: undefined;
             type: `${N}/${K & string}`;
           }; name: K; type: `${N}/${K & string}`; }
-        : T[K] extends Array<any>
-          ? { (...params: T[K]): {
+        : IsTuple<T[K]> extends true
+          ? { (...params: Extract<T[K], readonly unknown[]>): {
               payload: T[K];
               type: `${N}/${K & string}`;
             }; name: K; type: `${N}/${K & string}`; }
@@ -89,7 +89,7 @@ export const createSlice =
 
       return acc;
     }, { ...createEventEmitter<Events>() } as {
-      [P in keyof T]: T[P] extends Array<any> ? (...params: T[P]) => Promise<void> : (params: T[P]) => Promise<void>
+      [P in keyof T]: IsTuple<T[P]> extends true ? (...params:Extract<T[P], readonly unknown[]>) => Promise<void> : (params: T[P]) => Promise<void>
     } & EventEmitter<Events>);
 
   const middleware = (middlewareApi: MiddlewareAPI) => {
@@ -171,3 +171,11 @@ function inverse<T extends string, U extends string>(obj: Record<T, U>): Record<
 
   return ret;
 }
+
+type ANumber = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
+
+type IsTuple<Type> = Type extends readonly unknown[]
+  ? Type['length'] extends ANumber
+    ? true
+    : false
+  : false;
