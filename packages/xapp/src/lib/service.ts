@@ -1,7 +1,7 @@
 import type { NodeTypes, Service } from "./types";
 
 export function service<T extends [] | Service<any>[], Args extends NodeTypes<T>, I = any>(
-  factory: (...args: Args) => Promise<I>,
+  factory: (...args: Args) => Promise<I> | I,
   options: {
     deps: T,
   } = {
@@ -31,12 +31,18 @@ export function service<T extends [] | Service<any>[], Args extends NodeTypes<T>
 
     const depInstances = await Promise.all(deps.map(dep => dep.getAPI())) as Args;
 
-    promise = factory(...depInstances);
+    const ret = factory(...depInstances);
 
-    promise.then(i => {
-      instance = i;
-    })
+    if (ret instanceof Promise) {
+      ret.then(i => {
+        instance = i;
+      })
+  
+      return ret;
+    }
 
-    return promise;
+    instance = ret;
+
+    return instance;
   }
 }

@@ -123,7 +123,28 @@ describe('slice', () => {
     expect(instanceC.a.isA).toEqual(true);
     expect(instanceC.b.isB).toEqual(true);
   });
+
+  test('should select the state', async () => {
+    const a = slice(() => Promise.resolve(sliceA()), { name: 'a' });
+    const b = slice((a) => Promise.resolve(sliceB(a)), { deps: [a], name: 'b' });
+
+    a.bindStore(store);
+    b.bindStore(store);
+
+    await b.getInstance();
+    
+    expect(a.select(store.getState())).toEqual({ initialA: true });
+    expect(b.select(store.getState())).toEqual({ initialB: true });
+  });
 });
+
+interface StateA {
+  initialA: boolean;
+}
+
+interface StateB {
+  initialB: boolean;
+}
 
 function sliceA() {
   return {
@@ -131,7 +152,8 @@ function sliceA() {
       isA: true,
     },
     middleware: () => (next: Dispatch) => (action: Action) => next(action),
-    reducer: (state: any, action: Action) => ({ initialA: true }),
+    reducer: (state: StateA, action: Action) => ({ initialA: true }),
+    select: (state: any) => ({ initialA: true })
   };
 }
 
@@ -142,7 +164,8 @@ function sliceB(apiA: ReturnType<typeof sliceA>['api']) {
       isB: true,
     },
     middleware: () => (next: Dispatch) => (action: Action) => next(action),
-    reducer: (state: any, action: Action) => ({ initialB: true }),
+    reducer: (state: StateB, action: Action) => ({ initialB: true }),
+    select: (state: any) => ({ initialB: true })
   };
 }
 

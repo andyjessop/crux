@@ -39,21 +39,21 @@ export type View<D = any, A = any> = {
   updateData(state: any): boolean,
 }
 
-export type Slice<API = any> = APIType<API> & {
+export type Slice<State = any, API = any> = APIType<API> & {
   bindStore(store: DynamicStore): void,
-  getInstance(): Promise<SliceInstance<API>>;
+  getInstance(): Promise<SliceInstance<State, API>>;
   getStore(): DynamicStore | undefined;
-  isGlobal: boolean,
-  getPromise(): Promise<SliceInstance<API>> | undefined,
+  getPromise(): Promise<SliceInstance<State, API>> | undefined,
   getUnregister(): (() => void) | undefined,
   name: string,
-  register(middleware?: Middleware, reducer?: Reducer): void;
+  register(middleware?: Middleware, reducer?: Reducer<State>): void;
+  select(state: any): State;
   shouldBeEnabled?(state: any): boolean,
   store?: DynamicStore,
 };
 
-export type SliceInstance<API = any> = {
+export type SliceInstance<State, API = any> = {
   api: API,
   middleware?: Middleware,
-  reducer?: Reducer,
+  reducer: Reducer<State>
 };

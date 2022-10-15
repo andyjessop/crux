@@ -1,4 +1,4 @@
-export function createReportingService() {
+export function reporting() {
   return {
     track
   };

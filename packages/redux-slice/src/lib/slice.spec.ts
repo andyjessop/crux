@@ -1,3 +1,4 @@
+import { createStore } from '@crux/create-store';
 import { createSlice } from './slice';
 
 describe('reduxQuery', () => {
@@ -8,7 +9,7 @@ describe('reduxQuery', () => {
     
     const initial: State = { count: 0 };
     
-    const { actions, api, reducer } = createSlice<{
+    const { actions, reducer } = createSlice<{
       add: number,
       subtract: number,
     }>()('counter', initial, {
@@ -160,7 +161,7 @@ describe('reduxQuery', () => {
     const { add } = actions;
 
     expect(add([1, 2])).toEqual({ payload: [1, 2], type: add.type });
-    expect(reducer(initial, { type: add.type, payload: [1, 2] })).toEqual({ count: 2 });
+    expect(reducer(initial, { type: add.type, payload: [1, 2] })).toEqual({ count: 3 });
   });
 
   it('should produce API from actions', () => {
@@ -170,7 +171,7 @@ describe('reduxQuery', () => {
     
     const initial: State = { count: 0 };
     
-    const { api, reducer } = createSlice<{
+    const { api } = createSlice<{
       add: number[],
     }>()('counter', initial, {
       add: (state, one) => ({
@@ -179,8 +180,59 @@ describe('reduxQuery', () => {
       }),
     });
 
-    const { add } = api;
+    expect(api.add).not.toBeUndefined();
+  });
 
-    expect(add([1, 2])).not.toBeUndefined();
+  it('api should dispatch actions', () => {
+    interface State {
+      count: number;
+    }
+    
+    const initial: State = { count: 0 };
+    
+    const { api, middleware, reducer } = createSlice<{
+      add: number[],
+    }>()('counter', initial, {
+      add: (state, one) => ({
+        ...state,
+        count: state.count + one.reduce((acc, cur) => acc + cur, 0),
+      }),
+    });
+
+    const store = createStore();
+
+    store.addMiddleware(middleware);
+    store.addReducer('counter', reducer);
+
+    api.add([1, 2]);
+
+    expect(store.getState().counter.count).toEqual(3);
+  });
+
+  it('should get state', () => {
+    interface State {
+      count: number;
+    }
+    
+    const initial: State = { count: 0 };
+    
+    const { api, middleware, reducer } = createSlice<{
+      add: number[],
+    }>()('counter', initial, {
+      add: (state, one) => ({
+        ...state,
+        count: state.count + one.reduce((acc, cur) => acc + cur, 0),
+      }),
+    });
+
+    const store = createStore();
+
+    store.addMiddleware(middleware);
+    store.addReducer('counter', reducer);
+
+    const { get } = api;
+
+    expect(get()).not.toBeUndefined();
+    expect(get('count')).not.toBeUndefined();
   });
 });

@@ -27,8 +27,7 @@ type CounterSlice = {
   subtract: number;
 }
 
-// Note we have to provide the `CounterSlice` so that crux can work out the API. It's an unfortunate limitation of
-// TypeScript that we can't infer the type of `api` here. Hopefully future versions will allow this.
+// Note we have to provide the `CounterSlice` so that we can infer the API.
 export const { actions, middleware, reducer } = createSlice<CounterSlice>()('counter', initialState, {
   add: (state, num) => merge(state, {
     count: state.count + num
@@ -150,12 +149,50 @@ api.add(1, 2);
 console.log(store.getState().counter.count); // 3
 ```
 
+#### `get`
+`api` also contains a `get` function, which will get the state for this specific slice:
+
+```ts
+api.get(); // { count: 0 }
+api.get('count') // 0
+```
+
+This is useful for if you want to provide the data to a different slice's async handlers. Here you can wrap your `createSlice` function in order to inject another's API:
+
+```ts
+import { MultiplierAPI } from '../features/multiplier';
+
+export function createCounterSlice(multilier: MultiplierAPI) {
+  return createSlice<CounterSlice>()(name, initialState, {
+    withMultiplier: (state, one) => ({ api }) => {
+      const multiple = multiplier.get('multiple');
+
+      if (multiple) {
+        add(one * multiple);
+      }
+    },
+    add: (state, one) => () => {
+      if (decisionsAPI.get()) {
+
+      }
+    },
+```
+
+(Note that's a horribly contrived example, but you get the point. Sometimes you might want access to some state that is not contained within the slice)
+
+#### API Type
+
 If you want to get the type of your API, you can do it like this:
 
 ```ts
-import { ApiOf } from '@crux/redux-slice';
+export type CounterAPI = ReturnType<typeof counterSlice>['api'];
 
-export type CounterAPI = ApiOf<CounterSlice>;
+const counterSlice = createSlice<CounterSlice>()('counter', initial, {
+  add: (state, one) => ({
+    ...state,
+    count: state.count + one
+  }),
+});
 ```
 
 ### Side-effects
@@ -183,7 +220,7 @@ type AuthSlice = {
   logoutSuccess: void;
 }
 
-export type AuthApi = ApiOf<AuthSlice>;
+export type AuthApi = ReturnType<typeof createAuthSlice>['api'];
 
 export function createAuthSlice(name: string, auth: AuthHttp) {
   return createSlice<AuthSlice>()(name, initialState, {

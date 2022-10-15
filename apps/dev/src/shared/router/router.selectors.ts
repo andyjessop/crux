@@ -1,3 +1,9 @@
-import type { State } from '@crux/redux-router'
+import { createSelector } from 'reselect';
+import type { RouterState } from './router.slice';
 
-export const selectRoute = (state: { router: State }) => state.router.route;
+const selectRouter = (state: { router: RouterState }) => state.router;
+
+export const selectRoute = createSelector(
+  selectRouter,
+  router => router?.route ?? null
+);

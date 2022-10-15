@@ -7,7 +7,7 @@ export type SliceOne = ReturnType<typeof sliceOne>['api'];
 export function sliceOne(serviceOne: ServiceOne, shared: SharedService) {
   const slice = createSlice<{
     set: void;
-  }>()('moduleOne', { isOne: true }, {
+  }>()('sliceOne', { isOne: true }, {
     set: () => ({}),
   });
 

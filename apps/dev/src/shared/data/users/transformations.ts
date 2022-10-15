@@ -1,4 +1,4 @@
-import type { PutUser, Response, User } from "../../api/users-api.service";
+import type { PutUser, Response, User } from "../../http/users/users-http.service";
 
 export function toData(response: Response<User[]>) {
   return response.data;

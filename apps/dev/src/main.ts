@@ -2,17 +2,6 @@ import './main.css';
 import { createApp, LogLevel } from '@crux/app';
 import type { Logger } from '@crux/app';
 import { selectLayoutData } from './layout/layout.selectors';
-import '@shoelace-style/shoelace/dist/themes/light.css';
-import '@shoelace-style/shoelace/dist/components/alert/alert.js';
-import '@shoelace-style/shoelace/dist/components/button/button.js';
-import '@shoelace-style/shoelace/dist/components/icon/icon.js';
-import '@shoelace-style/shoelace/dist/components/input/input.js';
-import '@shoelace-style/shoelace/dist/components/dialog/dialog.js';
-import '@shoelace-style/shoelace/dist/components/switch/switch.js';
-import { setBasePath } from '@shoelace-style/shoelace/dist/utilities/base-path.js';
-
-// Set the base path to the folder you copied Shoelace's assets to
-setBasePath('/path/to/shoelace/dist');
 
 main();
 
@@ -48,7 +37,7 @@ async function main() {
       },
       data: {
         deps: ['usersApi'],
-        factory: () => import('./shared/data/data.module').then(mod => mod.createDataModule),
+        factory: () => import('./shared/data/module').then(mod => mod.createDataModule),
       },
       router: {
         deps: ['cache'],
@@ -94,13 +83,13 @@ async function main() {
      * ========
      */
     services: {
-      asyncCache: { factory: () => import('./shared/cache/async-cache.service').then(mod => mod.createAsyncCacheService) },
+      asyncCache: { factory: () => import('./shared/async-cache/async-cache.service').then(mod => mod.createAsyncCacheService) },
       authApi: { factory: () => import('./features/auth/api/api').then(mod => mod.createAuthApi), deps: ['asyncCache', 'env'] },
       cache: { factory: () => import('./shared/cache/cache.service').then(mod => mod.createCacheService) },
       env: { factory: () => import('./shared/env/env.service').then(mod => mod.env) },
       featureFlags: { factory: () => import('./shared/feature-flags/feature-flags.service').then(mod => mod.createFeatureFlagsService) },
-      reporting: { factory: () => import('./shared/logging/logging.service').then(mod => mod.createReportingService) },
-      usersApi: { factory: () => import('./shared/api/users-api.service').then(mod => mod.createUsersApiService) },
+      reporting: { factory: () => import('./shared/reporting/reporting.service').then(mod => mod.createReportingService) },
+      usersApi: { factory: () => import('./shared/http/users/users-http.service').then(mod => mod.createUsersApiService) },
     },
   });
 

@@ -27,15 +27,17 @@ type ToasterSlice = {
 
 export type ToasterAPI = ApiOf<ToasterSlice>;
 
-export function createToasterSlice() {
-  return createSlice<ToasterSlice>()('toast', initialState, {
-    add: (state: ToasterState, payload: Alert) => merge(state, {
+export function createToasterSlice(name: string) {
+  return createSlice<ToasterSlice>()(name, initialState, {
+    add: (state, payload) => merge(state, {
       alerts: [...state.alerts, payload],
     }),
-    remove: (state: ToasterState, payload: Alert) => merge(state, {
+
+    remove: (state, payload) => merge(state, {
       alerts: state.alerts.filter(alert => alert.id !== payload.id),
     }),
-    toast: (state: ToasterState, payload: Alert) => async ({ api }) => {
+    
+    toast: (state, payload) => async ({ api }) => {
       await api.add(payload);
 
       document.querySelector<SlAlert>(`#${payload.id}`)?.toast();

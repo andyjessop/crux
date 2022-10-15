@@ -1,9 +1,11 @@
-import type { API } from "@crux/query";
+import type { API as queryAPI } from "@crux/query";
 
-export function createDataSlice(data: API) {
-  const { reducer, middleware } = data;
+export function dataSlice(data: queryAPI) {
+  const { createResource, reducer, middleware } = data;
 
   return {
-    middleware, reducer,
+    api: { createResource },
+    middleware,
+    reducer,
   };
 }

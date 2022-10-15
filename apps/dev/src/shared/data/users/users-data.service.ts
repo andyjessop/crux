@@ -1,17 +1,15 @@
 import type { API } from "@crux/query";
-import type { PostUser, PutUser, User, UsersAPI } from "../../api/users-api.service";
+import type { PostUser, PutUser, User, UsersAPI } from "../../http/users/users-http.service";
 import { deleteUser, mergeUser, toData } from "./transformations";
 
-export type UsersData = ReturnType<typeof createUsersDataService>;
+export type UsersData = ReturnType<typeof usersData>;
 
-export function createUsersDataService(createResource: API['createResource'], users: UsersAPI) {
+export function usersData(createResource: API['createResource'], users: UsersAPI) {
   const resource = createResource('users', {
-    query: () => {
-      return users
+    query: async () => users
       .getAll()
       .then(toData)
-      .catch(e => { throw e as { message: string } });
-    },
+      .catch(e => { throw e as { message: string } }),
     mutations: {
       create: {
         query: (user: PostUser) => users.post(user)

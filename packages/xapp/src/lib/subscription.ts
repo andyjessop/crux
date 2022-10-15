@@ -6,7 +6,7 @@ export function subscription<
   T extends (Selector | Service)[],
   Args extends SelectorOrServiceTypes<T>
 >(
-  factory: () => Promise<(...args: Args) => void>,
+  factory: () => Promise<(...args: Args) => void> | ((...args: Args) => void),
   { deps }: { deps: T }
 ) {
   type Instance = (...args: Args) => void;
@@ -32,13 +32,19 @@ export function subscription<
       return promise;
     }
 
-    promise = factory();
+    const ret = factory();
 
-    promise.then(i => {
-      instance = i;
-    })
+    if (ret instanceof Promise) {
+      ret.then(i => {
+        instance = i;
+      })
+  
+      return ret;
+    }
 
-    return promise;
+    instance = ret;
+
+    return instance;
   }
 
   async function runSubscription(state: any) {

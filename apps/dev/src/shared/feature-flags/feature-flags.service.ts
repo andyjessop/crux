@@ -1,4 +1,4 @@
-export function createFeatureFlagsService() {
+export function featureFlags() {
   return {
     has
   };

@@ -1,9 +1,9 @@
 import type { Selector, Service, Slice, View, ViewInstance } from "./types";
 
 export function view<S, D, A>(
-  factory: () => Promise<ViewInstance<D, A>>,
+  factory: () => Promise<ViewInstance<D, A>> | ViewInstance<D, A>,
   options: {
-    actions?: Service<A> | Slice<A>,
+    actions?: Service<A> | Slice<any, A>,
     data: Selector<S, D>,
     root: string,
   }
@@ -35,13 +35,19 @@ export function view<S, D, A>(
       return promise;
     }
 
-    promise = factory();
+    const ret = factory();
 
-    promise.then(i => {
-      instance = i;
-    })
+    if (ret instanceof Promise) {
+      ret.then(i => {
+        instance = i;
+      })
+  
+      return ret;
+    }
 
-    return promise;
+    instance = ret;
+
+    return instance;
   }
 
   function updateData(state: any) {

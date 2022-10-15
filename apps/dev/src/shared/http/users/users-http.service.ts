@@ -11,10 +11,10 @@ export interface Response<Data> {
 export type PostUser = Omit<User, 'id'>;
 export type PutUser = Partial<User>;
 
-export type Users = typeof createUsersApiService;
-export type UsersAPI = ReturnType<typeof createUsersApiService>;
+export type Users = typeof createUsersHttp;
+export type UsersAPI = ReturnType<typeof createUsersHttp>;
 
-export function createUsersApiService() {
+export function createUsersHttp() {
   const users: User[] = [
     { id: 1, email: 'name1', roles: ['admin'] },
     { id: 2, email: 'name2', roles: ['user'] }

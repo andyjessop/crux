@@ -120,6 +120,33 @@ export function xapp({
 
   return {
     ...emitter,
+    addSlice,
+    addSubscription,
+    addView,
     store,
   };
+
+  function addTo(arr: Slice[] | View[] | Subscription[], obj: Slice | View | Subscription) {
+    arr.push(obj as any);
+
+    return () => {
+      const index = arr.indexOf(obj as any);
+
+      if (index > -1) {
+        arr.splice(index, 1);
+      }
+    }
+  }
+
+  function addSlice(slice: Slice) {
+    addTo(slices, slice);
+  }
+
+  function addView(view: View) {
+    addTo(views, view);
+  }
+
+  function addSubscription(subscription: Subscription) {
+    addTo(subscriptions, subscription);
+  }
 }
