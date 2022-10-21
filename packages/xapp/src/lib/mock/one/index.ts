@@ -4,7 +4,6 @@ import { subscription } from "../../subscription";
 import { view } from "../../view";
 import { sharedService } from "../shared";
 import { selectorOne } from "./selector";
-export { selectorOne } from "./selector";
 
 export const serviceOne = service(() => import('./service').then(mod => mod.serviceOne()));
 
@@ -25,4 +24,6 @@ export const viewOne = view(
     data: selectorOne,
     root: 'viewOne',
   }
-)
+);
+
+export const selectOne = sliceOne.selector;

@@ -25,4 +25,6 @@ export const viewTwo = view(
     data: selectorTwo,
     root: 'viewTwo',
   }
-)
+);
+
+export const selectTwo = sliceTwo.selector;

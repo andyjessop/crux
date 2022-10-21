@@ -1,14 +1,14 @@
 import { createSlice } from "@crux/redux-slice";
-import type { ApiOf } from '@crux/redux-slice';
 import { merge } from "@crux/utils";
-import type { SlAlert } from "@shoelace-style/shoelace";
 
 export interface Alert {
-  duration: string;
-  html: string;
-  icon: string;
+  animationDuration?: number;
+  duration: number;
+  html?: string;
   id: string;
-  variant: string;
+  removing?: boolean;
+  text?: string;
+  variant: 'success' | 'danger' | 'warning' | 'info';
 }
 
 export interface ToasterState {
@@ -19,30 +19,23 @@ const initialState: ToasterState = {
   alerts: [],
 }
 
-type ToasterSlice = {
-  add: Alert,
-  remove: Alert,
-  toast: Alert,
-};
-
-export type ToasterAPI = ApiOf<ToasterSlice>;
+export type ToasterStateAPI = ReturnType<typeof createToasterSlice>['api']
 
 export function createToasterSlice(name: string) {
-  return createSlice<ToasterSlice>()(name, initialState, {
-    add: (state, payload) => merge(state, {
-      alerts: [...state.alerts, payload],
+  return createSlice(name, initialState, {
+    add: (state: ToasterState, alert: Alert) => merge(state, {
+      alerts: [...state.alerts, alert],
     }),
 
-    remove: (state, payload) => merge(state, {
-      alerts: state.alerts.filter(alert => alert.id !== payload.id),
+    remove: (state: ToasterState, id: string) => merge(state, {
+      alerts: state.alerts.filter(alert => alert.id !== id),
     }),
-    
-    toast: (state, payload) => async ({ api }) => {
-      await api.add(payload);
 
-      document.querySelector<SlAlert>(`#${payload.id}`)?.toast();
-
-      await api.remove(payload);
-    }
+    setRemoving: (state: ToasterState, id: string) => merge(state, {
+      alerts: state.alerts.map(alert => alert.id !== id ? alert : {
+        ...alert,
+        removing: true,
+      }),
+    }),
   });
 }

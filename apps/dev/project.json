@@ -10,6 +10,12 @@
         "command": "vite serve apps/dev --config apps/dev/vite.config.ts --port 3000"
       }
     },
+    "preview": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "command": "vite preview apps/dev --config apps/dev/vite.config.ts"
+      }
+    },
     "build": {
       "executor": "@nrwl/workspace:run-commands",
       "options": {

@@ -1,40 +1,27 @@
-import './normalise.css';
 import { html, render } from 'lit-html';
-import type { LayoutState } from './types';
 import styles from './layout.module.scss';
-import type { LayoutData } from './layout.selectors';
+import logo from '../assets/logo-code-transparent.png';
+import { verticalDivider } from '../design/divider/vertical-divider';
 
-interface DefaultProps {
-  root: HTMLElement;
-}
+export function createLayoutView(root: HTMLElement) {
+  return function renderLayout() {
+    render(template(), root);
 
-interface Props extends DefaultProps {
-  roots: LayoutState['roots'],
-}
-
-export function createLayoutView(root: HTMLElement, data: LayoutData) {
-  render(template(data.layout.roots), root);
-
-  function template(roots: LayoutState['roots']) {
-    return html`
-      <div class=${styles['app']}>
+    function template() {
+      return html`
         <div class=${styles['top']}>
-          <div data-crux-root="top-left"></div>
-          ${data.auth.machineState === 'signupForm'
-            ? html`<div class=${styles['right']} data-crux-root="sign-up-form"></div>`
-            : null}
-          <div>
-            <div data-crux-root="user-nav"></div>
+          <div class=${styles['logo']} data-crux-root="logo">
+            <img src=${logo} alt="Crux Code" />
+          </div>
+          ${verticalDivider()}
+          <div class=${styles['nav']} data-crux-root="nav"></div>
+          <div class=${styles['right-nav']}>
             <div data-crux-root="dark-mode-toggle"></div>
           </div>
         </div>
-        ${roots.sidebar
-          ? html`<div class=${styles['sidebar']} data-crux-root="sidebar"></div>`
-          : null}
-        
         <div class=${styles['main']} data-crux-root="main"></div>
-        <div data-crux-root="toast"></div>
-      </div>
-    `;
+        <div class=${styles['toaster']} data-crux-root="toaster"></div>
+      `;
+    }
   }
 }

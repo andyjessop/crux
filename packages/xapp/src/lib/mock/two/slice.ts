@@ -5,9 +5,7 @@ import { ServiceTwo } from "./service";
 export type SliceTwo = ReturnType<typeof sliceTwo>['api'];
 
 export function sliceTwo(serviceTwo: ServiceTwo, shared: SharedService) {
-  return createSlice<{
-    set: void;
-  }>()('module1', { isTwo: true }, {
+  return createSlice('module1', { isTwo: true }, {
     set: () => ({}),
   });
 }

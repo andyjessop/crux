@@ -1,0 +1,1 @@
+function c(n){return Object.prototype.toString.call(n)==="[object Object]"}function i(n,o){const e={...n};for(const[t,r]of Object.entries(o))Array.isArray(r)?e[t]=[...r]:c(r)?e[t]={...i(e[t],o[t])}:e[t]=r;return e}export{i as m};

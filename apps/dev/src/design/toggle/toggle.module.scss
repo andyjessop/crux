@@ -1,0 +1,30 @@
+.background {
+  cursor: pointer;
+  position: relative;
+  border-radius: 11px;
+  width: 40px;
+  height: 22px;
+  border: 1px solid var(--toggle-border-color);
+  background-color: var(--toggle-background-color);
+  transition: border-color .25s;
+
+  &:hover {
+    border-color: var(--toggle-border-color-highlight);
+  }
+}
+
+.switch {
+  position: absolute;
+  top: 1px;
+  left: 1px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background-color: var(--toggle-switch-background-color);
+  box-shadow: var(--toggle-switch-shadow-color);
+  transition: transform .25s;
+
+  &.on {
+    transform: translate(18px);
+  }
+}

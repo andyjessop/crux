@@ -37,7 +37,7 @@ export function slice<
     getUnregister: () => unregister,
     name,
     register,
-    select,
+    selector,
     shouldBeEnabled,
     store,
   } as Slice<State, API>;
@@ -128,7 +128,7 @@ export function slice<
     }
   }
 
-  function select(state: any): State {
+  function selector(state: any): State {
     return state[name] as State;
   }
 }

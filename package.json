@@ -12,6 +12,7 @@
     "@nrwl/js": "^13.7.3",
     "@reduxjs/toolkit": "1.8.3",
     "@shoelace-style/shoelace": "^2.0.0-beta.82",
+    "animate.css": "^4.1.1",
     "classnames": "^2.3.1",
     "core-js": "^3.6.5",
     "idb-keyval": "^6.2.0",

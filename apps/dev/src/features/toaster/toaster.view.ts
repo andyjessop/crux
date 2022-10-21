@@ -1,28 +1,24 @@
-import { html, render } from "lit-html";
-import { map } from 'lit-html/directives/map.js';
-import { unsafeHTML } from 'lit/directives/unsafe-html.js';
-import type { Alert, ToasterAPI, ToasterState } from "./toaster.slice";
+import { render } from "lit-html";
+import { repeat } from 'lit/directives/repeat.js';
+import type { Alert, ToasterState } from "./toaster.slice";
+import type { ToasterAPI } from "./toaster.service";
+import toasterStyles from './toaster.module.scss';
+import { alert } from '../../design/alert/alert';
+import { cx } from "@crux/utils";
 
 export function toasterView(root: HTMLElement) {
   return function toast(data: ToasterState, actions: ToasterAPI): void {
-    const {
-      alerts,
-    } = data;
+    const { alerts } = data;
+    const { close } = actions;
 
     render(template(alerts), root);
 
     function template(toRender: Alert[]) {
-      return map(toRender, (alert: Alert) => html`
-        <sl-alert
-          id=${alert.id}
-          variant=${alert.variant}
-          duration=${alert.duration}
-          closable>
-          <sl-icon
-            slot="icon"
-            name="info-circle"></sl-icon>
-          ${unsafeHTML(alert.html)}
-        </sl-alert>`
+      return repeat(toRender, (a: Alert) => a.id, (a: Alert) =>
+        alert(a, close, cx(
+          toasterStyles['alert'],
+          ' animate__fadeInRight',
+        )),
       );
     }
   }

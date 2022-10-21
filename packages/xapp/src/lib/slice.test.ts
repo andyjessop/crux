@@ -133,8 +133,8 @@ describe('slice', () => {
 
     await b.getInstance();
     
-    expect(a.select(store.getState())).toEqual({ initialA: true });
-    expect(b.select(store.getState())).toEqual({ initialB: true });
+    expect(a.selector(store.getState())).toEqual({ initialA: true });
+    expect(b.selector(store.getState())).toEqual({ initialB: true });
   });
 });
 

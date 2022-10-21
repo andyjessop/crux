@@ -8,6 +8,7 @@ export default defineConfig({
     alias: [
       { find: '@crux/app', replacement: path.resolve(__dirname, '../../packages/app/src/index.ts') },
       { find: '@crux/async-queue', replacement: path.resolve(__dirname, '../../packages/async-queue/src/index.ts') },
+      { find: '@crux/create-store', replacement: path.resolve(__dirname, '../../packages/create-store/src/index.ts') },
       { find: '@crux/di', replacement: path.resolve(__dirname, '../../packages/di/src/index.ts') },
       { find: '@crux/event-emitter', replacement: path.resolve(__dirname, '../../packages/event-emitter/src/index.ts') },
       { find: '@crux/machine', replacement: path.resolve(__dirname, '../../packages/machine/src/index.ts') },
@@ -23,6 +24,7 @@ export default defineConfig({
       { find: '@crux/sync-queue', replacement: path.resolve(__dirname, '../../packages/sync-queue/src/index.ts') },
       { find: '@crux/url-parser', replacement: path.resolve(__dirname, '../../packages/url-parser/src/index.ts') },
       { find: '@crux/utils', replacement: path.resolve(__dirname, '../../packages/utils/src/index.ts') },
+      { find: '@crux/xapp', replacement: path.resolve(__dirname, '../../packages/xapp/src/index.ts') },
     ],
   },
 });

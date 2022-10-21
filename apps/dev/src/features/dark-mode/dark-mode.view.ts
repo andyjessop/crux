@@ -1,5 +1,5 @@
 import { html, render } from "lit-html";
-import { createRef, ref } from 'lit-html/directives/ref.js';
+import { toggle as toggleSwitch } from '../../design/toggle/toggle';
 
 interface Actions {
   toggle(): void;
@@ -9,19 +9,17 @@ interface Data {
   isDark: boolean;
 }
 
-export function createDarkModeView(root: HTMLElement, data: Data, actions: Actions) {
-  const { toggle } = actions;
-  const { isDark } = data;
+export function createDarkModeView(root: HTMLElement) {
+  return function(data: Data, actions: Actions) {
+    const { toggle } = actions;
+    const { isDark } = data;
 
-  const switchRef = createRef();
-
-  render(html`
-    <sl-switch ${ref(switchRef)} .checked=${isDark}>${isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}</sl-switch>
-  `, root);
-
-  switchRef.value.addEventListener('sl-change', (event) => {
-    event.stopImmediatePropagation();
-
-    toggle();
-  });
+    render(html`
+      ${toggleSwitch({
+        isOn: isDark,
+        label: 'Toggle dark mode',
+        toggle,
+      })}
+    `, root);
+  }
 }

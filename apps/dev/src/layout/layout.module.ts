@@ -9,12 +9,8 @@ const initialState: LayoutState = {
   }
 };
 
-type LayoutSlice = {
-  toggleSidebar: void
-};
-
 export function createLayoutModule() {
-  return createSlice<LayoutSlice>()('layout', initialState, {
+  return createSlice('layout', initialState, {
     toggleSidebar: (state: LayoutState) => merge(state, {
       roots: {
         sidebar: !state.roots.sidebar

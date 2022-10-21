@@ -1,7 +1,13 @@
-import './main.css';
-import { createApp, LogLevel } from '@crux/app';
-import type { Logger } from '@crux/app';
-import { selectLayoutData } from './layout/layout.selectors';
+import './styles/variables.scss';
+import './styles/normalise.css';
+import './styles/main.scss';
+import 'animate.css';
+import { xapp } from '@crux/xapp';
+import { toasterSlice, toasterView } from './features/toaster/toaster.index';
+import { layoutSlice, layoutView } from './layout/layout.index';
+import { routerSlice } from './shared/router/router.index';
+import { darkModeSlice, darkModeView } from './features/dark-mode/dark-mode.index';
+import { navSlice, navView } from './features/nav/nav.index';
 
 main();
 
@@ -12,97 +18,24 @@ async function main() {
     throw 'No root found!!';
   }
 
-  // If we're in development, start the mock server. This starts a ServiceWorker
-  // which intercepts fetch requests and returns mocks according to the contents
-  // of ./shared/mocks/handlers. See https://mswjs.io/ for more details.
-  if (import.meta.env.DEV) {    
-    const { createServer } = await import('./shared/mock/server');
+  const slices = [
+    layoutSlice,
+    navSlice,
+    routerSlice,
+    toasterSlice,
+    darkModeSlice,
+  ];
 
-    (await createServer( import.meta.env.VITE_API_BASE_URL)).start({ onUnhandledRequest: "bypass", waitUntilReady: true });
-  }
+  const views = [
+    layoutView,
+    navView,
+    toasterView,
+    darkModeView,
+  ];
 
-  const { services } = await createApp({
-    /**
-     * MODULES
-     * =======
-     */
-    modules: {
-      auth: {
-        deps: ['authApi'],
-        factory: () => import('./features/auth/auth.module').then(mod => mod.createAuthModule),
-      },
-      darkMode: {
-        deps: ['cache'],
-        factory: () => import('./features/dark-mode/dark-mode.module').then(mod => mod.createDarkModeModule),
-      },
-      data: {
-        deps: ['usersApi'],
-        factory: () => import('./shared/data/module').then(mod => mod.createDataModule),
-      },
-      router: {
-        deps: ['cache'],
-        factory: () => import('./shared/router/router.module').then(mod => mod.createRouterModule)
-      },
-      signupForm: {
-        deps: ['auth.api'],
-        enabled: (state: any) => state.auth.user === null,
-        factory: () => import('./features/sign-up-form/sign-up-form.module').then(mod => mod.createSignupFormModule),
-      },
-      toast: {
-        deps: [],
-        factory: () => import('./features/toaster/toaster.module').then(mod => mod.createToastModule),
-      },
-      users: {
-        deps: ['data.users'],
-        factory: () => import('./features/users/user.module').then(mod => mod.createUserModule),
-      },
-    },
-
-    /**
-     * LAYOUT
-     * ======
-     */
-    layout: {
-      module: {
-        factory: () => import('./layout/layout.module').then(mod => mod.createLayoutModule),
-      },
-      view: {
-        selectData: selectLayoutData,
-        factory: () => import('./layout/layout.view').then(mod => mod.createLayoutView),
-      }
-    },
-
-    /**
-     * ROOT
-     * ====
-     */
+  const app = xapp({
     root,
-
-    /**
-     * SERVICES
-     * ========
-     */
-    services: {
-      asyncCache: { factory: () => import('./shared/async-cache/async-cache.service').then(mod => mod.createAsyncCacheService) },
-      authApi: { factory: () => import('./features/auth/api/api').then(mod => mod.createAuthApi), deps: ['asyncCache', 'env'] },
-      cache: { factory: () => import('./shared/cache/cache.service').then(mod => mod.createCacheService) },
-      env: { factory: () => import('./shared/env/env.service').then(mod => mod.env) },
-      featureFlags: { factory: () => import('./shared/feature-flags/feature-flags.service').then(mod => mod.createFeatureFlagsService) },
-      reporting: { factory: () => import('./shared/reporting/reporting.service').then(mod => mod.createReportingService) },
-      usersApi: { factory: () => import('./shared/http/users/users-http.service').then(mod => mod.createUsersApiService) },
-    },
+    slices,
+    views,
   });
-
-  (window as any).services = services;
-}
-
-export function createLogger(initialLevel: keyof typeof LogLevel): Logger {
-  return {
-    log: (level: keyof typeof LogLevel, data: string) => {
-      if (LogLevel[level] <= LogLevel[initialLevel]) {
-        const { data: logData, message } = JSON.parse(data) as any;
-        console.info(message, logData);
-      }
-    }
-  }
 }

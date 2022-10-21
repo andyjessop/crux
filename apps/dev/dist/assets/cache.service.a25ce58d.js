@@ -1,0 +1,1 @@
+function i(r=localStorage){return{clear:n,get:c,remove:o,set:u};function n(){return r.clear()}function c(e){try{return JSON.parse(r.getItem(e))}catch{throw new Error("Could not JSON.parse cached value")}}function o(e){return r.removeItem(e)}function u(e,t){try{return r.setItem(e,JSON.stringify(t))}catch{throw new Error("Could not JSON.stringify value")}}}export{i as cache};

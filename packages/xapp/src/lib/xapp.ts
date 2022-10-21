@@ -18,11 +18,11 @@ export type Events<State = any> = {
 }
 
 export function xapp({
-  root, slices, subscriptions, views
+  root, slices, subscriptions = [], views
 }: {
   root?: HTMLElement;
   slices: Slice[];
-  subscriptions: Subscription[];
+  subscriptions?: Subscription[];
   views: View[];
 }, {
   emitter, store = createStore(),
@@ -32,7 +32,7 @@ export function xapp({
   }
   
   const middleware = (api: MiddlewareAPI) => (next: Dispatch) => async (action: Action) => {
-    next(action);
+    next(action);   
 
     // If we handle this action below, it will get into some kind of loop. This action is fired
     // when we call `slice.register(instance.middleware, instance.reducer)`, which happens before
@@ -48,6 +48,8 @@ export function xapp({
     /**
      * UPDATE SLICES
      */
+    const slicesToRegister: Slice[] = [];
+
     for (const slice of slices) {      
       if (!slice.getStore()) {
         slice.bindStore(store);
@@ -61,17 +63,18 @@ export function xapp({
       }
 
       if (!unregister && shouldBeEnabled) {
-        const instance = await slice.getInstance();
-
-        slice.register(instance.middleware, instance.reducer);
+        // getting a slice instance will register its middleware and reducer
+        slicesToRegister.push(slice);
       }
     }
+
+    await Promise.all(slicesToRegister.map(slice => slice.getInstance()));
 
     emitter?.emit('afterSlices', { action, state });
 
     /**
      * LAYOUT
-     */    
+     */
     const layoutView = views.find(view => view.root === 'root');
 
     if (!layoutView) {
@@ -87,20 +90,27 @@ export function xapp({
     /**
      * VIEWS
      */
-    for (const view of views) {
-      const shouldRender = Boolean(layoutView.getCurrentData()?.[view.root]);
-      const shouldUpdate = view.updateData(api.getState());
+    const viewsToRender: { view: View, root: HTMLElement }[] = [];
 
-      if (shouldRender && shouldUpdate) {
-        const viewRoot = root ? { id: view.root } : document.querySelector(`data-crux-root=${view.root}`);
+    for (const view of views) {
+      if (view.root === 'root') {
+        continue;
+      }
+
+      if (view.root) {
+        const viewRoot = root ? document.querySelector(`[data-crux-root=${view.root}]`) : { id: view.root };
 
         if (!viewRoot) {
           throw new Error(`Could not find root element with data-crux-root=${view.root}`);
         }
 
-        await view.render(viewRoot as HTMLElement, api.getState());
+        viewsToRender.push({ view, root: viewRoot as HTMLElement });
       }
     }
+
+    const currentState = api.getState();
+
+    await Promise.all(viewsToRender.map(({ view, root }) => view.render(root, currentState)));
 
     emitter?.emit('afterViews', { action, state });
     

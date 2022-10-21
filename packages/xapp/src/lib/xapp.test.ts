@@ -26,6 +26,8 @@ describe('xapp', () => {
       viewTwo
     ];
     
+    debugger; // eslint-disable-line no-debugger
+
     const app = xapp({
       slices,
       subscriptions,

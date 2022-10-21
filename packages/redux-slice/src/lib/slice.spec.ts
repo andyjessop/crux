@@ -9,17 +9,14 @@ describe('reduxQuery', () => {
     
     const initial: State = { count: 0 };
     
-    const { actions, reducer } = createSlice<{
-      add: number,
-      subtract: number,
-    }>()('counter', initial, {
-      add: (state, payload) => ({
+    const { actions, reducer } = createSlice('counter', initial, {
+      add: (state: State, one: number) => ({
         ...state,
-        count: state.count + payload
+        count: state.count + one
       }),
-      subtract: (state, payload) => ({
+      subtract: (state: State, one: number) => ({
         ...state,
-        count: state.count - payload
+        count: state.count - one
       }),
     });
 
@@ -43,10 +40,8 @@ describe('reduxQuery', () => {
     
     const initial: State = { count: 0 };
     
-    const { actions, reducer } = createSlice<{
-      add: [number, number],
-    }>()('counter', initial, {
-      add: (state, one, two) => ({
+    const { actions, reducer } = createSlice('counter', initial, {
+      add: (state: State, one: number, two: number) => ({
         ...state,
         count: state.count + one + two
       }),
@@ -65,15 +60,12 @@ describe('reduxQuery', () => {
     
     const initial: State = { count: 0 };
     
-    const { actions, reducer } = createSlice<{
-      add: [undefined, number],
-      addOptional: [number, number?],
-    }>()('counter', initial, {
-      add: (state, one, two) => ({
+    const { actions, reducer } = createSlice('counter', initial, {
+      add: (state: State, one: number, two: number) => ({
         ...state,
-        count: state.count + two
+        count: state.count + one + two
       }),
-      addOptional: (state, one, two) => ({
+      addOptional: (state: State, one: number, two?: number) => ({
         ...state,
         count: state.count + one + (two ?? 0)
       }),
@@ -81,8 +73,8 @@ describe('reduxQuery', () => {
 
     const { add, addOptional } = actions;
 
-    expect(add(undefined, 2)).toEqual({ payload: [undefined, 2], type: add.type });
-    expect(reducer(initial, { type: add.type, payload: [1, 2] })).toEqual({ count: 2 });
+    expect(add(1, 2)).toEqual({ payload: [1, 2], type: add.type });
+    expect(reducer(initial, { type: add.type, payload: [1, 2] })).toEqual({ count: 3 });
 
     expect(addOptional(2)).toEqual({ payload: [2], type: addOptional.type });
     expect(reducer(initial, { type: addOptional.type, payload: [2] })).toEqual({ count: 2 });
@@ -98,10 +90,8 @@ describe('reduxQuery', () => {
     
     const initial: State = { count: 0 };
     
-    const { actions, reducer } = createSlice<{
-      addOptional: number | void,
-    }>()('counter', initial, {
-      addOptional: (state, one) => ({
+    const { actions, reducer } = createSlice('counter', initial, {
+      addOptional: (state: State, one?: number) => ({
         ...state,
         count: state.count + (one ?? 0)
       }),
@@ -123,10 +113,8 @@ describe('reduxQuery', () => {
     
     const initial: State = { count: 0 };
     
-    const { actions, reducer } = createSlice<{
-      addOptional: [number, number?],
-    }>()('counter', initial, {
-      addOptional: (state, one, two) => ({
+    const { actions, reducer } = createSlice('counter', initial, {
+      addOptional: (state: State, one: number, two?: number) => ({
         ...state,
         count: state.count + one + (two ?? 0)
       }),
@@ -149,10 +137,8 @@ describe('reduxQuery', () => {
     
     const initial: State = { count: 0 };
     
-    const { actions, reducer } = createSlice<{
-      add: number[],
-    }>()('counter', initial, {
-      add: (state, one) => ({
+    const { actions, reducer } = createSlice('counter', initial, {
+      add: (state: State, one: number[]) => ({
         ...state,
         count: state.count + one.reduce((acc, cur) => acc + cur, 0),
       }),
@@ -171,10 +157,8 @@ describe('reduxQuery', () => {
     
     const initial: State = { count: 0 };
     
-    const { api } = createSlice<{
-      add: number[],
-    }>()('counter', initial, {
-      add: (state, one) => ({
+    const { api } = createSlice('counter', initial, {
+      add: (state: State, one: number[]) => ({
         ...state,
         count: state.count + one.reduce((acc, cur) => acc + cur, 0),
       }),
@@ -190,10 +174,8 @@ describe('reduxQuery', () => {
     
     const initial: State = { count: 0 };
     
-    const { api, middleware, reducer } = createSlice<{
-      add: number[],
-    }>()('counter', initial, {
-      add: (state, one) => ({
+    const { api, middleware, reducer } = createSlice('counter', initial, {
+      add: (state: State, one: number[]) => ({
         ...state,
         count: state.count + one.reduce((acc, cur) => acc + cur, 0),
       }),
@@ -216,23 +198,15 @@ describe('reduxQuery', () => {
     
     const initial: State = { count: 0 };
     
-    const { api, middleware, reducer } = createSlice<{
-      add: number[],
-    }>()('counter', initial, {
-      add: (state, one) => ({
-        ...state,
-        count: state.count + one.reduce((acc, cur) => acc + cur, 0),
-      }),
-    });
+    const { api, middleware, reducer } = createSlice('counter', initial, {});
 
     const store = createStore();
 
     store.addMiddleware(middleware);
     store.addReducer('counter', reducer);
 
-    const { get } = api;
+    const { getState } = api;
 
-    expect(get()).not.toBeUndefined();
-    expect(get('count')).not.toBeUndefined();
+    expect(getState()).toEqual({ count: 0 });
   });
 });

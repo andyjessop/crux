@@ -1,0 +1,28 @@
+.nav {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  display: flex;
+  align-items: center;
+}
+
+.nav-item {
+  margin-left: var(--nav-item-spacing);
+}
+
+.nav-item {
+  a {
+    color: var(--nav-item-color);
+    font-weight: var(--nav-item-font-weight);
+    transition: var(--nav-item-color-transition);
+
+    &:hover {
+      color: var(--nav-item-color-highlight);
+    }
+  }
+
+  &.active a {
+    color: var(--nav-item-color-highlight);
+  }
+}

@@ -15,6 +15,12 @@ export type SelectorOrServiceTypes<T extends (Selector | Service)[]> = {
     : T[P] extends APIType<infer R> ? R: never
 }
 
+export type SelectorOrSliceTypes<T extends (Selector | Slice)[]> = {
+  [P in keyof T]: T[P] extends Selector<any, infer U>
+    ? U
+    : T[P] extends Slice<infer S> ? S: never
+}
+
 export type Selector<T = any, U = any> = (state: T) => U;
 
 export type LayoutSelector = (state: any) => { [key: string]: string };
@@ -47,7 +53,7 @@ export type Slice<State = any, API = any> = APIType<API> & {
   getUnregister(): (() => void) | undefined,
   name: string,
   register(middleware?: Middleware, reducer?: Reducer<State>): void;
-  select(state: any): State;
+  selector(state: any): State;
   shouldBeEnabled?(state: any): boolean,
   store?: DynamicStore,
 };
