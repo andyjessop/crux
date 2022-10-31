@@ -1,8 +1,8 @@
-import { intersection } from "./intersection";
+import { intersection } from './intersection';
 
 /**
  * Return those entries that are in first, but not in second.
-*/
+ */
 export function asymmetricDifference<T>(first: Set<T>, second: Set<T>): Set<T> {
   const i = intersection(first, second);
 

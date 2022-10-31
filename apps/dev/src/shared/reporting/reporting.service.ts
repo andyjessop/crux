@@ -1,6 +1,6 @@
 export function reporting() {
   return {
-    track
+    track,
   };
 
   function track(data: unknown) {

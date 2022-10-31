@@ -1,4 +1,4 @@
-import { State } from "../types";
+import { State } from '../types';
 import { Action } from '@crux/redux-types';
 
 export function createReducer(initialState: Record<string, State<any, any>>) {
@@ -11,10 +11,10 @@ export function createReducer(initialState: Record<string, State<any, any>>) {
         [action.meta.id]: {
           ...currentState[action.meta.id],
           ...action.payload,
-        }
+        },
       };
     }
-  
-    return state ||initialState;
-  }
+
+    return state || initialState;
+  };
 }

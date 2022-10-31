@@ -1,10 +1,10 @@
-import { render } from "lit-html";
+import { render } from 'lit';
 import { repeat } from 'lit/directives/repeat.js';
-import type { Alert, ToasterState } from "./toaster.slice";
-import type { ToasterAPI } from "./toaster.service";
+import type { Alert, ToasterState } from './toaster.slice';
+import type { ToasterAPI } from './toaster.service';
 import toasterStyles from './toaster.module.scss';
 import { alert } from '../../design/alert/alert';
-import { cx } from "@crux/utils";
+import { cx } from '@crux/utils';
 
 export function toasterView(root: HTMLElement) {
   return function toast(data: ToasterState, actions: ToasterAPI): void {
@@ -14,12 +14,11 @@ export function toasterView(root: HTMLElement) {
     render(template(alerts), root);
 
     function template(toRender: Alert[]) {
-      return repeat(toRender, (a: Alert) => a.id, (a: Alert) =>
-        alert(a, close, cx(
-          toasterStyles['alert'],
-          ' animate__fadeInRight',
-        )),
+      return repeat(
+        toRender,
+        (a: Alert) => a.id,
+        (a: Alert) => alert(a, close, cx(toasterStyles['alert'], ' animate__fadeInRight'))
       );
     }
-  }
+  };
 }

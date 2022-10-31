@@ -10,21 +10,28 @@ export function router<T extends Record<string, string>>(config: T, api: RouterS
   });
 
   return {
+    link,
     navigate,
   };
 
-  function navigate({ hash, name, search, params }: Route<T>, event?: Event) {
-    event.preventDefault();
+  function link(route: Route<T>) {
+    return function withEvent(event: Event) {
+      event.preventDefault();
 
+      navigate(route);
+    };
+  }
+
+  function navigate({ hash, name, search, params }: Route<T>) {
     const url = getUrlFromRoute(config, name, params, search, hash);
 
     window.history.pushState({}, '', url);
-    
+
     api.navigateSuccess({
       hash,
       name,
       params,
-      search
+      search,
     });
   }
 

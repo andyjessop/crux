@@ -1,0 +1,22 @@
+.title {
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+}
+
+.title i {
+  margin-right: 0.5rem;
+  font-size: 1.5rem;
+}
+
+.title.to-do i {
+  color: var(--color-info-light);
+}
+
+.title.in-progress i {
+  color: var(--color-primary-light);
+}
+
+.title.completed i {
+  color: var(--color-success-light);
+}

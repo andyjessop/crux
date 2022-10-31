@@ -1,33 +1,37 @@
-import { merge } from "./any";
+import { merge } from './any';
 
 const dest = {
   a: true,
   b: {
     c: [1, 2],
     d: { e: true },
-    f: true
+    f: true,
   },
   g: [1, 2],
   h: {
-    i: true
-  }
-}
+    i: true,
+  },
+};
 
 test('updates shallow primitive', () => {
-  expect(merge(dest, {
-    a: false
-  })).toEqual({...dest, a: false });
+  expect(
+    merge(dest, {
+      a: false,
+    })
+  ).toEqual({ ...dest, a: false });
 });
 
 test('updates nested primitive', () => {
-  expect(merge(dest, {
-    b: { f: false }
-  })).toEqual({ ...dest, b: { ...dest.b, f: false } });
+  expect(
+    merge(dest, {
+      b: { f: false },
+    })
+  ).toEqual({ ...dest, b: { ...dest.b, f: false } });
 });
 
 test('updates shallow array immutably', () => {
   const updated = merge(dest, {
-    g: [1, 2]
+    g: [1, 2],
   });
 
   expect(updated).toEqual(dest);
@@ -37,8 +41,8 @@ test('updates shallow array immutably', () => {
 test('updates shallow object immutably', () => {
   const updated = merge(dest, {
     h: {
-      i: true
-    }
+      i: true,
+    },
   });
 
   expect(updated).toEqual(dest);
@@ -47,7 +51,7 @@ test('updates shallow object immutably', () => {
 
 test('updates nested array immutably', () => {
   const updated = merge(dest, {
-    b: { c: [1, 2] }
+    b: { c: [1, 2] },
   });
 
   expect(updated).toEqual(dest);

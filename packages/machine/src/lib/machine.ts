@@ -22,9 +22,7 @@ export function machine<T extends Config>(config: T, options: Options<T>) {
     return current;
   }
 
-  function onEnter(
-    handler: (data: Events<T>['onEnter']) => Promise<void> | void
-  ) {
+  function onEnter(handler: (data: Events<T>['onEnter']) => Promise<void> | void) {
     emitter.on(EventTypes.OnEnter, handler);
 
     return function offEnter() {
@@ -32,9 +30,7 @@ export function machine<T extends Config>(config: T, options: Options<T>) {
     };
   }
 
-  function onExit(
-    handler: (data: Events<T>['onExit']) => Promise<void> | void
-  ) {
+  function onExit(handler: (data: Events<T>['onExit']) => Promise<void> | void) {
     emitter.on(EventTypes.OnExit, handler);
 
     return function offEnter() {
@@ -42,7 +38,10 @@ export function machine<T extends Config>(config: T, options: Options<T>) {
     };
   }
 
-  async function transition(action: Actions<T>, ...meta: unknown[]): Promise<keyof T & string | undefined> {
+  async function transition(
+    action: Actions<T>,
+    ...meta: unknown[]
+  ): Promise<(keyof T & string) | undefined> {
     await emitter.emit(EventTypes.OnExit, { action, current, meta });
 
     const last = current;
@@ -54,16 +53,18 @@ export function machine<T extends Config>(config: T, options: Options<T>) {
     current = await config[current][action](meta);
 
     await emitter.emit(EventTypes.OnEnter, { action, current, last, meta });
-    await secEmitter.emit(current, { action, current, last: last as Exclude<keyof T, keyof T & string>, meta });
+    await secEmitter.emit(current, {
+      action,
+      current,
+      last: last as Exclude<keyof T, keyof T & string>,
+      meta,
+    });
 
     return current;
   }
 }
 
-function buildActions<T extends Config>(
-  config: T,
-  transition: Transition<T>
-) {
+function buildActions<T extends Config>(config: T, transition: Transition<T>) {
   return Array.from(
     Object.values(config).reduce((acc, stateConfig) => {
       Object.keys(stateConfig).forEach((key) => acc.add(<Actions<T>>key));
@@ -76,20 +77,19 @@ function buildActions<T extends Config>(
     };
 
     return acc;
-  }, <Record<Actions<T>, (...meta: unknown[]) => Promise<keyof T & string | undefined>>>{});
+  }, <Record<Actions<T>, (...meta: unknown[]) => Promise<(keyof T & string) | undefined>>>{});
 }
 
-function buildHandlers<T extends Config>(
-  config: T,
-  emitter: EventEmitter<StateEvents<T>>
-) {
+function buildHandlers<T extends Config>(config: T, emitter: EventEmitter<StateEvents<T>>) {
   const keys = Object.keys(config) as (keyof T)[];
 
   return keys.reduce((acc, cur: any) => {
     const first = cur.slice(0, 1);
     const rest = cur.slice(1).split('');
 
-    const k = `on${first.toUpperCase()}${rest.join('')}` as `on${Capitalize<Extract<keyof T, string>>}`;
+    const k = `on${first.toUpperCase()}${rest.join('')}` as `on${Capitalize<
+      Extract<keyof T, string>
+    >}`;
 
     acc[k] = (handler: EventHandler<StateEvents<T>[keyof T]>) => {
       emitter.on(cur, handler);
@@ -107,12 +107,12 @@ type Config = {
 
 export type Events<T> = {
   onEnter: { action: Actions<T>; current: keyof T; meta?: unknown; last: keyof T };
-  onExit: { action: Actions<T>; current: keyof T, meta?: unknown; };
+  onExit: { action: Actions<T>; current: keyof T; meta?: unknown };
 };
 
 type StateEvents<T> = {
-  [K in keyof T]: { action: Actions<T>; current: K; meta?: unknown; last: Exclude<keyof T, K> }
-}
+  [K in keyof T]: { action: Actions<T>; current: K; meta?: unknown; last: Exclude<keyof T, K> };
+};
 
 export const enum EventTypes {
   OnEnter = 'onEnter',
@@ -124,10 +124,11 @@ type Options<T> = {
   initialState: keyof T & string;
 };
 
-type NestedKeys<T> = T extends object
-  ? { [K in keyof T]-?: K | NestedKeys<T[K]> }[keyof T]
-  : never;
+type NestedKeys<T> = T extends object ? { [K in keyof T]-?: K | NestedKeys<T[K]> }[keyof T] : never;
 
-type Transition<T> = (action: Actions<T>, meta?: unknown) => Promise<keyof T & string | undefined>;
+type Transition<T> = (
+  action: Actions<T>,
+  meta?: unknown
+) => Promise<(keyof T & string) | undefined>;
 
 type Actions<T> = Exclude<NestedKeys<T>, keyof T>;

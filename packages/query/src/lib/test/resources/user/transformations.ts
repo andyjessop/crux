@@ -1,5 +1,5 @@
-import { serialize } from "../../../helpers/serializer";
-import { ErrorResponse, PutUser, Response, User } from "../../api";
+import { serialize } from '../../../helpers/serializer';
+import { ErrorResponse, PutUser, Response, User } from '../../api';
 
 export function toError(response: ErrorResponse): string {
   throw new Error(serialize(response.error));
@@ -18,10 +18,7 @@ export function toUndefined() {
 }
 
 export function postResponseToData(data: User[] | null, response: Response<User>) {
-  return [
-    ...data || [],
-    response.data,
-  ];
+  return [...(data || []), response.data];
 }
 
 export function deleteUser(data: User[] | null, id: number) {
@@ -29,8 +26,7 @@ export function deleteUser(data: User[] | null, id: number) {
     return data;
   }
 
-
-  return data.filter(u => id !== u.id);
+  return data.filter((u) => id !== u.id);
 }
 
 export function mergeUser(data: User[] | null, user: PutUser) {
@@ -38,7 +34,7 @@ export function mergeUser(data: User[] | null, user: PutUser) {
     return data;
   }
 
-  const ndx = data?.findIndex(u => u.id === user.id);
+  const ndx = data?.findIndex((u) => u.id === user.id);
 
   if (ndx === -1) {
     return data;
@@ -46,7 +42,7 @@ export function mergeUser(data: User[] | null, user: PutUser) {
 
   data[ndx] = {
     ...data[ndx],
-    ...user
+    ...user,
   };
 
   return data;

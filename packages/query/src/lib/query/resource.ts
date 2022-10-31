@@ -1,6 +1,6 @@
 import { machine } from '@crux/machine';
-import { createAsyncQueue } from "@crux/async-queue";
-import { MutationConfig, State } from "../types";
+import { createAsyncQueue } from '@crux/async-queue';
+import { MutationConfig, State } from '../types';
 
 export function resource({
   fetchFn,
@@ -65,8 +65,8 @@ export function resource({
     waitingForNextFetch: {
       forceFetch: () => 'fetching',
       mutate: () => 'mutating',
-      pollTimeout: () => 'fetching'
-    }
+      pollTimeout: () => 'fetching',
+    },
   };
 
   const resourceMachine = machine(config, { initialState: 'idle' });
@@ -82,18 +82,18 @@ export function resource({
   async function doFetch() {
     setState({
       loading: true,
-      updating: getState().data !== null
+      updating: getState().data !== null,
     });
 
     try {
       const result = await fetchFn(...fetchParams);
 
       resourceMachine.fetchSuccess();
-      
+
       setState({
         data: result,
         loading: false,
-        updating: false
+        updating: false,
       });
 
       return result;
@@ -103,7 +103,7 @@ export function resource({
       setState({
         error: e,
         loading: false,
-        updating: false
+        updating: false,
       });
     }
   }
@@ -126,7 +126,7 @@ export function resource({
     if (['fetching', 'mutating'].includes(current)) {
       retryCount = 0;
     }
-  })
+  });
 
   return {
     addSubscriber,
@@ -141,10 +141,7 @@ export function resource({
     resourceMachine.cancelSelfDestruct();
   }
 
-  async function doMutation(
-    config: MutationConfig,
-    ...params: any[]
-  ) {
+  async function doMutation(config: MutationConfig, ...params: any[]) {
     const { query, optimistic, options } = config;
     const { refetchOnSuccess } = options;
     const state = getState();
@@ -157,7 +154,7 @@ export function resource({
       setState({
         data,
         loading: true,
-        updating: state.data !== null
+        updating: state.data !== null,
       });
     }
 
@@ -169,7 +166,7 @@ export function resource({
       setState({
         data: config.options.refetchOnSuccess === false ? data : state.data,
         loading: false,
-        updating: false
+        updating: false,
       });
 
       resourceMachine.mutateSuccess();
@@ -183,7 +180,7 @@ export function resource({
       setState({
         error: e,
         loading: false,
-        updating: false
+        updating: false,
       });
 
       resourceMachine.mutateFailure();
@@ -223,6 +220,8 @@ export function resource({
   }
 }
 
-function isFunction<D>(obj: D | ((data: D | null) => D | null) | null): obj is ((data: D | null) => D | null) {
+function isFunction<D>(
+  obj: D | ((data: D | null) => D | null) | null
+): obj is (data: D | null) => D | null {
   return typeof (<(data: D) => D>obj) === 'function';
 }

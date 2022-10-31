@@ -1,0 +1,10 @@
+.todos {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr;
+  grid-template-areas: 'to-do in-progress completed';
+  max-width: 1000px;
+  padding: 1rem 0;
+  margin: 0 auto;
+  height: calc(100vh - var(--top-height));
+}

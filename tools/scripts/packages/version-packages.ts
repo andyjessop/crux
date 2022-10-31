@@ -1,15 +1,14 @@
-import { ProjectGraph } from "@nrwl/devkit";
-import { readFileSync, writeFileSync } from "fs";
+import { ProjectGraph } from '@nrwl/devkit';
+import { readFileSync, writeFileSync } from 'fs';
 import { exec } from 'child_process';
 import { config } from 'dotenv';
 
 config();
 
-execute('npx nx dep-graph --file=tools/scripts/publish/tmp/project.json')
-  .then(() => {
-    const projectJson = JSON.parse(readFileSync(`tools/scripts/publish/tmp/project.json`, 'utf8'));
-    versionPackages(projectJson.graph);
-  })
+execute('npx nx dep-graph --file=tools/scripts/publish/tmp/project.json').then(() => {
+  const projectJson = JSON.parse(readFileSync(`tools/scripts/publish/tmp/project.json`, 'utf8'));
+  versionPackages(projectJson.graph);
+});
 
 export async function versionPackages(graph: ProjectGraph) {
   const version = getCurrentVersion();
@@ -24,8 +23,7 @@ export async function versionPackages(graph: ProjectGraph) {
 }
 
 function getLibs(graph: ProjectGraph) {
-  return Object.keys(graph.nodes)
-    .filter(nodeName => graph.nodes[nodeName].type === 'lib');
+  return Object.keys(graph.nodes).filter((nodeName) => graph.nodes[nodeName].type === 'lib');
 }
 
 function getPackagePath(name: string) {
@@ -54,14 +52,19 @@ function getCurrentVersion() {
 }
 
 function getProjectPackageJson(name: string, env: 'dev' | 'prod') {
-  return JSON.parse(readFileSync(`${env === 'prod' ? getPackageDistPath(name) : getPackagePath(name)}/package.json`, 'utf8'));
+  return JSON.parse(
+    readFileSync(
+      `${env === 'prod' ? getPackageDistPath(name) : getPackagePath(name)}/package.json`,
+      'utf8'
+    )
+  );
 }
 
 function getProjectDeps(graph: ProjectGraph, name: string): string[] {
-  const deps = [];
+  const deps = [] as any[];
 
   for (const file of graph.nodes[name].data.files) {
-    for (const dep of (file.deps || [])) {
+    for (const dep of file.deps || []) {
       if (dep && !dep.startsWith('npm:')) {
         deps.push(dep);
       }
@@ -73,8 +76,8 @@ function getProjectDeps(graph: ProjectGraph, name: string): string[] {
 
 function execute(command: string) {
   return new Promise<string>((resolve) => {
-    exec(command, function(error, stdout, stderr) {
+    exec(command, function (error, stdout, stderr) {
       resolve(stdout);
     });
   });
-};
+}

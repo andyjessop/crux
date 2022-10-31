@@ -1,4 +1,4 @@
-import { service } from "./service";
+import { service } from './service';
 
 describe('service', () => {
   test('resolves single service', async () => {
@@ -106,14 +106,14 @@ describe('service', () => {
 
 function serviceA() {
   return {
-    isA: true
+    isA: true,
   };
 }
 
 function serviceB(a: ReturnType<typeof serviceA>) {
   return {
     a,
-    isB: true
+    isB: true,
   };
 }
 
@@ -121,6 +121,6 @@ function serviceC(a: ReturnType<typeof serviceA>, b: ReturnType<typeof serviceB>
   return {
     a,
     b,
-    isC: true
+    isC: true,
   };
 }

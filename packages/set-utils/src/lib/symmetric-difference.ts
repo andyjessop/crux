@@ -1,5 +1,5 @@
-import { intersection } from "./intersection";
-import { union } from "./union";
+import { intersection } from './intersection';
+import { union } from './union';
 
 export function symmetricDifference<T>(first: Set<T>, second: Set<T>): Set<T> {
   const u = union(first, second);

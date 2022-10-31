@@ -1,3 +1,3 @@
-import { service } from "@crux/xapp";
+import { service } from '@crux/xapp';
 
-export const cacheService = service(() => import('./cache.service').then(mod => mod.cache()));
+export const cacheService = service(() => import('./cache.service').then((mod) => mod.cache()));

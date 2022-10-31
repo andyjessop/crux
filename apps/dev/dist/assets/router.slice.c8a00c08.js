@@ -1,0 +1,1 @@
+import{c as i}from"./slice.4262e30e.js";import{m as c}from"./any.07715dce.js";import{g as a}from"./get-route-from-url.1ff994d5.js";function u(e){const t={route:a(e,window.location.href)};return i("router",t,{navigateSuccess:(r,o)=>c(r,{route:o})})}export{u as createRouterSlice};

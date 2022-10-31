@@ -11,25 +11,22 @@ import { SearchParams } from './types';
 export function parseQueries(target: SearchParams) {
   const keys = Array.from(target.keys());
 
-  const parsers = keys.map((key) => {
-    const segment = target.get(key);
-    
-    if (!segment) {
-      return null;
-    }
-    
-    return parseSegment(segment);
-  }).filter(parser => parser !== null);
+  const parsers = keys
+    .map((key) => {
+      const segment = target.get(key);
 
-  return function curriedParseQueries(
-    query: SearchParams,
-    params: RouteParams
-  ): boolean {
+      if (!segment) {
+        return null;
+      }
+
+      return parseSegment(segment);
+    })
+    .filter((parser) => parser !== null);
+
+  return function curriedParseQueries(query: SearchParams, params: RouteParams): boolean {
     const queryKeys = Array.from(query.keys());
 
-    if (
-      !keys.every((x) => isOptional(x) || isList(x) || queryKeys.includes(x))
-    ) {
+    if (!keys.every((x) => isOptional(x) || isList(x) || queryKeys.includes(x))) {
       return false;
     }
 

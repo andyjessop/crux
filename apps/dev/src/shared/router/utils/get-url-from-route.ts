@@ -1,11 +1,11 @@
-import type { Route } from "../router.slice";
+import type { Route } from '../router.slice';
 
 export function getUrlFromRoute<T extends Record<string, string>>(
   config: T,
   name: keyof T,
   params: Route<T>['params'],
   search: Route<T>['search'],
-  hash: Route<T>['hash'],
+  hash: Route<T>['hash']
 ): string {
   let pathname = config[name];
 
@@ -16,7 +16,13 @@ export function getUrlFromRoute<T extends Record<string, string>>(
     pathname = pathname.replace(param, value) as T[keyof T];
   }
 
-  const searchStr = search ? Object.entries(search).map(([key, value]) => `${key}=${value}`).join('&') : '';
+  const searchStr = search
+    ? Object.entries(search)
+        .map(([key, value]) => `${key}=${value}`)
+        .join('&')
+    : '';
 
-  return `${window.location.origin}${pathname}${searchStr.length ? `?${searchStr}` : ''}${hash ? `#${hash}` : ''}`;
+  return `${window.location.origin}${pathname}${searchStr.length ? `?${searchStr}` : ''}${
+    hash ? `#${hash}` : ''
+  }`;
 }

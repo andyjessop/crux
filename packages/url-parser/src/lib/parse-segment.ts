@@ -23,11 +23,7 @@ export function parseSegment(seg: string) {
       name = seg.slice(1, ndx);
     }
 
-    return function curriedParseSegment(
-      str: string,
-      paths: RouteParams,
-      array = false
-    ): boolean {
+    return function curriedParseSegment(str: string, paths: RouteParams, array = false): boolean {
       if (array) {
         paths[name] = [].concat((paths[name] as any) || [], str as any);
       } else {

@@ -1,9 +1,9 @@
 export function featureFlags() {
   return {
-    has
+    has,
   };
 
   function has(feature: string) {
-    return (window as any).features[feature] = true;
+    return ((window as any).features[feature] = true);
   }
 }

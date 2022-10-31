@@ -25,7 +25,7 @@ export function createExternallyResolvablePromise<T>(): ExternallyResolvableProm
   };
 }
 
-export type PromiseResolveReject = ((data: any) => void);
+export type PromiseResolveReject = (data: any) => void;
 
 export interface ExternallyResolvablePromise<T> {
   promise: Promise<T>;

@@ -18,7 +18,6 @@ export function cache(storage: Storage = localStorage): Cache {
     } catch (e: unknown) {
       throw new Error('Could not JSON.parse cached value');
     }
-    
   }
 
   function remove(key: string): void {

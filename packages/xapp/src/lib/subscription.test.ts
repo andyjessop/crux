@@ -1,5 +1,5 @@
-import { service } from "./service";
-import { subscription } from "./subscription";
+import { service } from './service';
+import { subscription } from './subscription';
 
 const mockA = jest.fn();
 
@@ -11,7 +11,7 @@ describe('service', () => {
   test('calls handler with dependencies', async () => {
     const sA = service(() => Promise.resolve(serviceA()));
     const a = subscription(() => Promise.resolve(subscriptionA), {
-      deps: [sA, selectorA]
+      deps: [sA, selectorA],
     });
 
     expect(a.instance).toBeUndefined();
@@ -27,14 +27,14 @@ describe('service', () => {
 
     expect(mockA.mock.calls[0][0]).toEqual({
       isA: true,
-      a: 'a'
+      a: 'a',
     });
   });
 
   test('does not call handler if inputs have not changed', async () => {
     const sA = service(() => Promise.resolve(serviceA()));
     const a = subscription(() => Promise.resolve(subscriptionA), {
-      deps: [sA, selectorA]
+      deps: [sA, selectorA],
     });
 
     await a.getInstance();
@@ -58,9 +58,9 @@ describe('service', () => {
 
   test('calls handler again if state is new reference', async () => {
     const sA = service(() => Promise.resolve(serviceA()));
-    
+
     const a = subscription(() => Promise.resolve(subscriptionA), {
-      deps: [sA, selectorA]
+      deps: [sA, selectorA],
     });
 
     await a.getInstance();
@@ -74,7 +74,7 @@ describe('service', () => {
 
 function serviceA() {
   return {
-    isA: true
+    isA: true,
   };
 }
 
@@ -85,6 +85,6 @@ function selectorA(state: any) {
 function subscriptionA(service: ReturnType<typeof serviceA>, value: ReturnType<typeof selectorA>) {
   mockA({
     isA: service.isA,
-    a: value
+    a: value,
   });
 }

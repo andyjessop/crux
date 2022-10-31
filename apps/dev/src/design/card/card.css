@@ -1,0 +1,37 @@
+.card {
+  background-color: var(--card-background-color);
+  border: var(--card-border-width) solid var(--card-border-color);
+  transition: var(--card-transition);
+}
+.card.interactive:hover {
+  border-color: var(--card-border-highlight-color);
+}
+
+.card.dragging {
+  background-color: var(--card-background-faded-color);
+  border-color: var(--card-border-faded-color) !important;
+  user-select: none;
+}
+
+.card.raised {
+  position: absolute;
+  z-index: 1000;
+  transition: none;
+  pointer-events: none;
+  opacity: 0.75;
+  border: 1px dashed whitesmoke;
+  cursor: grabbing;
+}
+
+.title {
+  color: var(--card-title-color);
+  font-size: var(--card-title-font-size);
+  font-weight: var(--card-title-font-weight);
+  margin-bottom: var(--card-title-margin-bottom);
+}
+
+.subtitle {
+  color: var(--card-subtitle-color);
+  font-size: var(--card-subtitle-font-size);
+  font-weight: var(--card-subtitle-font-weight);
+}

@@ -6,7 +6,7 @@
   height: 22px;
   border: 1px solid var(--toggle-border-color);
   background-color: var(--toggle-background-color);
-  transition: border-color .25s;
+  transition: border-color 0.25s;
 
   &:hover {
     border-color: var(--toggle-border-color-highlight);
@@ -22,7 +22,7 @@
   border-radius: 50%;
   background-color: var(--toggle-switch-background-color);
   box-shadow: var(--toggle-switch-shadow-color);
-  transition: transform .25s;
+  transition: transform 0.25s;
 
   &.on {
     transform: translate(18px);

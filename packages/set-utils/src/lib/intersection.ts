@@ -10,7 +10,7 @@ export function intersection<T>(...iterables: Set<T>[]): Set<T> {
 
   for (const iterable of iterables) {
     for (const item of iterable) {
-      if (iterables.every(one => one.has(item))) {
+      if (iterables.every((one) => one.has(item))) {
         intersectionSet.add(item);
       }
     }

@@ -23,7 +23,7 @@ export function parse(pattern: string) {
 
   const targetHash = getHash(target.hash);
 
-  const pq = parseQueries(<SearchParams><unknown>target.searchParams);
+  const pq = parseQueries(<SearchParams>(<unknown>target.searchParams));
 
   const pp = parsePaths(targetSegments);
 
@@ -36,7 +36,7 @@ export function parse(pattern: string) {
 
     if (
       pp(splitPath(trimSlashes(route.pathname)), params) &&
-      pq(<SearchParams><unknown>route.searchParams, params) &&
+      pq(<SearchParams>(<unknown>route.searchParams), params) &&
       ph(getHash(route.hash), params)
     ) {
       return params;

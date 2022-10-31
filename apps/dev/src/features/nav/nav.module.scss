@@ -13,16 +13,34 @@
 
 .nav-item {
   a {
+    display: flex;
+    align-items: center;
     color: var(--nav-item-color);
+    font-size: var(--nav-item-font-size);
     font-weight: var(--nav-item-font-weight);
     transition: var(--nav-item-color-transition);
 
     &:hover {
       color: var(--nav-item-color-highlight);
+
+      i {
+        color: var(--nav-item-icon-color-highlight);
+      }
+    }
+
+    i {
+      margin-right: var(--nav-item-icon-spacing);
+      font-size: var(--nav-item-icon-font-size);
+      color: var(--nav-item-icon-color);
+      transition: var(--nav-item-color-transition);
     }
   }
 
   &.active a {
     color: var(--nav-item-color-highlight);
+
+    i {
+      color: var(--nav-item-icon-color-highlight);
+    }
   }
 }

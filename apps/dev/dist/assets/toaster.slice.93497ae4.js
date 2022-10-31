@@ -1,1 +1,0 @@
-import{c as o}from"./slice.ceea3f84.js";import{m as i}from"./any.07715dce.js";const m={alerts:[]};function c(a){return o(a,m,{add:(e,r)=>i(e,{alerts:[...e.alerts,r]}),remove:(e,r)=>i(e,{alerts:e.alerts.filter(t=>t.id!==r)}),setRemoving:(e,r)=>i(e,{alerts:e.alerts.map(t=>t.id!==r?t:{...t,removing:!0})})})}export{c as createToasterSlice};

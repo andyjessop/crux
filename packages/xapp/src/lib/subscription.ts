@@ -1,4 +1,4 @@
-import type { Selector, SelectorOrServiceTypes, Service } from "./types";
+import type { Selector, SelectorOrServiceTypes, Service } from './types';
 
 export type Subscription = ReturnType<typeof subscription>;
 
@@ -35,10 +35,10 @@ export function subscription<
     const ret = factory();
 
     if (ret instanceof Promise) {
-      ret.then(i => {
+      ret.then((i) => {
         instance = i;
-      })
-  
+      });
+
       return ret;
     }
 
@@ -56,7 +56,7 @@ export function subscription<
       throw new Error('Could not get subscription instance');
     }
 
-    if (!await updateDeps(state)) {
+    if (!(await updateDeps(state))) {
       return;
     }
 
@@ -89,7 +89,7 @@ export function subscription<
         isUpdated = true;
       }
     }
-    
+
     return isUpdated;
   }
 }

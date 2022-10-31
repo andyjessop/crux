@@ -7,7 +7,7 @@ describe('Utils/Promise: createExternallyResolvablePromise', () => {
 
     resolve(result);
 
-    return promise.then(res => {
+    return promise.then((res) => {
       expect(res).toEqual(result);
     });
   });
@@ -18,7 +18,7 @@ describe('Utils/Promise: createExternallyResolvablePromise', () => {
 
     reject(result);
 
-    return promise.catch(res => {
+    return promise.catch((res) => {
       expect(res).toEqual(result);
     });
   });

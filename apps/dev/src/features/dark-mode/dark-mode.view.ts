@@ -1,4 +1,4 @@
-import { html, render } from "lit-html";
+import { html, render } from 'lit';
 import { toggle as toggleSwitch } from '../../design/toggle/toggle';
 
 interface Actions {
@@ -10,16 +10,19 @@ interface Data {
 }
 
 export function createDarkModeView(root: HTMLElement) {
-  return function(data: Data, actions: Actions) {
+  return function (data: Data, actions: Actions) {
     const { toggle } = actions;
     const { isDark } = data;
 
-    render(html`
-      ${toggleSwitch({
-        isOn: isDark,
-        label: 'Toggle dark mode',
-        toggle,
-      })}
-    `, root);
-  }
+    render(
+      html`
+        ${toggleSwitch({
+          isOn: isDark,
+          label: 'Toggle dark mode',
+          toggle,
+        })}
+      `,
+      root
+    );
+  };
 }

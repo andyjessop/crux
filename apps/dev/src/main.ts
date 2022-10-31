@@ -7,7 +7,9 @@ import { toasterSlice, toasterView } from './features/toaster/toaster.index';
 import { layoutSlice, layoutView } from './layout/layout.index';
 import { routerSlice } from './shared/router/router.index';
 import { darkModeSlice, darkModeView } from './features/dark-mode/dark-mode.index';
-import { navSlice, navView } from './features/nav/nav.index';
+import { navView } from './features/nav/nav.index';
+import { todosSlice, todosView } from './features/todos/todos.index';
+import { dataSlice } from './shared/data/data.index';
 
 main();
 
@@ -15,23 +17,24 @@ async function main() {
   const root = document.getElementById('root');
 
   if (!root) {
-    throw 'No root found!!';
+    throw '#root element does not exist';
   }
 
-  const slices = [
-    layoutSlice,
-    navSlice,
-    routerSlice,
-    toasterSlice,
-    darkModeSlice,
-  ];
+  // If we're in development, start the mock server. This starts a ServiceWorker
+  // which intercepts fetch requests and returns mocks according to the contents
+  // of ./shared/mocks/handlers. See https://mswjs.io/ for more details.
+  if (import.meta.env.DEV) {
+    const { createServer } = await import('./shared/mock/server');
 
-  const views = [
-    layoutView,
-    navView,
-    toasterView,
-    darkModeView,
-  ];
+    (await createServer(import.meta.env.VITE_API_URL)).start({
+      onUnhandledRequest: 'bypass',
+      waitUntilReady: true,
+    });
+  }
+
+  const slices = [dataSlice, layoutSlice, routerSlice, toasterSlice, darkModeSlice, todosSlice];
+
+  const views = [layoutView, navView, toasterView, darkModeView, todosView];
 
   const app = xapp({
     root,

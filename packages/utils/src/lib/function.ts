@@ -1,4 +1,7 @@
- export function debounce<T extends any[], U>(fn: (...props: T) => U, wait: number): ((...args: T) => void) {
+export function debounce<T extends any[], U>(
+  fn: (...props: T) => U,
+  wait: number
+): (...args: T) => void {
   let timeout: ReturnType<typeof setTimeout>;
 
   return (...args: T) => {
@@ -11,5 +14,5 @@
 }
 
 export function sleep(ms: number) {
-  return new Promise(resolve => setTimeout(resolve, ms));
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }

@@ -28,10 +28,10 @@ describe('di', () => {
 
     // f is invalid
     let err = null;
-    
+
     try {
       (await container.get('f')).get();
-    } catch(error) {
+    } catch (error) {
       err = error;
     }
 
@@ -42,10 +42,10 @@ describe('di', () => {
     container.remove('b');
 
     let err = null;
-    
+
     try {
       (await container.get('b')).get();
-    } catch(error) {
+    } catch (error) {
       err = error;
     }
 

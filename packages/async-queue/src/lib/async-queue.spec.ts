@@ -1,7 +1,7 @@
-import { asyncQueue } from './async-queue';
+import { createAsyncQueue } from './async-queue';
 
 describe('asyncQueue', () => {
   it('should work', () => {
-    expect(asyncQueue()).toEqual('async-queue');
+    expect(createAsyncQueue()).toEqual('async-queue');
   });
 });
