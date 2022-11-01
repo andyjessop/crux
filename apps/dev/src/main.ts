@@ -8,7 +8,7 @@ import { layoutSlice, layoutView } from './layout/layout.index';
 import { routerSlice } from './shared/router/router.index';
 import { darkModeSlice, darkModeView } from './features/dark-mode/dark-mode.index';
 import { navView } from './features/nav/nav.index';
-import { todosSlice, todosView } from './features/todos/todos.index';
+import { todosFetchInitiator, todosSlice, todosView } from './features/todos/todos.index';
 import { dataSlice } from './shared/data/data.index';
 
 main();
@@ -34,11 +34,14 @@ async function main() {
 
   const slices = [dataSlice, layoutSlice, routerSlice, toasterSlice, darkModeSlice, todosSlice];
 
+  const subscriptions = [todosFetchInitiator];
+
   const views = [layoutView, navView, toasterView, darkModeView, todosView];
 
   const app = xapp({
     root,
     slices,
+    subscriptions,
     views,
   });
 }

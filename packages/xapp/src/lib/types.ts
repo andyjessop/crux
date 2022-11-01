@@ -15,7 +15,7 @@ export type SelectorOrServiceTypes<T extends (Selector | Service)[]> = {
     : T[P] extends APIType<infer R>
     ? R
     : never;
-};
+} & unknown[];
 
 export type SelectorOrSliceTypes<T extends (Selector | Slice)[]> = {
   [P in keyof T]: T[P] extends Selector<any, infer U> ? U : T[P] extends Slice<infer S> ? S : never;
@@ -32,6 +32,8 @@ export type Service<I = any> = APIType<I> & {
   instance?: I;
   promise?: Promise<I>;
 };
+
+export type ExtractInstance<T extends Service> = T extends Service<infer I> ? I : never;
 
 export type ViewInstance<D = any, A = any> = (root: HTMLElement) => (data: D, actions: A) => void;
 

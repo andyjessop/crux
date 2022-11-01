@@ -10,11 +10,10 @@ export interface Task {
 export interface TodosState {
   draggingTaskId?: string;
   hoveringState: { ndx: number; status: Status } | null;
-  tasks: Task[];
 }
 
 export type Status = 'to-do' | 'in-progress' | 'completed';
 
-export type PostTask = Omit<TextTrackList, 'createdAt' | 'id' | 'updatedAt'>;
+export type PostTask = Omit<Task, 'createdAt' | 'id' | 'updatedAt'>;
 
-export type PutTask = Omit<TextTrackList, 'createdAt' | 'updatedAt'>;
+export type PutTask = Omit<Task, 'createdAt' | 'updatedAt'>;

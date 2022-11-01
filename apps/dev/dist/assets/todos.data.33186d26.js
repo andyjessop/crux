@@ -1,0 +1,1 @@
+function a(t){return t.data}function u(t,e){return t("todos",{query:async()=>e.getAll().then(a),mutations:{updateTask:{query:async(n,r)=>e.update(n,r),options:{refetchOnSuccess:!0}}},options:{lazy:!0,keepUnusedDataFor:60,pollingInterval:60}}).subscribe()}export{u as todosData};

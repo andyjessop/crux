@@ -1,0 +1,1 @@
+import{y as s}from"./index.a4500d8b.js";const l={bell:"las la-bell","check-circle":"las la-check-circle",mountain:"las la-mountain","shipping-fast":"las la-shipping-fast",stream:"las la-stream",tasks:"las la-tasks",user:"las la-user"};function c(a){return s`<i class="${l[a]}"></i>`}export{c as i};

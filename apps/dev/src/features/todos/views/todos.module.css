@@ -4,12 +4,26 @@
   align-items: center;
 }
 
-.title i {
+.title i:not(button *) {
   margin-right: 0.5rem;
   font-size: 1.5rem;
 }
 
-.title.to-do i {
+.title button {
+  margin-left: auto;
+  background-color: var(--color-warning);
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  aspect-ratio: 1;
+  cursor: pointer;
+}
+
+.title button:hover {
+  background-color: var(--color-warning-dark);
+}
+
+.title.to-do i:not(button *) {
   color: var(--color-info-light);
 }
 

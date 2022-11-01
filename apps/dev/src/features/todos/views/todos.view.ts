@@ -1,11 +1,11 @@
 import { html, render } from 'lit';
 import { repeat } from 'lit/directives/repeat.js';
-import type { TodosActions } from '../todos.index';
 import styles from './todos.module.css';
 import { cx } from '@crux/utils';
 import type { TodosData } from '../domain/todos.selectors';
 import { relativeTime } from '../../../utils/relative-time';
 import { icon } from '../../../design/icon/icon';
+import type { TodosService } from '../domain/todos.service';
 
 // Elements
 import '../components/column/column';
@@ -15,26 +15,13 @@ import '../components/task/task';
 import '../components/task-overlay/task-overlay';
 
 export function todosView(root: HTMLElement) {
-  return function renderTodos(data: TodosData, actions: TodosActions): void {
+  return function renderTodos(data: TodosData, actions: TodosService): void {
     const { draggingTaskId, tasks } = data;
-    const { onDrag, onDrop, onEnter, onExit } = actions;
+    const { createTask, onDrag, onDrop, onEnter, onExit } = actions;
 
     render(todos(tasks), root);
 
-    function todos(tasks: TodosData['tasks']) {
-      const { toDo, inProgress, completed } = tasks;
-
-      const columns = [
-        { icon: 'bell', status: 'to-do', tasks: toDo, title: 'To Do' },
-        {
-          icon: 'shipping-fast',
-          status: 'in-progress',
-          tasks: inProgress,
-          title: 'In Progress',
-        },
-        { icon: 'check-circle', status: 'completed', tasks: completed, title: 'Completed' },
-      ];
-
+    function todos(columns: TodosData['tasks']) {
       return html`
         <todos-container
           @dragTask=${handleDrag}
@@ -48,7 +35,12 @@ export function todosView(root: HTMLElement) {
             (column) => column.status,
             ({ icon: columnIcon, status, tasks, title }) => html`
               <todos-column status=${status}>
-                <h3 class=${cx(styles['title'], styles[status])}>${icon(columnIcon)}${title}</h3>
+                <h3 class=${cx(styles['title'], styles[status])}>
+                  ${icon(columnIcon)} ${title}
+                  ${status === 'to-do'
+                    ? html`<button @click=${createTask}>${icon('plus')}</button>`
+                    : null}
+                </h3>
                 ${repeat(
                   tasks,
                   (task) => task.id,

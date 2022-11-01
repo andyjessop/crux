@@ -1,25 +1,34 @@
 import type { ToasterAPI } from '../../toaster/toaster.service';
-import type { TodosStateAPI } from '../slice/todos.slice';
+import type { TodosRepository } from '../todos.index';
 import type { Status } from './todos.types';
 
-export type TodosAPI = ReturnType<typeof todos>;
+export type TodosService = ReturnType<typeof todosService>;
 
-export function todos(state: TodosStateAPI, toaster: ToasterAPI) {
+export function todosService(repository: TodosRepository, toaster: ToasterAPI) {
   return {
+    createTask,
     onDrag,
     onDrop,
     onEnter,
     onExit,
   };
 
+  function createTask() {
+    repository.createTask({
+      status: 'to-do',
+      text: 'Do something...',
+    });
+  }
+
   function onDrag(taskId: string) {
-    state.setDraggingTaskId(taskId);
+    repository.setDraggingTaskId(taskId);
   }
 
   async function onDrop(taskId: string) {
-    state.setDraggingTaskId(null);
+    repository.setDraggingTaskId(null);
 
-    const { hoveringState, tasks } = state.getState();
+    const tasks = repository.getTasks();
+    const hoveringState = repository.getHoveringState();
 
     if (!hoveringState) {
       return;
@@ -37,29 +46,36 @@ export function todos(state: TodosStateAPI, toaster: ToasterAPI) {
         return;
       }
 
-      state.removeTask(taskId);
+      // state.removeTask(taskId);
 
       const newStatusIndex =
         hoveringIndex < 1 ? Math.floor(hoveringIndex) : Math.ceil(hoveringIndex);
 
-      const moved = state.addTask({ ...task, status: hoveringStatus }, newStatusIndex);
+      try {
+        await repository.updateTask({ ...task, status: hoveringStatus }, newStatusIndex);
 
-      // Check if the task was actually moved
-      if (moved) {
         toaster.toast({
           duration: 4000,
           text: `Task moved to ${hoveringStatus}.`,
           variant: 'success',
         });
+      } catch (e) {
+        toaster.toast({
+          duration: 4000,
+          text: `Failed to move task to ${hoveringStatus}.`,
+          variant: 'danger',
+        });
       }
+
+      // const moved = state.addTask({ ...task, status: hoveringStatus }, newStatusIndex);
     }
   }
 
   function onEnter(taskNdx: number, status: Status) {
-    state.setHoveringState({ ndx: taskNdx, status });
+    repository.setHoveringState({ ndx: taskNdx, status });
   }
 
   function onExit() {
-    state.setHoveringState(null);
+    repository.setHoveringState(null);
   }
 }

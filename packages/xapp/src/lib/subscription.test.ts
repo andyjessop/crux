@@ -10,18 +10,9 @@ describe('service', () => {
 
   test('calls handler with dependencies', async () => {
     const sA = service(() => Promise.resolve(serviceA()));
-    const a = subscription(() => Promise.resolve(subscriptionA), {
+    const a = subscription((servA, selA) => Promise.resolve(subscriptionA(servA, selA)), {
       deps: [sA, selectorA],
     });
-
-    expect(a.instance).toBeUndefined();
-    expect(a.promise).toBeUndefined();
-
-    const promiseA = a.getInstance();
-
-    expect(promiseA.then).not.toBeUndefined();
-
-    await promiseA;
 
     await a.runSubscription({ a: 'a' });
 
@@ -33,11 +24,9 @@ describe('service', () => {
 
   test('does not call handler if inputs have not changed', async () => {
     const sA = service(() => Promise.resolve(serviceA()));
-    const a = subscription(() => Promise.resolve(subscriptionA), {
+    const a = subscription((servA, selA) => subscriptionA(servA, selA), {
       deps: [sA, selectorA],
     });
-
-    await a.getInstance();
 
     const state = { a: 'a' };
 
@@ -59,11 +48,9 @@ describe('service', () => {
   test('calls handler again if state is new reference', async () => {
     const sA = service(() => Promise.resolve(serviceA()));
 
-    const a = subscription(() => Promise.resolve(subscriptionA), {
+    const a = subscription((servA, selA) => Promise.resolve(subscriptionA(servA, selA)), {
       deps: [sA, selectorA],
     });
-
-    await a.getInstance();
 
     await a.runSubscription({ a: { nested: 'a' } });
     await a.runSubscription({ a: { nested: 'a' } }); // same call but different reference
@@ -79,7 +66,7 @@ function serviceA() {
 }
 
 function selectorA(state: any) {
-  return state.a;
+  return state.a as boolean;
 }
 
 function subscriptionA(service: ReturnType<typeof serviceA>, value: ReturnType<typeof selectorA>) {

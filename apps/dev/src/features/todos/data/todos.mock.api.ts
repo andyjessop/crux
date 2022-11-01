@@ -1,20 +1,81 @@
+import { generateRandomId } from '@crux/string-utils';
 import { ResponseComposition, rest, RestContext, RestRequest } from 'msw';
-import type { Task } from '../domain/todos.types';
+import type { PostTask, PutTask, Task } from '../domain/todos.types';
 
-export function createTodosMocks(apiBaseUrl: string) {
+export function createTodosMockApi(apiBaseUrl: string) {
+  let tasks = getTasks();
+
   return [
-    /**
-     * Projects.
-     */
-    rest.get(`${apiBaseUrl}/tasks`, getTasks),
+    rest.get(`${apiBaseUrl}/tasks`, getAllTasks),
+    rest.post(`${apiBaseUrl}/tasks`, createTask),
+    rest.put(`${apiBaseUrl}/tasks/:id`, updateTask),
   ];
+
+  function getAllTasks(req: RestRequest, res: ResponseComposition, ctx: RestContext) {
+    return res(ctx.status(200), ctx.json({ data: tasks }));
+  }
+
+  async function createTask(req: RestRequest, res: ResponseComposition, ctx: RestContext) {
+    const body = await req.json();
+    const task = body.task as PostTask;
+
+    const newTask = {
+      ...task,
+      id: generateRandomId(),
+      createdAt: Date.now(),
+      updatedAt: null,
+    } as Task;
+
+    const firstStatusTaskIndex = tasks.findIndex((t) => t.status === task.status);
+
+    tasks.splice(firstStatusTaskIndex, 0, newTask);
+
+    return res(ctx.status(201), ctx.json({ data: newTask }));
+  }
+
+  async function updateTask(req: RestRequest, res: ResponseComposition, ctx: RestContext) {
+    const body = await req.json();
+    const task = body.task as PutTask;
+    const statusNdx = body.statusNdx as number;
+
+    const { status, text } = task;
+
+    const newTask = {
+      ...task,
+      status: status ?? 'to-do',
+      text: text ?? 'Do something...',
+      updatedAt: Date.now(),
+    } as Task;
+
+    tasks = tasks.filter((t) => t.id !== task.id);
+
+    // If an index for the status is provided, insert the task at that index.
+    if (statusNdx !== undefined) {
+      const statusTasks = [];
+      const otherTasks = [];
+
+      for (const t of tasks) {
+        if (t.status === status) {
+          statusTasks.push(t);
+
+          continue;
+        }
+
+        otherTasks.push(t);
+      }
+
+      const index = statusNdx < 0 ? 0 : statusNdx;
+
+      tasks = [...otherTasks, ...statusTasks.slice(0, index), newTask, ...statusTasks.slice(index)];
+    } else {
+      tasks = [...tasks, newTask];
+    }
+
+    return res(ctx.status(200), ctx.json(newTask));
+  }
 }
 
-function getTasks(req: RestRequest, res: ResponseComposition, ctx: RestContext) {
-  return res(ctx.status(200), ctx.json(tasks()));
-}
-
-function tasks(): Task[] {
+function getTasks(): Task[] {
   return [
     {
       createdAt: Date.now() - 1000 * 60,

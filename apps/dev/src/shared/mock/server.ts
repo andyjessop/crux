@@ -1,8 +1,8 @@
 import { setupWorker } from 'msw';
-import { createTodosMocks } from '../../features/todos/data/mock.handlers';
+import { createTodosMockApi } from '../../features/todos/data/todos.mock.api';
 
 export async function createServer(apiUrl: string) {
-  const handlers = [...createTodosMocks(apiUrl)];
+  const handlers = [...createTodosMockApi(apiUrl)];
 
   return setupWorker(...handlers);
 }
