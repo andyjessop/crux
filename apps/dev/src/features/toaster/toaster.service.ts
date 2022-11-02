@@ -4,7 +4,7 @@ import type { Alert, ToasterStateAPI } from './toaster.slice';
 
 export type BaseAlert = Omit<Alert, 'id'>;
 
-export type ToasterAPI = ReturnType<typeof toaster>;
+export type ToasterService = ReturnType<typeof toaster>;
 
 const DEFAULT_ANIMATION_DURATION = 200;
 

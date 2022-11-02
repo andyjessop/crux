@@ -1,10 +1,10 @@
-import type { ToasterAPI } from '../../toaster/toaster.service';
+import type { ToasterService } from '../../toaster/toaster.service';
 import type { TodosRepository } from '../todos.index';
 import type { Status } from './todos.types';
 
 export type TodosService = ReturnType<typeof todosService>;
 
-export function todosService(repository: TodosRepository, toaster: ToasterAPI) {
+export function todosService(todos: TodosRepository, toaster: ToasterService) {
   return {
     createTask,
     onDrag,
@@ -14,21 +14,21 @@ export function todosService(repository: TodosRepository, toaster: ToasterAPI) {
   };
 
   function createTask() {
-    repository.createTask({
+    todos.createTask({
       status: 'to-do',
       text: 'Do something...',
     });
   }
 
   function onDrag(taskId: string) {
-    repository.setDraggingTaskId(taskId);
+    todos.setDraggingTaskId(taskId);
   }
 
   async function onDrop(taskId: string) {
-    repository.setDraggingTaskId(null);
+    todos.setDraggingTaskId(null);
 
-    const tasks = repository.getTasks();
-    const hoveringState = repository.getHoveringState();
+    const tasks = todos.getTasks();
+    const hoveringState = todos.getHoveringState();
 
     if (!hoveringState) {
       return;
@@ -46,13 +46,11 @@ export function todosService(repository: TodosRepository, toaster: ToasterAPI) {
         return;
       }
 
-      // state.removeTask(taskId);
-
       const newStatusIndex =
         hoveringIndex < 1 ? Math.floor(hoveringIndex) : Math.ceil(hoveringIndex);
 
       try {
-        await repository.updateTask({ ...task, status: hoveringStatus }, newStatusIndex);
+        await todos.updateTask({ ...task, status: hoveringStatus }, newStatusIndex);
 
         toaster.toast({
           duration: 4000,
@@ -66,16 +64,14 @@ export function todosService(repository: TodosRepository, toaster: ToasterAPI) {
           variant: 'danger',
         });
       }
-
-      // const moved = state.addTask({ ...task, status: hoveringStatus }, newStatusIndex);
     }
   }
 
   function onEnter(taskNdx: number, status: Status) {
-    repository.setHoveringState({ ndx: taskNdx, status });
+    todos.setHoveringState({ ndx: taskNdx, status });
   }
 
   function onExit() {
-    repository.setHoveringState(null);
+    todos.setHoveringState(null);
   }
 }

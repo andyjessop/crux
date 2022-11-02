@@ -1,8 +1,6 @@
 import { service, slice } from '@crux/xapp';
 
 const config = {
-  // projects: '/projects',
-  // project: '/projects/:projectId',
   todos: '/todos',
 };
 

@@ -17,7 +17,7 @@ async function main() {
   const root = document.getElementById('root');
 
   if (!root) {
-    throw '#root element does not exist';
+    throw new Error('#root element does not exist');
   }
 
   // If we're in development, start the mock server. This starts a ServiceWorker

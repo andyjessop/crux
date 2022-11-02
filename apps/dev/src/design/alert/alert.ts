@@ -22,7 +22,7 @@ export function alert(
     '--animate-duration': `${(animationDuration ?? 0) / 1000}s`,
   });
 
-  return html` <div class=${fullClassName} role="alert" style=${style}>
+  return html`<div class=${fullClassName} role="alert" style=${style}>
     ${alertHTML ? unsafeHTML(alertHTML) : text}
     <button @click=${() => close(id)}>x</button>
   </div>`;

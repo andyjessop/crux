@@ -1,13 +1,13 @@
 import { render } from 'lit';
 import { repeat } from 'lit/directives/repeat.js';
 import type { Alert, ToasterState } from './toaster.slice';
-import type { ToasterAPI } from './toaster.service';
+import type { ToasterService } from './toaster.service';
 import toasterStyles from './toaster.module.scss';
 import { alert } from '../../design/alert/alert';
 import { cx } from '@crux/utils';
 
 export function toasterView(root: HTMLElement) {
-  return function toast(data: ToasterState, actions: ToasterAPI): void {
+  return function toast(data: ToasterState, actions: ToasterService): void {
     const { alerts } = data;
     const { close } = actions;
 
