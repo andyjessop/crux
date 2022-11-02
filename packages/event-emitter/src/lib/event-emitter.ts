@@ -17,9 +17,7 @@ export interface EventListener<T, K extends keyof T> {
 /**
  * Create an event emitter.
  */
-export function createEventEmitter<
-  T extends Record<string, unknown>
->(): EventEmitter<T> {
+export function createEventEmitter<T extends Record<string, unknown>>(): EventEmitter<T> {
   const listeners: EventListener<T, any>[] = [];
 
   return {
@@ -91,8 +89,7 @@ export function createEventEmitter<
    */
   function offAll(handler: EventHandler<T[keyof T]>): void {
     const ndx = listeners.findIndex(
-      (l: EventListener<T, keyof T>) =>
-        'all' === l.type && handler === l.handler
+      (l: EventListener<T, keyof T>) => 'all' === l.type && handler === l.handler
     );
 
     if (ndx !== -1) {

@@ -1,4 +1,3 @@
-
 import { configureStore } from '@reduxjs/toolkit';
 import { query } from './query';
 import { createDataAPI, createUserConfig } from '../test';
@@ -120,7 +119,7 @@ describe('createAPI', () => {
   // it('should listen to events', (done) => {
   //   const resource = createResource('users', createUserConfig(dataAPI));
 
-  //   resource.onFetch('get', ({ state }, ...params) => { 
+  //   resource.onFetch('get', ({ state }, ...params) => {
   //     expect(state).toEqual({
   //       data: null,
   //       error: null,
@@ -137,4 +136,4 @@ describe('createAPI', () => {
 
   //    users.refetch();
   // })
-})
+});

@@ -23,5 +23,5 @@ export function combineReducers(reducers: Record<string, Reducer>) {
     }
 
     return nextState;
-  }
+  };
 }

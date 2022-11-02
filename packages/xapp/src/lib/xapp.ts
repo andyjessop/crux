@@ -10,29 +10,33 @@ export interface Options {
 }
 
 export type Events<State = any> = {
-  afterReducer: { action: Action, state: State };
-  afterSlices: { action: Action, state: State };
-  afterLayout: { action: Action, state: State };
-  afterViews: { action: Action, state: State };
-  afterSubscriptions: { action: Action, state: State };
-}
+  afterReducer: { action: Action; state: State };
+  afterSlices: { action: Action; state: State };
+  afterLayout: { action: Action; state: State };
+  afterViews: { action: Action; state: State };
+  afterSubscriptions: { action: Action; state: State };
+};
 
-export function xapp({
-  root, slices, subscriptions = [], views
-}: {
-  root?: HTMLElement;
-  slices: Slice[];
-  subscriptions?: Subscription[];
-  views: View[];
-}, {
-  emitter, store = createStore(),
-}: Options = {}) {
+export function xapp(
+  {
+    root,
+    slices,
+    subscriptions = [],
+    views,
+  }: {
+    root?: HTMLElement;
+    slices: Slice[];
+    subscriptions?: Subscription[];
+    views: View[];
+  },
+  { emitter, store = createStore() }: Options = {}
+) {
   if (!root) {
     console.info('No root element provided. Running in headless mode.');
   }
-  
+
   const middleware = (api: MiddlewareAPI) => (next: Dispatch) => async (action: Action) => {
-    next(action);   
+    next(action);
 
     // If we handle this action below, it will get into some kind of loop. This action is fired
     // when we call `slice.register(instance.middleware, instance.reducer)`, which happens before
@@ -50,11 +54,11 @@ export function xapp({
      */
     const slicesToRegister: Slice[] = [];
 
-    for (const slice of slices) {      
+    for (const slice of slices) {
       if (!slice.getStore()) {
         slice.bindStore(store);
       }
-      
+
       const unregister = slice.getUnregister();
       const shouldBeEnabled = slice.shouldBeEnabled?.(api.getState()) ?? true;
 
@@ -68,14 +72,14 @@ export function xapp({
       }
     }
 
-    await Promise.all(slicesToRegister.map(slice => slice.getInstance()));
+    await Promise.all(slicesToRegister.map((slice) => slice.getInstance()));
 
     emitter?.emit('afterSlices', { action, state });
 
     /**
      * LAYOUT
      */
-    const layoutView = views.find(view => view.root === 'root');
+    const layoutView = views.find((view) => view.root === 'root');
 
     if (!layoutView) {
       throw new Error('No layout view found');
@@ -90,7 +94,7 @@ export function xapp({
     /**
      * VIEWS
      */
-    const viewsToRender: { view: View, root: HTMLElement }[] = [];
+    const viewsToRender: { view: View; root: HTMLElement }[] = [];
 
     for (const view of views) {
       if (view.root === 'root') {
@@ -98,13 +102,11 @@ export function xapp({
       }
 
       if (view.root) {
-        const viewRoot = root ? document.querySelector(`[data-crux-root=${view.root}]`) : { id: view.root };
+        const viewRoot = document.querySelector(`[data-crux-root=${view.root}]`);
 
-        if (!viewRoot) {
-          throw new Error(`Could not find root element with data-crux-root=${view.root}`);
+        if (viewRoot) {
+          viewsToRender.push({ view, root: viewRoot as HTMLElement });
         }
-
-        viewsToRender.push({ view, root: viewRoot as HTMLElement });
       }
     }
 
@@ -113,7 +115,7 @@ export function xapp({
     await Promise.all(viewsToRender.map(({ view, root }) => view.render(root, currentState)));
 
     emitter?.emit('afterViews', { action, state });
-    
+
     /**
      * SUBSCRIPTIONS
      */
@@ -145,7 +147,7 @@ export function xapp({
       if (index > -1) {
         arr.splice(index, 1);
       }
-    }
+    };
   }
 
   function addSlice(slice: Slice) {

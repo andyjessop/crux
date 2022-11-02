@@ -1,14 +1,14 @@
-import { createStore, DynamicStore } from "@crux/create-store";
-import { Action, Dispatch } from "@crux/redux-types";
-import { service } from "./service";
-import { slice } from "./slice";
+import { createStore, DynamicStore } from '@crux/create-store';
+import { Action, Dispatch } from '@crux/redux-types';
+import { service } from './service';
+import { slice } from './slice';
 
 let store: DynamicStore;
 
 describe('slice', () => {
   beforeEach(() => {
     store = createStore();
-  })
+  });
 
   test('should create a slice', async () => {
     const a = slice(() => Promise.resolve(sliceA()), { name: 'a' });
@@ -64,7 +64,7 @@ describe('slice', () => {
 
     const instanceB = await b.getInstance();
     const instanceA = await a.getInstance();
-    
+
     expect(store.getState()).toEqual({
       a: { initialA: true },
       b: { initialB: true },
@@ -80,7 +80,7 @@ describe('slice', () => {
 
     const instanceB = b.getInstance();
     const instanceA = a.getInstance();
-    
+
     await instanceB;
 
     expect(store.getState()).toEqual({
@@ -98,7 +98,7 @@ describe('slice', () => {
 
     const instanceB = await b.getInstance();
     const instanceA = a.getInstance();
-    
+
     expect(store.getState()).toEqual({
       a: { initialA: true },
       b: { initialB: true },
@@ -114,7 +114,7 @@ describe('slice', () => {
     b.bindStore(store);
 
     const instanceC = await c.getInstance();
-    
+
     expect(store.getState()).toEqual({
       a: { initialA: true },
       b: { initialB: true },
@@ -132,7 +132,7 @@ describe('slice', () => {
     b.bindStore(store);
 
     await b.getInstance();
-    
+
     expect(a.selector(store.getState())).toEqual({ initialA: true });
     expect(b.selector(store.getState())).toEqual({ initialB: true });
   });
@@ -153,7 +153,7 @@ function sliceA() {
     },
     middleware: () => (next: Dispatch) => (action: Action) => next(action),
     reducer: (state: StateA, action: Action) => ({ initialA: true }),
-    select: (state: any) => ({ initialA: true })
+    select: (state: any) => ({ initialA: true }),
   };
 }
 
@@ -165,7 +165,7 @@ function sliceB(apiA: ReturnType<typeof sliceA>['api']) {
     },
     middleware: () => (next: Dispatch) => (action: Action) => next(action),
     reducer: (state: StateB, action: Action) => ({ initialB: true }),
-    select: (state: any) => ({ initialB: true })
+    select: (state: any) => ({ initialB: true }),
   };
 }
 
@@ -173,6 +173,6 @@ function serviceC(a: ReturnType<typeof sliceA>['api'], b: ReturnType<typeof slic
   return {
     a,
     b,
-    isC: true
+    isC: true,
   };
 }

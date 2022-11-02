@@ -11,7 +11,7 @@ interface LightSwitchData {
 
 const initialState: LightSwitchData = {
   meta: 0,
-  state: 'off'
+  state: 'off',
 };
 
 const lightSwitch = {
@@ -35,10 +35,14 @@ let actions: Actions<typeof lightSwitch>;
 
 describe('redux-machine', () => {
   beforeEach(() => {
-    const { actions: machineActions, reducer: machineReducer } = machine('lightSwitch', lightSwitch, initialState);
+    const { actions: machineActions, reducer: machineReducer } = machine(
+      'lightSwitch',
+      lightSwitch,
+      initialState
+    );
 
     const reducer = combineReducers({ lightSwitch: machineReducer });
-    
+
     store = createStore(reducer, applyMiddleware(thunk));
     actions = machineActions;
   });
@@ -48,7 +52,7 @@ describe('redux-machine', () => {
 
     expect(store.getState().lightSwitch).toEqual({
       state: 'on',
-      meta: 2
+      meta: 2,
     });
   });
 
@@ -58,7 +62,7 @@ describe('redux-machine', () => {
 
     expect(store.getState().lightSwitch).toEqual({
       state: 'on',
-      meta: 2
+      meta: 2,
     });
   });
 });

@@ -21,6 +21,14 @@
       "options": {
         "command": "vite build apps/dev --config apps/dev/vite.config.ts"
       }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/apps/dev"],
+      "options": {
+        "jestConfig": "apps/dev/jest.config.ts",
+        "passWithNoTests": true
+      }
     }
   }
 }

@@ -1,3 +1,3 @@
-import { service } from "../../service";
+import { service } from '../../service';
 
-export const sharedService = service(() => import('./service').then(mod => mod.sharedService()));
+export const sharedService = service(() => import('./service').then((mod) => mod.sharedService()));

@@ -1,5 +1,5 @@
-import { createEventEmitter, EventEmitter } from "@crux/event-emitter";
-import { Action, Dispatch, MiddlewareAPI } from "@crux/redux-types";
+import { createEventEmitter, EventEmitter } from '@crux/event-emitter';
+import { Action, Dispatch, MiddlewareAPI } from '@crux/redux-types';
 
 type ANumber = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
 
@@ -7,17 +7,13 @@ type DropFirst<T extends unknown[]> = T extends [any, ...infer U]
   ? U['length'] extends ANumber
     ? U
     : [U]
-  : never
+  : never;
 
 export function createSlice<
   T extends Record<keyof T, (state: S, ...params: any[]) => any>,
   N extends string = any,
   S = any
->(
-  name: N,
-  initialState: S,
-  config: T,
-) {
+>(name: N, initialState: S, config: T) {
   let dispatch: Dispatch;
   let getState: () => any;
   type SliceActionType = `${N}/${keyof T & string}`;
@@ -35,13 +31,13 @@ export function createSlice<
   /**
    * Build the slice's action creators.
    */
-  const actions = keys
-    .reduce((acc, key) => {
-      const actionCreator = function(...params: any[]) {
+  const actions = keys.reduce(
+    (acc, key) => {
+      const actionCreator = function (...params: any[]) {
         return {
           payload: config[key].length > 2 ? params : params[0],
           type: actionTypes[key],
-        }
+        };
       } as any;
 
       actionCreator.type = actionTypes[key];
@@ -49,18 +45,27 @@ export function createSlice<
       acc[key] = actionCreator;
 
       return acc;
-    }, {} as {
+    },
+    {} as {
       [K in keyof T]: T[K] extends undefined
         ? {
-          (): {
-            payload: undefined;
+            (): {
+              payload: undefined;
+              type: `${N}/${K & string}`;
+            };
+            name: K;
             type: `${N}/${K & string}`;
-          }; name: K; type: `${N}/${K & string}`; }
-        : { (...params: DropFirst<Parameters<T[K]>>): {
+          }
+        : {
+            (...params: DropFirst<Parameters<T[K]>>): {
               payload: T[K];
               type: `${N}/${K & string}`;
-            }; name: K; type: `${N}/${K & string}`; }
-    });
+            };
+            name: K;
+            type: `${N}/${K & string}`;
+          };
+    }
+  );
 
   type Events = {
     [K in keyof T]: T[K];
@@ -70,39 +75,47 @@ export function createSlice<
    * Create an API from the actions object. The API provides the same parameters as the actions, but
    * calls dispatch instead of just creating an action.
    */
-  const api = (Object.entries(actions) as Array<[keyof T & string, (param?: any) => Action]>)
-    .reduce((acc, [key, actionCreator]) => {
-      acc[key] = async function<K extends keyof T & string>(
-        param?: T[K]
-      ) {
+  const api = (
+    Object.entries(actions) as Array<[keyof T & string, (param?: any) => Action]>
+  ).reduce(
+    (acc, [key, actionCreator]) => {
+      acc[key] = function <K extends keyof T & string>(...params: DropFirst<Parameters<T[K]>>) {
         if (!dispatch) {
           throw `${name} slice middleware has not yet been registered with the store. Dispatch is not available.`;
         }
 
-        const action = actionCreator(param) as {
+        const action = actionCreator(...params) as {
           payload: T[K];
           type: `${N}/${K & string}`;
         };
-        
-        dispatch(actionCreator(param));
+
+        const before = getSliceState();
+
+        dispatch(action);
+
+        const after = getSliceState();
 
         acc.emit(key, action.payload);
+
+        return before !== after;
       } as any;
 
       return acc;
-    }, {
+    },
+    {
       ...createEventEmitter<Events>(),
       getState: getSliceState,
     } as {
-      [P in keyof T]: (...params: DropFirst<Parameters<T[P]>>) => void
-    } & { getState: () => S } & EventEmitter<Events>);
+      [P in keyof T]: (...params: DropFirst<Parameters<T[P]>>) => boolean;
+    } & { getState: () => S } & EventEmitter<Events>
+  );
 
   return {
     actions,
     api,
     middleware,
     reducer,
-  }
+  };
 
   function getSliceState(): S {
     if (!getState) {
@@ -114,7 +127,7 @@ export function createSlice<
 
   function getType(key: keyof T & string): SliceActionType {
     return `${name}/${key}`;
-  } 
+  }
 
   function isSliceActionType(type: string): type is SliceActionType {
     return keysFromActionTypes[type as SliceActionType] !== undefined;
@@ -144,13 +157,14 @@ export function createSlice<
       }
 
       // Spread payload into handler, but only if the config handler is expecting more than one argument.
-      const res = config[key].length > 2
-        ? config[key](dest, ...(action['payload'] as [any]))
-        : config[key](dest, action['payload']);
+      const res =
+        config[key].length > 2
+          ? config[key](dest, ...(action['payload'] as [any]))
+          : config[key](dest, action['payload']);
 
       return res;
     }
-    
+
     return dest;
   }
 }
@@ -158,7 +172,7 @@ export function createSlice<
 function inverse<T extends string, U extends string>(obj: Record<T, U>): Record<U, T> {
   const ret = {} as Record<U, T>;
 
-  for(const key in obj){
+  for (const key in obj) {
     ret[obj[key]] = key;
   }
 

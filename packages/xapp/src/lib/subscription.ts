@@ -1,66 +1,24 @@
-import type { Selector, SelectorOrServiceTypes, Service } from "./types";
+import type { Selector, SelectorOrServiceTypes, Service } from './types';
 
 export type Subscription = ReturnType<typeof subscription>;
 
 export function subscription<
-  T extends (Selector | Service)[],
+  T extends [] | (Selector | Service)[],
   Args extends SelectorOrServiceTypes<T>
->(
-  factory: () => Promise<(...args: Args) => void> | ((...args: Args) => void),
-  { deps }: { deps: T }
-) {
-  type Instance = (...args: Args) => void;
-
-  let instance: Instance | undefined;
-  let promise: Promise<Instance> | undefined;
+>(factory: (...args: Args) => void, { deps }: { deps: T }) {
   const cachedDeps = [] as any;
 
   return {
-    getInstance,
-    instance,
-    promise,
     runSubscription,
     updateDeps,
   };
 
-  async function getInstance(): Promise<Instance> {
-    if (instance) {
-      return instance;
-    }
-
-    if (promise) {
-      return promise;
-    }
-
-    const ret = factory();
-
-    if (ret instanceof Promise) {
-      ret.then(i => {
-        instance = i;
-      })
-  
-      return ret;
-    }
-
-    instance = ret;
-
-    return instance;
-  }
-
   async function runSubscription(state: any) {
-    if (!instance) {
-      await getInstance();
-    }
-
-    if (!instance) {
-      throw new Error('Could not get subscription instance');
-    }
-
-    if (!await updateDeps(state)) {
+    if (!(await updateDeps(state))) {
       return;
     }
 
-    return instance(...cachedDeps);
+    return factory(...cachedDeps);
   }
 
   async function updateDeps(state: any) {
@@ -89,7 +47,7 @@ export function subscription<
         isUpdated = true;
       }
     }
-    
+
     return isUpdated;
   }
 }

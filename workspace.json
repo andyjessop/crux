@@ -17,7 +17,6 @@
     "redux-utils": "packages/redux-utils",
     "router": "packages/router",
     "set-utils": "packages/set-utils",
-    "store": "packages/store",
     "string-utils": "packages/string-utils",
     "sync-queue": "packages/sync-queue",
     "url-parser": "packages/url-parser",

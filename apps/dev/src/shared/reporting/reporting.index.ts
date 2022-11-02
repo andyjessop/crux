@@ -1,3 +1,5 @@
-import { service } from "@crux/xapp";
+import { service } from '@crux/xapp';
 
-export const reportingService = service(() => import('./reporting.service').then(mod => mod.reporting()));
+export const reportingService = service(() =>
+  import('./reporting.service').then((mod) => mod.reporting())
+);

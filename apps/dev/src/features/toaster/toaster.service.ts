@@ -1,10 +1,12 @@
-import { generateRandomId } from "@crux/string-utils";
-import { sleep } from "@crux/utils";
-import type { Alert, ToasterStateAPI } from "./toaster.slice";
+import { generateRandomId } from '@crux/string-utils';
+import { sleep } from '@crux/utils';
+import type { Alert, ToasterStateAPI } from './toaster.slice';
 
 export type BaseAlert = Omit<Alert, 'id'>;
 
 export type ToasterAPI = ReturnType<typeof toaster>;
+
+const DEFAULT_ANIMATION_DURATION = 200;
 
 export function toaster(api: ToasterStateAPI) {
   return {
@@ -31,11 +33,11 @@ export function toaster(api: ToasterStateAPI) {
     api.add(alertWithId);
 
     if (alert.duration !== undefined) {
-      await sleep(alert.duration)
-      
+      await sleep(alert.duration);
+
       api.setRemoving(id);
-        
-      await sleep(alert.animationDuration ?? 0);
+
+      await sleep(alert.animationDuration ?? DEFAULT_ANIMATION_DURATION);
 
       api.remove(id);
     }

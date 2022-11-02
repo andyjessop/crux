@@ -1,1 +1,0 @@
-import{c as i}from"./slice.ceea3f84.js";import{m as c}from"./any.07715dce.js";import{D as n}from"./dark-mode.config.2f3f9c98.js";function s(e){return e===!0||e===!1}function D(e){const t={isDark:o()};return i("darkMode",t,{setDarkMode:(r,a)=>c(r,{isDark:a})});function o(){const r=e.get(n);return s(r)?r:!1}}export{D as createDarkModeSlice};

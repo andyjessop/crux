@@ -4,32 +4,36 @@ import { getDependents } from './get-dependents';
 
 export type Options<T> = { service: keyof T; singleton: true };
 
-export type Service<T> = { factory: Factory, deps?: (keyof T & string)[] };
+export type Service<T> = { factory: Factory; deps?: (keyof T & string)[] };
 export type ServiceCollection = {
-  [key: string]: { factory: Factory, deps?: string[] }
+  [key: string]: { factory: Factory; deps?: string[] };
 };
 
 type Constructor = (...args: any[]) => any;
 type Factory = () => Promise<Constructor>;
 
 export type Model<T> = {
-  factory: Factory,
-  deps: (keyof T)[],
+  factory: Factory;
+  deps: (keyof T)[];
   instance?: any;
-  name: keyof T,
-  order: number,
-}
+  name: keyof T;
+  order: number;
+};
 
 export function di<T>(initialServices: T) {
-  type Instance<K extends keyof T> = T[K] extends {factory: (() => Promise<(...args: any[]) => infer R>), deps?: string[] }
-  ? R : any;
-  const services = new Map<string, Model<T>>();  
+  type Instance<K extends keyof T> = T[K] extends {
+    factory: () => Promise<(...args: any[]) => infer R>;
+    deps?: string[];
+  }
+    ? R
+    : any;
+  const services = new Map<string, Model<T>>();
 
   if (initialServices) {
     const sorted = sortByDependency(Object.entries(initialServices));
 
     sorted.forEach(([key, service]) => {
-      register(key as (keyof T & string), service);
+      register(key as keyof T & string, service);
     });
   }
 
@@ -40,10 +44,7 @@ export function di<T>(initialServices: T) {
     remove,
   };
 
-  function register(
-    name: keyof T,
-    service: Service<T>
-  ): boolean {
+  function register(name: keyof T, service: Service<T>): boolean {
     if (services.get(name as string)) {
       return false;
     }
@@ -52,16 +53,16 @@ export function di<T>(initialServices: T) {
 
     const { factory, deps = [] } = service;
 
-      if (!allDependenciesExist<T>(services, deps)) {
-        return false;
-      }
+    if (!allDependenciesExist<T>(services, deps)) {
+      return false;
+    }
 
-      services.set(name as string, {
-        factory,
-        deps,
-        name,
-        order,
-      });
+    services.set(name as string, {
+      factory,
+      deps,
+      name,
+      order,
+    });
 
     return true;
   }
@@ -86,7 +87,10 @@ export function di<T>(initialServices: T) {
     return instantiate(name, true);
   }
 
-  async function instantiate<Key extends keyof T>(name: Key, singleton = false): Promise<Instance<Key>> {
+  async function instantiate<Key extends keyof T>(
+    name: Key,
+    singleton = false
+  ): Promise<Instance<Key>> {
     if (!services.get(name as string)) {
       throw new Error('Service does not exist');
     }
@@ -99,16 +103,12 @@ export function di<T>(initialServices: T) {
 
     const deps = service.deps;
 
-    const instantiatedDependencies = await Promise.all(
-      deps.map(dep => instantiate(dep))
-    );
+    const instantiatedDependencies = await Promise.all(deps.map((dep) => instantiate(dep)));
 
     // All services are defined with a Promise.
     const constuctor = await service.factory();
 
-    const instance = await constuctor(
-      ...instantiatedDependencies
-    );
+    const instance = await constuctor(...instantiatedDependencies);
 
     if (!singleton) {
       service.instance = instance;

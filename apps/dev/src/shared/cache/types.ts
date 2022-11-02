@@ -10,4 +10,3 @@ export interface AsyncCache {
   remove(key: string): Promise<void>;
   set(key: string, value: unknown): Promise<void>;
 }
-

@@ -1,4 +1,4 @@
-import type { Route } from "../router.slice";
+import type { Route } from '../router.slice';
 
 export function getRouteFromUrl(config: Record<string, string>, fullUrl: string): Route | null {
   const { hash, pathname, searchParams } = new URL(fullUrl);
@@ -25,10 +25,12 @@ export function getRouteFromUrl(config: Record<string, string>, fullUrl: string)
     });
   })?.[0];
 
-  return name ? {
-    hash,
-    name,
-    params: Object.keys(params).length ? params : undefined,
-    search: Object.fromEntries(searchParams.entries()),
-  } : null;
+  return name
+    ? {
+        hash,
+        name,
+        params: Object.keys(params).length ? params : undefined,
+        search: Object.fromEntries(searchParams.entries()),
+      }
+    : null;
 }

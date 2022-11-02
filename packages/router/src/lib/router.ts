@@ -13,10 +13,7 @@ export type Routes<T> = Record<keyof T, Route<T>>;
 
 export type RoutesConfig<T> = Record<keyof T, string>;
 
-export type Constructor<T> = (
-  baseRoute: string,
-  config: RoutesConfig<T>
-) => Router<T>;
+export type Constructor<T> = (baseRoute: string, config: RoutesConfig<T>) => Router<T>;
 
 export interface EncoderBase {
   decodeURL(url: string): null | RouteParams;
@@ -34,10 +31,7 @@ export interface Router<T> extends EventEmitter<Events<keyof Encoders<T>>> {
   getCurrentRoute(): Route<keyof Encoders<T>> | null;
   go(num: number): void;
   navigate(name: keyof Encoders<T>, params?: RouteParams): Promise<void>;
-  register(
-    name: keyof Encoders<T>,
-    path: string
-  ): Encoder<keyof Encoders<T>> | null;
+  register(name: keyof Encoders<T>, path: string): Encoder<keyof Encoders<T>> | null;
   replace(name: keyof Encoders<T>, params?: RouteParams): Promise<void>;
 }
 
@@ -66,10 +60,7 @@ export type Events<T> = {
 /**
  * Create a router.
  */
-export function createRouter<T>(
-  initialRoutes: RoutesConfig<T>,
-  base = ''
-): Router<T> {
+export function createRouter<T>(initialRoutes: RoutesConfig<T>, base = ''): Router<T> {
   const emitter = createEventEmitter<Events<keyof Encoders<T>>>();
   const trimmedBase = trimSlashes(base);
 
@@ -190,10 +181,7 @@ export function createRouter<T>(
   /**
    * Push a new route into the history.
    */
-  async function navigate(
-    name: keyof Encoders<T>,
-    params: RouteParams = {}
-  ): Promise<void> {
+  async function navigate(name: keyof Encoders<T>, params: RouteParams = {}): Promise<void> {
     const encoder = encoders[name];
 
     if (!encoder) {
@@ -217,7 +205,7 @@ export function createRouter<T>(
     if (!params) {
       return;
     }
-    
+
     const current = {
       name,
       params,
@@ -231,10 +219,7 @@ export function createRouter<T>(
   /**
    * Register a route.
    */
-  function register(
-    name: keyof Encoders<T>,
-    path: string
-  ): Encoder<keyof Encoders<T>> | null {
+  function register(name: keyof Encoders<T>, path: string): Encoder<keyof Encoders<T>> | null {
     if (typeof path === 'undefined' || typeof name === 'undefined') {
       return null;
     }
@@ -254,10 +239,7 @@ export function createRouter<T>(
   /**
    * Replace the current location history.
    */
-  async function replace(
-    name: keyof Encoders<T>,
-    params: RouteParams = {}
-  ): Promise<void> {
+  async function replace(name: keyof Encoders<T>, params: RouteParams = {}): Promise<void> {
     const encoder = encoders[name];
 
     if (!encoder) {

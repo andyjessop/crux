@@ -1,4 +1,4 @@
-import type { PutUser, Response, User } from "../../http/users/users-http.service";
+import type { PutUser, Response, User } from '../../http/users/users-http.service';
 
 export function toData(response: Response<User[]>) {
   return response.data;
@@ -9,8 +9,7 @@ export function deleteUser(data: User[] | null, id: number) {
     return data;
   }
 
-
-  return data.filter(u => id !== u.id);
+  return data.filter((u) => id !== u.id);
 }
 
 export function mergeUser(data: User[] | null, user: PutUser) {
@@ -18,7 +17,7 @@ export function mergeUser(data: User[] | null, user: PutUser) {
     return data;
   }
 
-  const ndx = data?.findIndex(u => u.id === user.id);
+  const ndx = data?.findIndex((u) => u.id === user.id);
 
   if (ndx === -1) {
     return data;
@@ -26,7 +25,7 @@ export function mergeUser(data: User[] | null, user: PutUser) {
 
   data[ndx] = {
     ...data[ndx],
-    ...user
+    ...user,
   };
 
   return data;

@@ -1,5 +1,5 @@
-import { serialize } from "../../../helpers/serializer";
-import { ErrorResponse, Comment, PutComment, Response } from "../../api";
+import { serialize } from '../../../helpers/serializer';
+import { ErrorResponse, Comment, PutComment, Response } from '../../api';
 
 export function toError(response: ErrorResponse): string {
   throw new Error(serialize(response.error));
@@ -18,10 +18,7 @@ export function toUndefined() {
 }
 
 export function postResponseToData(data: Comment[] | null, response: Response<Comment>) {
-  return [
-    ...data || [],
-    response.data,
-  ];
+  return [...(data || []), response.data];
 }
 
 export function deleteComment(data: Comment[] | null, comment: Comment) {
@@ -29,8 +26,7 @@ export function deleteComment(data: Comment[] | null, comment: Comment) {
     return data;
   }
 
-
-  return data.filter(c => comment.id !== c.id);
+  return data.filter((c) => comment.id !== c.id);
 }
 
 export function mergeComment(data: Comment[] | null, comment: PutComment) {
@@ -38,7 +34,7 @@ export function mergeComment(data: Comment[] | null, comment: PutComment) {
     return data;
   }
 
-  const ndx = data?.findIndex(c => c.id === comment.id);
+  const ndx = data?.findIndex((c) => c.id === comment.id);
 
   if (ndx === -1) {
     return data;
@@ -46,7 +42,7 @@ export function mergeComment(data: Comment[] | null, comment: PutComment) {
 
   data[ndx] = {
     ...data[ndx],
-    ...comment
+    ...comment,
   };
 
   return data;

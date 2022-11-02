@@ -1,6 +1,5 @@
-import { machine } from '@crux/machine';
-import { createAsyncQueue } from "@crux/async-queue";
-import { MutationConfig, State } from "../types";
+import { createAsyncQueue } from '@crux/async-queue';
+import { MutationConfig, State } from '../types';
 
 export function resource({
   fetchFn,
@@ -20,113 +19,12 @@ export function resource({
   setState: (state: Partial<State<unknown, unknown>>) => void;
 }) {
   const queue = createAsyncQueue();
-
+  let isFetching = false;
+  let isMutating = false;
   let retryCount = 0;
   let subscriberCount = 0;
   let selfDestructTimeout: ReturnType<typeof setTimeout> | undefined;
   let pollTimeout: ReturnType<typeof setTimeout> | undefined;
-
-  const config = {
-    idle: {
-      pollTimeoutStart: () => 'waitingForNextFetch',
-      fetch: () => 'fetching',
-      forceFetch: () => 'fetching',
-      mutate: () => 'mutating',
-    },
-    fetching: {
-      fetchFailure: () => {
-        if (retryCount === maxRetryCount) {
-          return 'idle';
-        }
-
-        retryCount += 1;
-
-        return 'fetching';
-      },
-      fetchSuccess: () => 'idle',
-      selfDestructStart: () => 'selfDestructing',
-    },
-    selfDestructing: {
-      cancelSelfDestruct: () => 'idle',
-      selfDestructTimeout: () => 'idle',
-    },
-    mutating: {
-      mutateFailure: () => {
-        if (retryCount === maxRetryCount) {
-          return 'idle';
-        }
-
-        retryCount += 1;
-
-        return 'mutating';
-      },
-      mutateSuccess: () => 'idle',
-    },
-    waitingForNextFetch: {
-      forceFetch: () => 'fetching',
-      mutate: () => 'mutating',
-      pollTimeout: () => 'fetching'
-    }
-  };
-
-  const resourceMachine = machine(config, { initialState: 'idle' });
-
-  resourceMachine.onIdle(() => {
-    if (pollingInterval !== null) {
-      queue.add(resourceMachine.pollTimeoutStart);
-    }
-
-    queue.flush();
-  });
-
-  async function doFetch() {
-    setState({
-      loading: true,
-      updating: getState().data !== null
-    });
-
-    try {
-      const result = await fetchFn(...fetchParams);
-
-      resourceMachine.fetchSuccess();
-      
-      setState({
-        data: result,
-        loading: false,
-        updating: false
-      });
-
-      return result;
-    } catch (e) {
-      resourceMachine.fetchFailure();
-
-      setState({
-        error: e,
-        loading: false,
-        updating: false
-      });
-    }
-  }
-
-  resourceMachine.onWaitingForNextFetch(() => {
-    pollTimeout = setTimeout(() => {
-      resourceMachine.pollTimeout();
-    }, pollingInterval);
-  });
-
-  resourceMachine.onExit(({ action, current }) => {
-    if (current === 'selfDestructing' && action !== 'selfDestructTimeout') {
-      clearTimeout(selfDestructTimeout);
-    }
-
-    if (current === 'waitingForNextFetch') {
-      clearTimeout(pollTimeout);
-    }
-
-    if (['fetching', 'mutating'].includes(current)) {
-      retryCount = 0;
-    }
-  })
 
   return {
     addSubscriber,
@@ -138,15 +36,53 @@ export function resource({
   function addSubscriber() {
     subscriberCount += 1;
 
-    resourceMachine.cancelSelfDestruct();
+    clearTimeout(selfDestructTimeout);
   }
 
-  async function doMutation(
-    config: MutationConfig,
-    ...params: any[]
-  ) {
+  async function doFetch() {
+    isFetching = true;
+    clearTimeout(pollTimeout);
+
+    setState({
+      loading: true,
+      updating: getState().data !== null,
+    });
+
+    try {
+      const result = await fetchFn(...fetchParams);
+
+      setState({
+        data: result,
+        loading: false,
+        updating: false,
+      });
+
+      isFetching = false;
+
+      if (pollingInterval !== null) {
+        startPollTimeout();
+      }
+
+      queue.flush();
+
+      return result;
+    } catch (e) {
+      setState({
+        error: e,
+        loading: false,
+        updating: false,
+      });
+
+      isFetching = false;
+      queue.flush();
+    }
+  }
+
+  async function doMutation(config: MutationConfig, ...params: any[]) {
+    isMutating = true;
+
     const { query, optimistic, options } = config;
-    const { refetchOnSuccess } = options;
+    const { refetchOnSuccess } = options ?? { refetchOnSuccess: true };
     const state = getState();
 
     if (optimistic) {
@@ -157,7 +93,7 @@ export function resource({
       setState({
         data,
         loading: true,
-        updating: state.data !== null
+        updating: state.data !== null,
       });
     }
 
@@ -167,15 +103,18 @@ export function resource({
       const data = isFunction(result) ? await result(getState().data) : result;
 
       setState({
-        data: config.options.refetchOnSuccess === false ? data : state.data,
+        data: refetchOnSuccess === false ? data : state.data,
         loading: false,
-        updating: false
+        updating: false,
       });
 
-      resourceMachine.mutateSuccess();
+      isMutating = false;
+      retryCount = 0;
 
       if (refetchOnSuccess) {
-        resourceMachine.fetch();
+        refetch();
+      } else {
+        queue.flush();
       }
 
       return data;
@@ -183,46 +122,61 @@ export function resource({
       setState({
         error: e,
         loading: false,
-        updating: false
+        updating: false,
       });
 
-      resourceMachine.mutateFailure();
+      isMutating = false;
+      retryCount += 1;
+
+      if (retryCount === maxRetryCount) {
+        throw e;
+      }
+
+      queue.flush();
     }
   }
 
-  function mutate<T extends any[]>(config: MutationConfig, ...params: T) {
-    const nextState = resourceMachine.mutate();
-
-    if (!nextState) {
+  async function mutate<T extends any[]>(config: MutationConfig, ...params: T) {
+    if (isFetching) {
       return queue.add(doMutation, config, ...params);
     } else {
       return doMutation(config, ...params);
     }
   }
 
-  function refetch(force = false) {
-    const nextState = force ? resourceMachine.forceFetch() : resourceMachine.fetch();
+  function startPollTimeout() {
+    pollTimeout = setTimeout(async () => {
+      refetch();
+    }, pollingInterval * 1000);
+  }
 
-    if (!nextState) {
-      return null;
+  async function refetch() {
+    if (isMutating) {
+      queue.add(doFetch);
     } else {
       return doFetch();
     }
   }
 
-  function removeSubscriber() {
+  async function removeSubscriber() {
     subscriberCount -= 1;
 
     if (subscriberCount === 0) {
-      resourceMachine.selfDestructStart();
-
-      selfDestructTimeout = setTimeout(() => {
-        resourceMachine.selfDestructTimeout();
+      selfDestructTimeout = setTimeout(async () => {
+        clearTimeout(pollTimeout);
+        setState({
+          data: null,
+          error: null,
+          loading: false,
+          updating: false,
+        });
       }, keepUnusedDataFor);
     }
   }
 }
 
-function isFunction<D>(obj: D | ((data: D | null) => D | null) | null): obj is ((data: D | null) => D | null) {
+function isFunction<D>(
+  obj: D | ((data: D | null) => D | null) | null
+): obj is (data: D | null) => D | null {
   return typeof (<(data: D) => D>obj) === 'function';
 }

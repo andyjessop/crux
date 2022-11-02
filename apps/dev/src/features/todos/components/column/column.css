@@ -1,0 +1,22 @@
+.in-progress {
+  grid-area: in-progress;
+}
+
+.completed {
+  grid-area: completed;
+}
+
+.to-do {
+  grid-area: to-do;
+}
+
+.column {
+  padding: 1rem;
+  height: 100%;
+  overflow-y: scroll;
+  user-select: none;
+}
+
+.column:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}

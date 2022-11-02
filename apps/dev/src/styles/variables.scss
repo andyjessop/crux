@@ -1,54 +1,54 @@
 :root {
-  /* Layout */
-  --top-height: 70px;
-
   /* Colors */
   --color-primary: #3f51b5;
-  --color-primary-light: #c5cae9;
+  --color-primary-light: #6e7dd1;
   --color-primary-dark: #303f9f;
 
   --color-success: #4caf50;
-  --color-success-light: #c8e6c9;
+  --color-success-light: #86c988;
   --color-success-dark: #388e3c;
 
-  --color-warning: #ff9800;
-  --color-warning-light: #ffe0b2;
-  --color-warning-dark: #f57c00;
+  --color-warning: #eaaa3d;
+  --color-warning-light: #f6d08d;
+  --color-warning-dark: #c19344;
 
   --color-danger: #f44336;
   --color-danger-light: #e57373;
   --color-danger-dark: #d32f2f;
 
   --color-info: #00bcd4;
-  --color-info-light: #b2ebf2;
+  --color-info-light: #82c5ce;
   --color-info-dark: #0097a7;
 
   --color-grey-100: #f5f5f5;
-  --color-grey-200: #eeeeee;
-  --color-grey-300: #e0e0e0;
-  --color-grey-400: #bdbdbd;
-  --color-grey-500: #9e9e9e;
-  --color-grey-600: #757575;
-  --color-grey-700: #616161;
-  --color-grey-800: #424242;
-  --color-grey-850: #292929;
-  --color-grey-900: #212121;
+  --color-grey-200: #d5ecf1;
+  --color-grey-300: #c6d6e0;
+  --color-grey-400: #a8b8bc;
+  --color-grey-500: #84949a;
+  --color-grey-600: #646e72;
+  --color-grey-700: #51595e;
+  --color-grey-800: #2f373d;
+  --color-grey-850: #1f2327;
+  --color-grey-900: #15191d;
 
   /* Padding */
   --padding: 1rem;
-  --padding-small: 0.5rem;
   --padding-large: 2rem;
+  --padding-small: 0.5rem;
+  --padding-tiny: 0.3125rem;
 
   /* Margin */
   --margin: 1rem;
-  --margin-small: 0.5rem;
   --margin-large: 1.5rem;
+  --margin-small: 0.5rem;
+  --margin-tiny: 0.375rem;
 
   /* Border Radius */
   --border-radius: 0.25rem;
 
   /* Transition */
-  --base-transition-time: 0.25s;
+  --transition-time: 0.25s;
+  --transition-time-fast: 0.15s;
   --base-transition-function: ease-in-out;
 }
 
@@ -58,14 +58,24 @@ body {
   --body-bg-highlight: var(--color-grey-100);
   --body-color: var(--color-grey-900);
 
+  /* Top */
+  --top-height: 70px;
+  --top-bg: var(--color-grey-200);
+
   /* Nav */
   --nav-item-color: var(--color-grey-500);
   --nav-item-color-highlight: var(--color-grey-900);
-  --nav-item-color-transition: color var(--base-transition-time) var(--base-transition-function);
-  --nav-item-font-weight: 500;
+  --nav-item-color-transition: color var(--transition-time-fast) var(--base-transition-function);
+  --nav-item-font-weight: 700;
+  --nav-item-font-size: 1rem;
   --nav-item-spacing: var(--margin-large);
+  --nav-item-icon-spacing: var(--margin-tiny);
+  --nav-item-icon-font-size: 1.3rem;
+  --nav-item-icon-color: var(--color-warning-dark);
+  --nav-item-icon-color-highlight: var(--color-warning);
 
   /* Alert */
+  --alert-background-color: var(--card-background-color);
   --alert-border-color: var(--color-grey-200);
   --alert-border: 1px solid var(--alert-border-color);
   --alert-border-radius: var(--border-radius);
@@ -86,11 +96,31 @@ body {
   /* Divider */
   --divider-color: var(--color-grey-200);
 
+  /* Card */
+  --card-background-color: var(--color-grey-300);
+  --card-boder-color: var(--color-grey-400);
+  --card-border-highlight-color: var(--color-grey-500);
+  --card-border-width: 1px;
+  --card-transition: border-color var(--transition-time-fast) var(--base-transition-function);
+  --card-title-font-size: 0.9rem;
+  --card-title-font-weight: 600;
+  --card-title-color: var(--color-grey-900);
+  --card-title-margin-bottom: var(--margin-tiny);
+  --card-subtitle-font-size: 0.875rem;
+  --card-subtitle-font-weight: 400;
+  --card-subtitle-color: var(--color-grey-700);
+
+  /* Todos */
+  --todos-drag-separator-color: var(--color-primary-light);
+
   &.dark {
     /* Body */
     --body-bg: var(--color-grey-850);
     --body-bg-highlight: var(--color-grey-900);
     --body-color: var(--color-grey-100);
+
+    /* Top */
+    --top-bg: var(--color-grey-850);
 
     /* Nav */
     --nav-item-color: var(--color-grey-500);
@@ -108,5 +138,14 @@ body {
 
     /* Divider */
     --divider-color: var(--color-grey-850);
+
+    /* Card */
+    --card-background-color: var(--color-grey-850);
+    --card-background-faded-color: var(--color-grey-850);
+    --card-border-highlight-color: var(--color-grey-500);
+    --card-border-faded-color: var(--color-grey-850);
+    --card-border-color: var(--color-grey-800);
+    --card-title-color: var(--color-grey-200);
+    --card-subtitle-color: var(--color-grey-900);
   }
 }

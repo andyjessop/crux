@@ -1,11 +1,11 @@
-import type { Selector, Service, Slice, View, ViewInstance } from "./types";
+import type { Selector, Service, Slice, View, ViewInstance } from './types';
 
 export function view<S, D, A>(
   factory: () => Promise<ViewInstance<D, A>> | ViewInstance<D, A>,
   options: {
-    actions?: Service<A> | Slice<any, A>,
-    data: Selector<S, D>,
-    root: string,
+    actions?: Service<A> | Slice<any, A>;
+    data: Selector<S, D>;
+    root: string;
   }
 ): View<D, A> {
   const { actions, data, root } = options;
@@ -38,10 +38,10 @@ export function view<S, D, A>(
     const ret = factory();
 
     if (ret instanceof Promise) {
-      ret.then(i => {
+      ret.then((i) => {
         instance = i;
-      })
-  
+      });
+
       return ret;
     }
 
@@ -71,7 +71,8 @@ export function view<S, D, A>(
       throw new Error('Could not get view instance');
     }
 
-    if (!updateData(state)) {
+    // Return if the data hasn't changed and we've already rendered to this root
+    if (!updateData(state) && root?.childElementCount) {
       return;
     }
 

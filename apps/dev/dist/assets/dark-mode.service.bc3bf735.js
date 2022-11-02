@@ -1,1 +1,0 @@
-import{D as o}from"./dark-mode.config.2f3f9c98.js";function r(s,e){return{set:d,toggle:a};function d(t){e.set(o,t),t?document.body.classList.add("dark"):document.body.classList.remove("dark"),s.setDarkMode(t)}function a(){const t=!s.getState().isDark;e.set(o,t),t?document.body.classList.add("dark"):document.body.classList.remove("dark"),s.setDarkMode(t)}}export{r as darkMode};
