@@ -1,1 +1,0 @@
-import{c as i}from"./slice.10e6ddb0.js";import{m as r}from"./any.07715dce.js";import"./index.a4500d8b.js";function o(t,e){return r(t,{draggingTaskId:e})}function n(t,e){return r(t,{hoveringState:e})}const a={hoveringState:void 0,draggingTaskId:void 0};function m(t){return i(t,a,{setDraggingTaskId:o,setHoveringState:n})}export{m as createTodosSlice};

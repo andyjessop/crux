@@ -1,1 +1,0 @@
-import{Variable as o}from"./env.service.06de621a.js";function s(e){return{getAll:()=>fetch(`${e.get(o.VITE_API_URL)}/tasks`).then(t=>t.json()),update:(t,n)=>fetch(`${e.get(o.VITE_API_URL)}/tasks/${t.id}`,{body:JSON.stringify({task:t,statusNdx:n}),headers:{"Content-Type":"application/json"},method:"PUT"}).then(i=>i.json())}}export{s as createTodosHttpApi};
