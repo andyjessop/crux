@@ -5,8 +5,15 @@ export type Subscription = ReturnType<typeof subscription>;
 export function subscription<
   T extends [] | (Selector | Service)[],
   Args extends SelectorOrServiceTypes<T>
->(factory: (...args: Args) => void, { deps }: { deps: T }) {
+>(
+  factory: (...args: Args) => void,
+  options?: {
+    deps: T;
+    shouldBeEnabled?: (state: any) => boolean;
+  }
+) {
   const cachedDeps = [] as any;
+  const { deps = [], shouldBeEnabled = () => true } = options ?? {};
 
   return {
     runSubscription,
@@ -14,6 +21,10 @@ export function subscription<
   };
 
   async function runSubscription(state: any) {
+    if (!shouldBeEnabled(state)) {
+      return;
+    }
+
     if (!(await updateDeps(state))) {
       return;
     }

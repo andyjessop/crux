@@ -1,6 +1,6 @@
 import type { Env } from '../../../shared/env/env.service';
 import { Variable } from '../../../shared/env/env.service';
-import type { PostTask, PutTask, Task } from '../domain/todos.types';
+import type { PostTask, PutTask, Task } from './todos.types';
 
 export interface Response<Data> {
   data: Data;

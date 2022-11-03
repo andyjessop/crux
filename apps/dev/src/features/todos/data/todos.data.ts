@@ -1,6 +1,6 @@
 import type { API } from '@crux/query';
 import type { PostTask, PutTask } from '../domain/todos.types';
-import type { TodosHttpApi } from './todos.http';
+import type { TodosHttpApi } from '../domain/todos.http';
 import { toData } from './transformations';
 
 export type TodosData = ReturnType<typeof todosData>;

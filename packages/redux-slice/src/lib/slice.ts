@@ -10,7 +10,7 @@ type DropFirst<T extends unknown[]> = T extends [any, ...infer U]
   : never;
 
 export function createSlice<
-  T extends Record<keyof T, (state: S, ...params: any[]) => any>,
+  T extends Record<keyof T, (state: S, ...params: any[]) => S>,
   N extends string = any,
   S = any
 >(name: N, initialState: S, config: T) {

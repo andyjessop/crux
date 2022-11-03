@@ -36,6 +36,8 @@ export function todosService(todos: TodosRepository, toaster: ToasterService) {
 
     const { ndx: hoveringIndex, status: hoveringStatus } = hoveringState;
 
+    todos.setHoveringState(null);
+
     if (hoveringIndex !== undefined && hoveringStatus !== undefined) {
       const newStatusTasks = tasks.filter((task) => task.status === hoveringStatus);
       const ndx = newStatusTasks.findIndex((task) => task.id === taskId);

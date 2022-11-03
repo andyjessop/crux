@@ -35,6 +35,8 @@ export function xapp(
     console.info('No root element provided. Running in headless mode.');
   }
 
+  let initialised = false;
+
   const middleware = (api: MiddlewareAPI) => (next: Dispatch) => async (action: Action) => {
     next(action);
 
@@ -73,6 +75,11 @@ export function xapp(
     }
 
     await Promise.all(slicesToRegister.map((slice) => slice.getInstance()));
+
+    if (!initialised) {
+      store.dispatch({ type: 'xapp/initialiseEnd' });
+      initialised = true;
+    }
 
     emitter?.emit('afterSlices', { action, state });
 
@@ -128,7 +135,7 @@ export function xapp(
 
   store.addMiddleware(middleware);
 
-  store.dispatch({ type: 'xapp/init' });
+  store.dispatch({ type: 'xapp/initialiseStart' });
 
   return {
     ...emitter,

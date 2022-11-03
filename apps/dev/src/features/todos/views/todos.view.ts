@@ -19,6 +19,12 @@ export function todosView(root: HTMLElement) {
     const { draggingTaskId, tasks } = data;
     const { createTask, onDrag, onDrop, onEnter, onExit } = actions;
 
+    const onButtonClick = (event: CustomEvent) => {
+      setTimeout(() => {
+        event.detail.success();
+      }, 1000);
+    };
+
     render(todos(tasks), root);
 
     function todos(columns: TodosData['tasks']) {

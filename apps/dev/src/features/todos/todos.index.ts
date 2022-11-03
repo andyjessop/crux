@@ -12,6 +12,12 @@ import { dataService } from '../../shared/data/data.index';
 import { envService } from '../../shared/env/env.index';
 import type { Task } from './domain/todos.types';
 import type { ExtractInstance } from 'packages/xapp/src/lib/types';
+import { routerSlice } from '../../shared/router/router.index';
+
+const selectTodosRoute = createSelector(
+  [routerSlice.selector],
+  (router) => router?.route?.name === 'todos'
+);
 
 /**
  * Slice
@@ -19,7 +25,10 @@ import type { ExtractInstance } from 'packages/xapp/src/lib/types';
  */
 export const todosSlice = slice(
   () => import('./slice/todos.slice').then((m) => m.createTodosSlice('todos')),
-  { name: 'todos' }
+  {
+    name: 'todos',
+    shouldBeEnabled: selectTodosRoute,
+  }
 );
 
 /**
@@ -27,7 +36,7 @@ export const todosSlice = slice(
  * =======
  */
 const todosHttpApi = service(
-  (env) => import('./data/todos.http').then((m) => m.createTodosHttpApi(env)),
+  (env) => import('./domain/todos.http').then((m) => m.createTodosHttpApi(env)),
   {
     deps: [envService],
   }
@@ -71,6 +80,7 @@ export const todosFetchInitiator = subscription(
   (data) => import('./data/todos.subscription').then((m) => m.initiateFetch(data)),
   {
     deps: [todosDataService],
+    shouldBeEnabled: selectTodosRoute,
   }
 );
 

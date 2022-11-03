@@ -1,6 +1,7 @@
 import { LitElement, html, css, unsafeCSS } from 'lit';
 import { property } from 'lit/decorators.js';
 import styles from './expanding-dropzone.css?inline';
+import overlayStyles from '../task-overlay/task-overlay.css?inline';
 import type { Status } from '../../domain/todos.types';
 
 export class ExpandingDropzone extends LitElement {
@@ -30,7 +31,10 @@ export class ExpandingDropzone extends LitElement {
       @mouseenter=${() => this._onEnter(this.status)}
       @mouseleave=${() => this._onExit(this.status)}
       class="dropzone"
-    ></div>`;
+    >
+      <div class="handle left"></div>
+      <div class="handle right"></div>
+    </div>`;
   }
 }
 

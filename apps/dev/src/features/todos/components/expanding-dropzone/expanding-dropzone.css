@@ -1,10 +1,42 @@
 .dropzone {
-  width: 100%;
+  width: calc(100% + 0.125rem);
   height: 100%;
   position: relative;
   top: -0.625rem;
+  left: -0.125rem;
 }
 
 .dropzone:hover {
   border-top: 2px solid var(--todos-drag-separator-color);
+}
+
+.handle {
+  opacity: 0;
+  border-radius: 4px;
+  width: 0.5rem;
+  height: 0.5rem;
+  background-color: var(--todos-drag-separator-color);
+}
+
+.handle i {
+  color: white;
+}
+
+.dropzone:hover .handle {
+  opacity: 1;
+  position: absolute;
+}
+
+.dropzone:hover .left {
+  left: 0;
+  transform: translateX(-0.4375rem);
+}
+
+.dropzone:hover .right {
+  right: 0;
+  transform: translateX(0.5rem);
+}
+
+.dropzone:hover .handle {
+  top: -0.3125rem;
 }

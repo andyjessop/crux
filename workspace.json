@@ -1,25 +1,15 @@
 {
   "version": 2,
   "projects": {
-    "app": "packages/app",
     "async-queue": "packages/async-queue",
     "create-store": "packages/create-store",
     "dev": "apps/dev",
-    "di": "packages/di",
     "event-emitter": "packages/event-emitter",
-    "machine": "packages/machine",
     "query": "packages/query",
-    "redux-machine": "packages/redux-machine",
     "redux-registry": "packages/redux-registry",
-    "redux-router": "packages/redux-router",
     "redux-slice": "packages/redux-slice",
     "redux-types": "packages/redux-types",
-    "redux-utils": "packages/redux-utils",
-    "router": "packages/router",
-    "set-utils": "packages/set-utils",
     "string-utils": "packages/string-utils",
-    "sync-queue": "packages/sync-queue",
-    "url-parser": "packages/url-parser",
     "utils": "packages/utils",
     "xapp": "packages/xapp"
   }

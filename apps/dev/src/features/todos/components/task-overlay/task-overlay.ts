@@ -2,6 +2,7 @@ import { LitElement, html, css, unsafeCSS } from 'lit';
 import { property } from 'lit/decorators.js';
 import styles from './task-overlay.css?inline';
 import type { Status } from '../../domain/todos.types';
+import { icon } from '../../../../design/icon/icon';
 
 export class TaskOverlay extends LitElement {
   static styles = [unsafeCSS(styles)];
@@ -37,8 +38,11 @@ export class TaskOverlay extends LitElement {
     return html`<div
       @mouseenter=${() => this._onEnter(ndx, this.status)}
       @mouseleave=${() => this._onExit(ndx, this.status)}
-      class=${`overlay-${this.placement}`}
-    ></div>`;
+      class=${this.placement}
+    >
+      <div class="handle left"></div>
+      <div class="handle right"></div>
+    </div>`;
   }
 }
 
