@@ -1,6 +1,6 @@
 {
   "name": "@crux/event-emitter",
-  "version": "0.0.45-alpha",
+  "version": "0.0.47-alpha",
   "type": "commonjs",
   "dependencies": {}
 }

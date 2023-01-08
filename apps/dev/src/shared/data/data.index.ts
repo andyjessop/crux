@@ -1,4 +1,4 @@
-import { service, slice } from '@crux/xapp';
+import { service, slice } from '@crux/crux';
 import { data } from './data.service';
 
 export const dataService = service(data);

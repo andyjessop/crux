@@ -1,4 +1,4 @@
-import { service, slice, view } from '@crux/xapp';
+import { service, slice, view } from '@crux/crux';
 
 export const toasterSlice = slice(
   () => import('./toaster.slice').then((m) => m.createToasterSlice('toaster')),

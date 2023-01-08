@@ -1,4 +1,4 @@
-import { service, slice } from '@crux/xapp';
+import { service, slice } from '@crux/crux';
 
 const config = {
   todos: '/todos',

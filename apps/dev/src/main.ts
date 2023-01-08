@@ -2,7 +2,7 @@ import './styles/variables.scss';
 import './styles/normalise.css';
 import './styles/main.scss';
 import 'animate.css';
-import { xapp } from '@crux/xapp';
+import { crux } from '@crux/crux';
 import { toasterSlice, toasterView } from './features/toaster/toaster.index';
 import { layoutSlice, layoutView } from './layout/layout.index';
 import { routerSlice } from './shared/router/router.index';
@@ -38,7 +38,7 @@ async function main() {
 
   const views = [layoutView, navView, toasterView, darkModeView, todosView];
 
-  const app = xapp({
+  const app = crux({
     root,
     slices,
     subscriptions,

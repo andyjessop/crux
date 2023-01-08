@@ -1,0 +1,51 @@
+{
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/dynamic-store/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/dynamic-store",
+        "main": "packages/dynamic-store/src/index.ts",
+        "tsConfig": "packages/dynamic-store/tsconfig.lib.json",
+        "assets": ["packages/dynamic-store/*.md"]
+      }
+    },
+    "prod": {
+      "executor": "@nrwl/web:rollup",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/dynamic-store",
+        "tsConfig": "packages/dynamic-store/tsconfig.lib.json",
+        "project": "packages/dynamic-store/package.json",
+        "entryFile": "packages/dynamic-store/src/index.ts",
+        "format": ["esm", "cjs"],
+        "rollupConfig": ["rollup.lib.prod.js", "packages/dynamic-store/rollup.lib.js"]
+      }
+    },
+    "publish": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "command": "./node_modules/.bin/ts-node tools/scripts/packages/publish-single.ts dynamic-store"
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["packages/dynamic-store/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/packages/dynamic-store"],
+      "options": {
+        "jestConfig": "packages/dynamic-store/jest.config.ts",
+        "passWithNoTests": true
+      }
+    }
+  },
+  "tags": []
+}

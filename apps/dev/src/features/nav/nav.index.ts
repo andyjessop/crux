@@ -1,4 +1,4 @@
-import { view } from '@crux/xapp';
+import { view } from '@crux/crux';
 import { createSelector } from 'reselect';
 import { routerService, routerSlice } from '../../shared/router/router.index';
 import { selectNavItems } from './nav.selectors';

@@ -16,7 +16,7 @@ export function resource({
   keepUnusedDataFor?: number;
   maxRetryCount?: number;
   pollingInterval?: number | null;
-  setState: (state: Partial<State<unknown, unknown>>) => void;
+  setState: (state: Partial<State<unknown, unknown>>, type?: string) => void;
 }) {
   const queue = createAsyncQueue();
   let isFetching = false;
@@ -43,19 +43,25 @@ export function resource({
     isFetching = true;
     clearTimeout(pollTimeout);
 
-    setState({
-      loading: true,
-      updating: getState().data !== null,
-    });
+    setState(
+      {
+        loading: true,
+        updating: getState().data !== null,
+      },
+      'fetch/pending'
+    );
 
     try {
       const result = await fetchFn(...fetchParams);
 
-      setState({
-        data: result,
-        loading: false,
-        updating: false,
-      });
+      setState(
+        {
+          data: result,
+          loading: false,
+          updating: false,
+        },
+        'fetch/fulfilled'
+      );
 
       isFetching = false;
 
@@ -67,11 +73,14 @@ export function resource({
 
       return result;
     } catch (e) {
-      setState({
-        error: e,
-        loading: false,
-        updating: false,
-      });
+      setState(
+        {
+          error: e,
+          loading: false,
+          updating: false,
+        },
+        'fetch/rejected'
+      );
 
       isFetching = false;
       queue.flush();
@@ -90,11 +99,14 @@ export function resource({
 
       const data = isFunction(response) ? response(getState().data) : response;
 
-      setState({
-        data,
-        loading: true,
-        updating: state.data !== null,
-      });
+      setState(
+        {
+          data,
+          loading: true,
+          updating: state.data !== null,
+        },
+        'mutate/optimistic'
+      );
     }
 
     try {
@@ -102,11 +114,14 @@ export function resource({
 
       const data = isFunction(result) ? await result(getState().data) : result;
 
-      setState({
-        data: refetchOnSuccess === false ? data : state.data,
-        loading: false,
-        updating: false,
-      });
+      setState(
+        {
+          data: refetchOnSuccess === false ? data : state.data,
+          loading: false,
+          updating: false,
+        },
+        'mutate/fulfilled'
+      );
 
       isMutating = false;
       retryCount = 0;
@@ -119,11 +134,14 @@ export function resource({
 
       return data;
     } catch (e) {
-      setState({
-        error: e,
-        loading: false,
-        updating: false,
-      });
+      setState(
+        {
+          error: e,
+          loading: false,
+          updating: false,
+        },
+        'mutate/rejected'
+      );
 
       isMutating = false;
       retryCount += 1;
@@ -164,12 +182,15 @@ export function resource({
     if (subscriberCount === 0) {
       selfDestructTimeout = setTimeout(async () => {
         clearTimeout(pollTimeout);
-        setState({
-          data: null,
-          error: null,
-          loading: false,
-          updating: false,
-        });
+        setState(
+          {
+            data: null,
+            error: null,
+            loading: false,
+            updating: false,
+          },
+          'self-destruct'
+        );
       }, keepUnusedDataFor);
     }
   }

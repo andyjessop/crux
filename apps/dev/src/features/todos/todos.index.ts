@@ -1,4 +1,4 @@
-import { service, slice, subscription, view } from '@crux/xapp';
+import { service, slice, subscription, view } from '@crux/crux';
 import { createSelector } from 'reselect';
 import {
   taskColumns,
@@ -11,7 +11,7 @@ import { toasterService } from '../toaster/toaster.index';
 import { dataService } from '../../shared/data/data.index';
 import { envService } from '../../shared/env/env.index';
 import type { Task } from './domain/todos.types';
-import type { ExtractInstance } from 'packages/xapp/src/lib/types';
+import type { ExtractInstance } from 'packages/crux/src/lib/types';
 import { routerSlice } from '../../shared/router/router.index';
 
 const selectTodosRoute = createSelector(

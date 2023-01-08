@@ -1,4 +1,4 @@
-import { createSlice } from '@crux/redux-slice';
+import { createSlice } from '@crux/slice';
 import { merge } from '@crux/utils';
 import type { LayoutState } from './types';
 

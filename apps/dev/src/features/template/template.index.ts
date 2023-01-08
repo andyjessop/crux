@@ -1,4 +1,4 @@
-import { service, slice, view } from '@crux/xapp';
+import { service, slice, view } from '@crux/crux';
 
 export const templateSlice = slice(
   () => import('./template.slice').then((m) => m.createTemplateSlice('template')),

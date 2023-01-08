@@ -1,4 +1,4 @@
-import { createSlice } from '@crux/redux-slice';
+import { createSlice } from '@crux/slice';
 
 export interface LayoutState {
   darkModeToggle: boolean;

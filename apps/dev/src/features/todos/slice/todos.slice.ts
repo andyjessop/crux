@@ -1,4 +1,4 @@
-import { createSlice } from '@crux/redux-slice';
+import { createSlice } from '@crux/slice';
 import { setDraggingTaskId, setHoveringState } from '../domain/todos.reducers';
 import type { TodosState } from '../domain/todos.types';
 

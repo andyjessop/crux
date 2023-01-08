@@ -1,0 +1,12 @@
+{
+  "name": "@crux/crux",
+  "version": "0.0.47-alpha",
+  "type": "commonjs",
+  "dependencies": {
+    "@crux/dynamic-store": "*",
+    "@crux/event-emitter": "*",
+    "@crux/redux-types": "*",
+    "@crux/slice": "*",
+    "@crux/string-utils": "*"
+  }
+}

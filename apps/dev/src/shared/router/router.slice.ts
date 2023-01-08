@@ -1,4 +1,4 @@
-import { createSlice } from '@crux/redux-slice';
+import { createSlice } from '@crux/slice';
 import { merge } from '@crux/utils';
 import { getRouteFromUrl } from './utils/get-route-from-url';
 import { getUrlFromRoute } from './utils/get-url-from-route';

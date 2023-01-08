@@ -2,15 +2,15 @@
   "version": 2,
   "projects": {
     "async-queue": "packages/async-queue",
-    "create-store": "packages/create-store",
+    "dynamic-store": "packages/dynamic-store",
     "dev": "apps/dev",
     "event-emitter": "packages/event-emitter",
     "query": "packages/query",
     "redux-registry": "packages/redux-registry",
-    "redux-slice": "packages/redux-slice",
+    "slice": "packages/slice",
     "redux-types": "packages/redux-types",
     "string-utils": "packages/string-utils",
     "utils": "packages/utils",
-    "xapp": "packages/xapp"
+    "crux": "packages/crux"
   }
 }

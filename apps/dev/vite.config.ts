@@ -12,8 +12,8 @@ export default defineConfig({
         replacement: path.resolve(__dirname, '../../packages/async-queue/src/index.ts'),
       },
       {
-        find: '@crux/create-store',
-        replacement: path.resolve(__dirname, '../../packages/create-store/src/index.ts'),
+        find: '@crux/dynamic-store',
+        replacement: path.resolve(__dirname, '../../packages/dynamic-store/src/index.ts'),
       },
       {
         find: '@crux/event-emitter',
@@ -28,8 +28,8 @@ export default defineConfig({
         replacement: path.resolve(__dirname, '../../packages/redux-registry/src/index.ts'),
       },
       {
-        find: '@crux/redux-slice',
-        replacement: path.resolve(__dirname, '../../packages/redux-slice/src/index.ts'),
+        find: '@crux/slice',
+        replacement: path.resolve(__dirname, '../../packages/slice/src/index.ts'),
       },
       {
         find: '@crux/redux-types',
@@ -44,8 +44,8 @@ export default defineConfig({
         replacement: path.resolve(__dirname, '../../packages/utils/src/index.ts'),
       },
       {
-        find: '@crux/xapp',
-        replacement: path.resolve(__dirname, '../../packages/xapp/src/index.ts'),
+        find: '@crux/crux',
+        replacement: path.resolve(__dirname, '../../packages/crux/src/index.ts'),
       },
     ],
   },

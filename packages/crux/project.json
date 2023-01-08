@@ -1,0 +1,51 @@
+{
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/crux/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/crux",
+        "main": "packages/crux/src/index.ts",
+        "tsConfig": "packages/crux/tsconfig.lib.json",
+        "assets": ["packages/crux/*.md"]
+      }
+    },
+    "prod": {
+      "executor": "@nrwl/web:rollup",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/crux",
+        "tsConfig": "packages/crux/tsconfig.lib.json",
+        "project": "packages/crux/package.json",
+        "entryFile": "packages/crux/src/index.ts",
+        "format": ["esm", "cjs"],
+        "rollupConfig": ["rollup.lib.prod.js", "packages/crux/rollup.lib.js"]
+      }
+    },
+    "publish": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "command": "./node_modules/.bin/ts-node tools/scripts/packages/publish-single.ts crux"
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["packages/crux/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/packages/crux"],
+      "options": {
+        "jestConfig": "packages/crux/jest.config.ts",
+        "passWithNoTests": true
+      }
+    }
+  },
+  "tags": []
+}

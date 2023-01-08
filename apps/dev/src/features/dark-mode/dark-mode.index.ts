@@ -1,4 +1,4 @@
-import { service, slice, view } from '@crux/xapp';
+import { service, slice, view } from '@crux/crux';
 import { cacheService } from '../../shared/cache/cache.index';
 
 export const darkModeSlice = slice(

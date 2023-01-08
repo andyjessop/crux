@@ -1,4 +1,4 @@
-import { service } from '@crux/xapp';
+import { service } from '@crux/crux';
 import { dataService } from '../data.index';
 import { usersHttpApi } from '../../http/users/users-http.index';
 

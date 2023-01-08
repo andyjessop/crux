@@ -21,7 +21,10 @@
                 "assets": [
                   "packages/redux-registry/*.md"
                 ]
-              }
+              },
+              "dependsOn": [
+                "^build"
+              ]
             },
             "prod": {
               "executor": "@nrwl/web:rollup",
@@ -83,7 +86,7 @@
             },
             {
               "file": "packages/redux-registry/package.json",
-              "hash": "1102170639ceac188c95d0dccc1b253b3ec02f48",
+              "hash": "7ed20328f1cb25d0713fd03b8fa11af12a8eb4a0",
               "deps": [
                 "npm:redux"
               ]
@@ -113,7 +116,7 @@
             },
             {
               "file": "packages/redux-registry/src/lib/redux-registry.ts",
-              "hash": "ce99cd01f48b29edee6157190b027768897d420b",
+              "hash": "77fc3d4eb4e835b66093ad615835b7193dc4dbde",
               "deps": [
                 "redux-types",
                 "npm:redux"
@@ -130,6 +133,138 @@
             {
               "file": "packages/redux-registry/tsconfig.spec.json",
               "hash": "f95b08f8f79e54f596db3da65676c4dc00ac9dea"
+            }
+          ]
+        }
+      },
+      "dynamic-store": {
+        "name": "dynamic-store",
+        "type": "lib",
+        "data": {
+          "root": "packages/dynamic-store",
+          "$schema": "../../node_modules/nx/schemas/project-schema.json",
+          "sourceRoot": "packages/dynamic-store/src",
+          "projectType": "library",
+          "targets": {
+            "build": {
+              "executor": "@nrwl/js:tsc",
+              "outputs": [
+                "{options.outputPath}"
+              ],
+              "options": {
+                "outputPath": "dist/packages/dynamic-store",
+                "main": "packages/dynamic-store/src/index.ts",
+                "tsConfig": "packages/dynamic-store/tsconfig.lib.json",
+                "assets": [
+                  "packages/dynamic-store/*.md"
+                ]
+              },
+              "dependsOn": [
+                "^build"
+              ]
+            },
+            "prod": {
+              "executor": "@nrwl/web:rollup",
+              "outputs": [
+                "{options.outputPath}"
+              ],
+              "options": {
+                "outputPath": "dist/packages/dynamic-store",
+                "tsConfig": "packages/dynamic-store/tsconfig.lib.json",
+                "project": "packages/dynamic-store/package.json",
+                "entryFile": "packages/dynamic-store/src/index.ts",
+                "format": [
+                  "esm",
+                  "cjs"
+                ],
+                "rollupConfig": [
+                  "rollup.lib.prod.js",
+                  "packages/dynamic-store/rollup.lib.js"
+                ]
+              }
+            },
+            "publish": {
+              "executor": "@nrwl/workspace:run-commands",
+              "options": {
+                "command": "./node_modules/.bin/ts-node tools/scripts/packages/publish-single.ts dynamic-store"
+              }
+            },
+            "lint": {
+              "executor": "@nrwl/linter:eslint",
+              "outputs": [
+                "{options.outputFile}"
+              ],
+              "options": {
+                "lintFilePatterns": [
+                  "packages/dynamic-store/**/*.ts"
+                ]
+              }
+            },
+            "test": {
+              "executor": "@nrwl/jest:jest",
+              "outputs": [
+                "coverage/packages/dynamic-store"
+              ],
+              "options": {
+                "jestConfig": "packages/dynamic-store/jest.config.ts",
+                "passWithNoTests": true
+              }
+            }
+          },
+          "tags": [],
+          "files": [
+            {
+              "file": "packages/dynamic-store/.babelrc",
+              "hash": "e24a5465f39c41b591d8bf49a58c93f0eb2b4916"
+            },
+            {
+              "file": "packages/dynamic-store/.eslintrc.json",
+              "hash": "9d9c0db55bb1e91c5f2e7b64a02bc6bf69fc7cb5"
+            },
+            {
+              "file": "packages/dynamic-store/jest.config.ts",
+              "hash": "a663c49349a7a5414512eca9b238096288bf5099"
+            },
+            {
+              "file": "packages/dynamic-store/package.json",
+              "hash": "04b98b603092f4fb95828ead35c8eb1a5064dc81"
+            },
+            {
+              "file": "packages/dynamic-store/project.json",
+              "hash": "f39e3bac0437a84581b5fad2bb0546a6e7e5ed3f"
+            },
+            {
+              "file": "packages/dynamic-store/README.md",
+              "hash": "e7112116e600d862a5a965583e82d44c7b811b0a"
+            },
+            {
+              "file": "packages/dynamic-store/src/index.ts",
+              "hash": "1972e4e0ecfa0b99d775c3cfc4756b1893502a98"
+            },
+            {
+              "file": "packages/dynamic-store/src/lib/dynamic-store.spec.ts",
+              "hash": "b983021d7c995a13501267b4bedb4f71b1f66911"
+            },
+            {
+              "file": "packages/dynamic-store/src/lib/dynamic-store.ts",
+              "hash": "dfb5aaf24a08e07b4ffe1d24fc3cf184ee19cc88",
+              "deps": [
+                "npm:redux",
+                "redux-registry",
+                "redux-types"
+              ]
+            },
+            {
+              "file": "packages/dynamic-store/tsconfig.json",
+              "hash": "f5b85657a88323b3f9173ca094e873053bfe211b"
+            },
+            {
+              "file": "packages/dynamic-store/tsconfig.lib.json",
+              "hash": "e85ef50f65c2dad130031e439787141b4c433b22"
+            },
+            {
+              "file": "packages/dynamic-store/tsconfig.spec.json",
+              "hash": "546f12877f7f05dd2e7b8782c7d6eae8189c34c0"
             }
           ]
         }
@@ -154,7 +289,10 @@
                 "assets": [
                   "packages/event-emitter/*.md"
                 ]
-              }
+              },
+              "dependsOn": [
+                "^build"
+              ]
             },
             "prod": {
               "executor": "@nrwl/web:rollup",
@@ -224,7 +362,7 @@
             },
             {
               "file": "packages/event-emitter/package.json",
-              "hash": "f71c559a8f1c73e1f0cb862a95adb2862b5a199e"
+              "hash": "76f444478600d7c4ecb4951ca5f6d8a6bdbb3055"
             },
             {
               "file": "packages/event-emitter/project.json",
@@ -251,7 +389,7 @@
             },
             {
               "file": "packages/event-emitter/src/lib/event-emitter.ts",
-              "hash": "b12cb33b8d6ada706a65ff71b458b7fec927014f"
+              "hash": "9bfbe5fea5e56d961f4c8da0f67d4eacaca1a5d3"
             },
             {
               "file": "packages/event-emitter/tsconfig.json",
@@ -263,496 +401,6 @@
             },
             {
               "file": "packages/event-emitter/tsconfig.spec.json",
-              "hash": "f95b08f8f79e54f596db3da65676c4dc00ac9dea"
-            }
-          ]
-        }
-      },
-      "redux-machine": {
-        "name": "redux-machine",
-        "type": "lib",
-        "data": {
-          "root": "packages/redux-machine",
-          "sourceRoot": "packages/redux-machine/src",
-          "projectType": "library",
-          "targets": {
-            "build": {
-              "executor": "@nrwl/js:tsc",
-              "outputs": [
-                "{options.outputPath}"
-              ],
-              "options": {
-                "outputPath": "dist/packages/redux-machine",
-                "main": "packages/redux-machine/src/index.ts",
-                "tsConfig": "packages/redux-machine/tsconfig.lib.json",
-                "assets": [
-                  "packages/redux-machine/*.md"
-                ]
-              }
-            },
-            "prod": {
-              "executor": "@nrwl/web:rollup",
-              "outputs": [
-                "{options.outputPath}"
-              ],
-              "options": {
-                "outputPath": "dist/packages/redux-machine",
-                "tsConfig": "packages/redux-machine/tsconfig.lib.json",
-                "project": "packages/redux-machine/package.json",
-                "entryFile": "packages/redux-machine/src/index.ts",
-                "format": [
-                  "esm",
-                  "cjs"
-                ],
-                "rollupConfig": [
-                  "rollup.lib.prod.js",
-                  "packages/redux-machine/rollup.lib.js"
-                ]
-              }
-            },
-            "publish": {
-              "executor": "@nrwl/workspace:run-commands",
-              "options": {
-                "command": "./node_modules/.bin/ts-node tools/scripts/packages/publish-single.ts redux-machine"
-              }
-            },
-            "lint": {
-              "executor": "@nrwl/linter:eslint",
-              "outputs": [
-                "{options.outputFile}"
-              ],
-              "options": {
-                "lintFilePatterns": [
-                  "packages/redux-machine/**/*.ts"
-                ]
-              }
-            },
-            "test": {
-              "executor": "@nrwl/jest:jest",
-              "outputs": [
-                "coverage/packages/redux-machine"
-              ],
-              "options": {
-                "jestConfig": "packages/redux-machine/jest.config.ts",
-                "passWithNoTests": true
-              }
-            }
-          },
-          "tags": [],
-          "files": [
-            {
-              "file": "packages/redux-machine/.babelrc",
-              "hash": "3949c55bc04b7751d86db82d6278c850cca144c7"
-            },
-            {
-              "file": "packages/redux-machine/.eslintrc.json",
-              "hash": "9d9c0db55bb1e91c5f2e7b64a02bc6bf69fc7cb5"
-            },
-            {
-              "file": "packages/redux-machine/jest.config.ts",
-              "hash": "c122e67ccfc467e0b476e86c329a71bceadcc011"
-            },
-            {
-              "file": "packages/redux-machine/LICENSE",
-              "hash": "4c6ceb2e1938bc590570c9d1995dab08756f2ac9"
-            },
-            {
-              "file": "packages/redux-machine/package.json",
-              "hash": "6a812cbf9f5bd26645325e44dc76b0c4ad29b015"
-            },
-            {
-              "file": "packages/redux-machine/project.json",
-              "hash": "c889d1b03e442805e11601ffba99622ad8a0cdbd"
-            },
-            {
-              "file": "packages/redux-machine/README.md",
-              "hash": "114d93367b7481423ae4e2ea10bad332799a1dab"
-            },
-            {
-              "file": "packages/redux-machine/rollup.lib.js",
-              "hash": "830beb80007dbc93c7717dd5575309fa22e70e80",
-              "deps": [
-                "npm:rollup-plugin-copy"
-              ]
-            },
-            {
-              "file": "packages/redux-machine/src/index.ts",
-              "hash": "1adf404e982d37165f59ba33fe3a585443fbd05d"
-            },
-            {
-              "file": "packages/redux-machine/src/lib/redux-machine.spec.ts",
-              "hash": "2670dfe5aad785f86738c74aad30768be821a27a",
-              "deps": [
-                "redux-utils",
-                "redux-types",
-                "npm:redux",
-                "npm:redux-thunk"
-              ]
-            },
-            {
-              "file": "packages/redux-machine/src/lib/redux-machine.ts",
-              "hash": "4512359bb9606c7f125e749b6375e896036b4796",
-              "deps": [
-                "redux-slice",
-                "redux-types"
-              ]
-            },
-            {
-              "file": "packages/redux-machine/tsconfig.json",
-              "hash": "14a5871aff60797c0969600becc2693b512b2cca"
-            },
-            {
-              "file": "packages/redux-machine/tsconfig.lib.json",
-              "hash": "a87bd6b7875df41b2c3e531387e4d5506b7015d2"
-            },
-            {
-              "file": "packages/redux-machine/tsconfig.spec.json",
-              "hash": "f95b08f8f79e54f596db3da65676c4dc00ac9dea"
-            }
-          ]
-        }
-      },
-      "create-store": {
-        "name": "create-store",
-        "type": "lib",
-        "data": {
-          "root": "packages/create-store",
-          "$schema": "../../node_modules/nx/schemas/project-schema.json",
-          "sourceRoot": "packages/create-store/src",
-          "projectType": "library",
-          "targets": {
-            "build": {
-              "executor": "@nrwl/js:tsc",
-              "outputs": [
-                "{options.outputPath}"
-              ],
-              "options": {
-                "outputPath": "dist/packages/create-store",
-                "main": "packages/create-store/src/index.ts",
-                "tsConfig": "packages/create-store/tsconfig.lib.json",
-                "assets": [
-                  "packages/create-store/*.md"
-                ]
-              }
-            },
-            "lint": {
-              "executor": "@nrwl/linter:eslint",
-              "outputs": [
-                "{options.outputFile}"
-              ],
-              "options": {
-                "lintFilePatterns": [
-                  "packages/create-store/**/*.ts"
-                ]
-              }
-            },
-            "test": {
-              "executor": "@nrwl/jest:jest",
-              "outputs": [
-                "coverage/packages/create-store"
-              ],
-              "options": {
-                "jestConfig": "packages/create-store/jest.config.ts",
-                "passWithNoTests": true
-              }
-            }
-          },
-          "tags": [],
-          "files": [
-            {
-              "file": "packages/create-store/.babelrc",
-              "hash": "e24a5465f39c41b591d8bf49a58c93f0eb2b4916"
-            },
-            {
-              "file": "packages/create-store/.eslintrc.json",
-              "hash": "9d9c0db55bb1e91c5f2e7b64a02bc6bf69fc7cb5"
-            },
-            {
-              "file": "packages/create-store/jest.config.ts",
-              "hash": "9f1aedcf1696fe8f3dfbc5355808d7b3a9b288e6"
-            },
-            {
-              "file": "packages/create-store/package.json",
-              "hash": "d5af727fc8c97a2000935643c841d41f3b6e0c9d"
-            },
-            {
-              "file": "packages/create-store/project.json",
-              "hash": "a44906ce91a78a964f1cfaa3eebc5cd945b5af66"
-            },
-            {
-              "file": "packages/create-store/README.md",
-              "hash": "9c4f1efacb1b1501855aa9db9cc3a6bfbdf176cc"
-            },
-            {
-              "file": "packages/create-store/src/index.ts",
-              "hash": "abcccc86e2b88cc2cdc92702dfe07ccb34a0d846"
-            },
-            {
-              "file": "packages/create-store/src/lib/create-store.spec.ts",
-              "hash": "fd0985d0fdfc0d2c859073c688346cc77346f399"
-            },
-            {
-              "file": "packages/create-store/src/lib/create-store.ts",
-              "hash": "f9be76ae1c3644323459f8cbe9ea5f074e99ef80",
-              "deps": [
-                "npm:redux",
-                "redux-registry",
-                "redux-types"
-              ]
-            },
-            {
-              "file": "packages/create-store/tsconfig.json",
-              "hash": "f5b85657a88323b3f9173ca094e873053bfe211b"
-            },
-            {
-              "file": "packages/create-store/tsconfig.lib.json",
-              "hash": "e85ef50f65c2dad130031e439787141b4c433b22"
-            },
-            {
-              "file": "packages/create-store/tsconfig.spec.json",
-              "hash": "546f12877f7f05dd2e7b8782c7d6eae8189c34c0"
-            }
-          ]
-        }
-      },
-      "redux-router": {
-        "name": "redux-router",
-        "type": "lib",
-        "data": {
-          "root": "packages/redux-router",
-          "sourceRoot": "packages/redux-router/src",
-          "projectType": "library",
-          "targets": {
-            "build": {
-              "executor": "@nrwl/js:tsc",
-              "outputs": [
-                "{options.outputPath}"
-              ],
-              "options": {
-                "outputPath": "dist/packages/redux-router",
-                "main": "packages/redux-router/src/index.ts",
-                "tsConfig": "packages/redux-router/tsconfig.lib.json",
-                "assets": [
-                  "packages/redux-router/*.md"
-                ]
-              }
-            },
-            "prod": {
-              "executor": "@nrwl/web:rollup",
-              "outputs": [
-                "{options.outputPath}"
-              ],
-              "options": {
-                "outputPath": "dist/packages/redux-router",
-                "tsConfig": "packages/redux-router/tsconfig.lib.json",
-                "project": "packages/redux-router/package.json",
-                "entryFile": "packages/redux-router/src/index.ts",
-                "format": [
-                  "esm",
-                  "cjs"
-                ],
-                "rollupConfig": [
-                  "rollup.lib.prod.js",
-                  "packages/redux-router/rollup.lib.js"
-                ]
-              }
-            },
-            "publish": {
-              "executor": "@nrwl/workspace:run-commands",
-              "options": {
-                "command": "./node_modules/.bin/ts-node tools/scripts/packages/publish-single.ts redux-router"
-              }
-            },
-            "lint": {
-              "executor": "@nrwl/linter:eslint",
-              "outputs": [
-                "{options.outputFile}"
-              ],
-              "options": {
-                "lintFilePatterns": [
-                  "packages/redux-router/**/*.ts"
-                ]
-              }
-            },
-            "test": {
-              "executor": "@nrwl/jest:jest",
-              "outputs": [
-                "coverage/packages/redux-router"
-              ],
-              "options": {
-                "jestConfig": "packages/redux-router/jest.config.ts",
-                "passWithNoTests": true
-              }
-            }
-          },
-          "tags": [],
-          "files": [
-            {
-              "file": "packages/redux-router/.babelrc",
-              "hash": "3949c55bc04b7751d86db82d6278c850cca144c7"
-            },
-            {
-              "file": "packages/redux-router/.eslintrc.json",
-              "hash": "9d9c0db55bb1e91c5f2e7b64a02bc6bf69fc7cb5"
-            },
-            {
-              "file": "packages/redux-router/jest.config.ts",
-              "hash": "fe7b613d608a5dfa064f688d3ac82a698cbc09e4"
-            },
-            {
-              "file": "packages/redux-router/LICENSE",
-              "hash": "4c6ceb2e1938bc590570c9d1995dab08756f2ac9"
-            },
-            {
-              "file": "packages/redux-router/node_modules/.package-lock.json",
-              "hash": "e8bb8a7b486b90ba9f62482b2690c994e26cd3a1"
-            },
-            {
-              "file": "packages/redux-router/node_modules/react/build-info.json",
-              "hash": "db5dbe5e2edc458845a665334d9ac1c082255b83"
-            },
-            {
-              "file": "packages/redux-router/node_modules/react/cjs/react-jsx-dev-runtime.development.js",
-              "hash": "9885b5f46f898b4f20dfed34e45eb1aac9d3bb84",
-              "deps": [
-                "npm:react"
-              ]
-            },
-            {
-              "file": "packages/redux-router/node_modules/react/cjs/react-jsx-dev-runtime.production.min.js",
-              "hash": "02c1a5b3a9aba5378f62d053ce2b5940c3c8d2d5",
-              "deps": [
-                "npm:react"
-              ]
-            },
-            {
-              "file": "packages/redux-router/node_modules/react/cjs/react-jsx-dev-runtime.profiling.min.js",
-              "hash": "9c8898a30a18c59f20d10be8bc89813523bc7a9b",
-              "deps": [
-                "npm:react"
-              ]
-            },
-            {
-              "file": "packages/redux-router/node_modules/react/cjs/react-jsx-runtime.development.js",
-              "hash": "38c92242c902c5f17c7e7f5dc249cb118bc5b94d",
-              "deps": [
-                "npm:react"
-              ]
-            },
-            {
-              "file": "packages/redux-router/node_modules/react/cjs/react-jsx-runtime.production.min.js",
-              "hash": "240488cf2c368c8abb9f7355c23f7fc0d0112cde",
-              "deps": [
-                "npm:react"
-              ]
-            },
-            {
-              "file": "packages/redux-router/node_modules/react/cjs/react-jsx-runtime.profiling.min.js",
-              "hash": "e6516f7b4c7a3558564555fb4c2848f1cefe4521",
-              "deps": [
-                "npm:react"
-              ]
-            },
-            {
-              "file": "packages/redux-router/node_modules/react/cjs/react.development.js",
-              "hash": "7f48126ebf8fcc69df7f69ea0f0173565cce50de"
-            },
-            {
-              "file": "packages/redux-router/node_modules/react/cjs/react.production.min.js",
-              "hash": "9128695679a8dae3556e3d74ffae5d2118b7b3d3"
-            },
-            {
-              "file": "packages/redux-router/node_modules/react/index.js",
-              "hash": "999ead77897d1726c100686831187fff3041fc2e"
-            },
-            {
-              "file": "packages/redux-router/node_modules/react/jsx-dev-runtime.js",
-              "hash": "324eb11e5992df2a5402481db28a2359c72017a4"
-            },
-            {
-              "file": "packages/redux-router/node_modules/react/jsx-runtime.js",
-              "hash": "0416df54291a872971e1f51c5dff0f2d83d2a85e"
-            },
-            {
-              "file": "packages/redux-router/node_modules/react/LICENSE",
-              "hash": "b96dcb0480a0b0be0727976e5202a1e7b23edc3f"
-            },
-            {
-              "file": "packages/redux-router/node_modules/react/package.json",
-              "hash": "936478a095255c0d16426733f95482e7a6c8f34e"
-            },
-            {
-              "file": "packages/redux-router/node_modules/react/README.md",
-              "hash": "0033e23bd8873ca5e9ea736b6aa659608e5681ae"
-            },
-            {
-              "file": "packages/redux-router/node_modules/react/umd/react.development.js",
-              "hash": "1124191bb61da5452d41f43c8244f4ee8c073d1e"
-            },
-            {
-              "file": "packages/redux-router/node_modules/react/umd/react.production.min.js",
-              "hash": "95f2ce7afbc41266b477401a9ddc9e974a742d35"
-            },
-            {
-              "file": "packages/redux-router/node_modules/react/umd/react.profiling.min.js",
-              "hash": "df2aad2cf79c13a89df734c274fbc3c7f5424e89"
-            },
-            {
-              "file": "packages/redux-router/package-lock.json",
-              "hash": "9a9cdeb5e04870f17cbbdc4ae7aeb7f8e7e01ae0"
-            },
-            {
-              "file": "packages/redux-router/package.json",
-              "hash": "e5161968fb1944910f156230af2a0ef093821a67",
-              "deps": [
-                "npm:react",
-                "npm:redux"
-              ]
-            },
-            {
-              "file": "packages/redux-router/project.json",
-              "hash": "99f5e22012eae7ec0b5f030758b9459b220465ac"
-            },
-            {
-              "file": "packages/redux-router/README.md",
-              "hash": "bda069033597513e1cf7a0f1918a1dc5a1cf2c8a"
-            },
-            {
-              "file": "packages/redux-router/rollup.lib.js",
-              "hash": "b75957558d0260467fd2ab58996a70490563c594",
-              "deps": [
-                "npm:rollup-plugin-copy"
-              ]
-            },
-            {
-              "file": "packages/redux-router/src/index.ts",
-              "hash": "5cfc7e53d5145aea30ec6bfb891c12c307c8d58e",
-              "deps": [
-                "router"
-              ]
-            },
-            {
-              "file": "packages/redux-router/src/lib/redux-router.spec.ts",
-              "hash": "8d5aeb508de840a7489954438956ac7dfc0ccbe2"
-            },
-            {
-              "file": "packages/redux-router/src/lib/redux-router.ts",
-              "hash": "fec06958d7934960e68dedd3815f30e539b0c258",
-              "deps": [
-                "redux-types",
-                "router"
-              ]
-            },
-            {
-              "file": "packages/redux-router/tsconfig.json",
-              "hash": "e61073f102ab80d394cc273dc352c993a0fe593c"
-            },
-            {
-              "file": "packages/redux-router/tsconfig.lib.json",
-              "hash": "d6d7468355f428e3e5e4a0f40d1caa6c6f05ec86"
-            },
-            {
-              "file": "packages/redux-router/tsconfig.spec.json",
               "hash": "f95b08f8f79e54f596db3da65676c4dc00ac9dea"
             }
           ]
@@ -778,7 +426,10 @@
                 "assets": [
                   "packages/string-utils/*.md"
                 ]
-              }
+              },
+              "dependsOn": [
+                "^build"
+              ]
             },
             "prod": {
               "executor": "@nrwl/web:rollup",
@@ -844,7 +495,7 @@
             },
             {
               "file": "packages/string-utils/package.json",
-              "hash": "c8e909ca91e997ebd6c0cf9254ad4cb617c64d80"
+              "hash": "22c87c0720be2ccbf70deb5b7f1bc6a2fa67aad1"
             },
             {
               "file": "packages/string-utils/project.json",
@@ -871,7 +522,7 @@
             },
             {
               "file": "packages/string-utils/src/lib/string-utils.ts",
-              "hash": "7f7c8c0d95ea919127964fd65e0ecba5616f57d0"
+              "hash": "58aa5b74af91dfd6ee5d3902e23ec211fe5637bf"
             },
             {
               "file": "packages/string-utils/tsconfig.json",
@@ -908,7 +559,10 @@
                 "assets": [
                   "packages/async-queue/*.md"
                 ]
-              }
+              },
+              "dependsOn": [
+                "^build"
+              ]
             },
             "prod": {
               "executor": "@nrwl/web:rollup",
@@ -978,7 +632,7 @@
             },
             {
               "file": "packages/async-queue/package.json",
-              "hash": "ff47ba9ab3a4e25a00f78932312102a6241d1fdf"
+              "hash": "6f6b37afaac3ade09c962d0480af1a9340b9cbf8"
             },
             {
               "file": "packages/async-queue/project.json",
@@ -1001,7 +655,7 @@
             },
             {
               "file": "packages/async-queue/src/lib/async-queue.spec.ts",
-              "hash": "00a60957f579d114fc42ccf736f43fd332d0f33c"
+              "hash": "a552ce18b9225be5d6612092a82abd20eabe0efd"
             },
             {
               "file": "packages/async-queue/src/lib/async-queue.ts",
@@ -1017,144 +671,6 @@
             },
             {
               "file": "packages/async-queue/tsconfig.spec.json",
-              "hash": "f95b08f8f79e54f596db3da65676c4dc00ac9dea"
-            }
-          ]
-        }
-      },
-      "redux-slice": {
-        "name": "redux-slice",
-        "type": "lib",
-        "data": {
-          "root": "packages/redux-slice",
-          "sourceRoot": "packages/redux-slice/src",
-          "projectType": "library",
-          "targets": {
-            "build": {
-              "executor": "@nrwl/js:tsc",
-              "outputs": [
-                "{options.outputPath}"
-              ],
-              "options": {
-                "outputPath": "dist/packages/redux-slice",
-                "main": "packages/redux-slice/src/index.ts",
-                "tsConfig": "packages/redux-slice/tsconfig.lib.json",
-                "assets": [
-                  "packages/redux-slice/*.md"
-                ]
-              }
-            },
-            "prod": {
-              "executor": "@nrwl/web:rollup",
-              "outputs": [
-                "{options.outputPath}"
-              ],
-              "options": {
-                "outputPath": "dist/packages/redux-slice",
-                "tsConfig": "packages/redux-slice/tsconfig.lib.json",
-                "project": "packages/redux-slice/package.json",
-                "entryFile": "packages/redux-slice/src/index.ts",
-                "format": [
-                  "esm",
-                  "cjs"
-                ],
-                "rollupConfig": [
-                  "rollup.lib.prod.js",
-                  "packages/redux-slice/rollup.lib.js"
-                ]
-              }
-            },
-            "publish": {
-              "executor": "@nrwl/workspace:run-commands",
-              "options": {
-                "command": "./node_modules/.bin/ts-node tools/scripts/packages/publish-single.ts redux-slice"
-              }
-            },
-            "lint": {
-              "executor": "@nrwl/linter:eslint",
-              "outputs": [
-                "{options.outputFile}"
-              ],
-              "options": {
-                "lintFilePatterns": [
-                  "packages/redux-slice/**/*.ts"
-                ]
-              }
-            },
-            "test": {
-              "executor": "@nrwl/jest:jest",
-              "outputs": [
-                "coverage/packages/redux-slice"
-              ],
-              "options": {
-                "jestConfig": "packages/redux-slice/jest.config.ts",
-                "passWithNoTests": true
-              }
-            }
-          },
-          "tags": [],
-          "files": [
-            {
-              "file": "packages/redux-slice/.babelrc",
-              "hash": "61641ec8ac3659e204441c80bb06defe323e3110"
-            },
-            {
-              "file": "packages/redux-slice/.eslintrc.json",
-              "hash": "9d9c0db55bb1e91c5f2e7b64a02bc6bf69fc7cb5"
-            },
-            {
-              "file": "packages/redux-slice/jest.config.ts",
-              "hash": "c9e5709ce7520cf7bb71b1e0ba770dca31cff8ae"
-            },
-            {
-              "file": "packages/redux-slice/package.json",
-              "hash": "c5d5363a18f5dcf0d5d5831167b72845cf5851f2"
-            },
-            {
-              "file": "packages/redux-slice/project.json",
-              "hash": "c719b714d8de3f9cacff6a19363183d992f4c460"
-            },
-            {
-              "file": "packages/redux-slice/README.md",
-              "hash": "37723ae54bdeb3ed4064bbb5eac2ce2dd1db715c"
-            },
-            {
-              "file": "packages/redux-slice/rollup.lib.js",
-              "hash": "c2c5832a8669d2b1d75ae0b3a3ddcf85ec520068",
-              "deps": [
-                "npm:rollup-plugin-copy"
-              ]
-            },
-            {
-              "file": "packages/redux-slice/src/index.ts",
-              "hash": "d5cdbb36f7460a54a053839bc7f2a22150213313"
-            },
-            {
-              "file": "packages/redux-slice/src/lib/slice.spec.ts",
-              "hash": "3696350b95812ff6ef143533990550ead49726df"
-            },
-            {
-              "file": "packages/redux-slice/src/lib/slice.ts",
-              "hash": "12d205319f27f713a8b116e336c926580a471a33",
-              "deps": [
-                "event-emitter",
-                "redux-types"
-              ]
-            },
-            {
-              "file": "packages/redux-slice/src/lib/types.ts",
-              "hash": "9efb32b9282f1d78785d359b518af0ad44084bd0"
-            },
-            {
-              "file": "packages/redux-slice/tsconfig.json",
-              "hash": "99f3ced6f3d644c500ac77626c40bd325aea6f95"
-            },
-            {
-              "file": "packages/redux-slice/tsconfig.lib.json",
-              "hash": "a87bd6b7875df41b2c3e531387e4d5506b7015d2"
-            },
-            {
-              "file": "packages/redux-slice/tsconfig.spec.json",
               "hash": "f95b08f8f79e54f596db3da65676c4dc00ac9dea"
             }
           ]
@@ -1180,7 +696,10 @@
                 "assets": [
                   "packages/redux-types/*.md"
                 ]
-              }
+              },
+              "dependsOn": [
+                "^build"
+              ]
             },
             "prod": {
               "executor": "@nrwl/web:rollup",
@@ -1246,7 +765,7 @@
             },
             {
               "file": "packages/redux-types/package.json",
-              "hash": "68c3faa3239e0af71e938f4b1bbedd7cfeb91587"
+              "hash": "57a09339722d238b38ff6fe66aefaeaab6539479"
             },
             {
               "file": "packages/redux-types/project.json",
@@ -1265,15 +784,15 @@
             },
             {
               "file": "packages/redux-types/src/index.ts",
-              "hash": "c584bc56c147aa974e7878e814dfbfde3789f22b"
+              "hash": "e51eb8aa619db07fb8ac8b0c0a4e2d5863c0d167"
             },
             {
               "file": "packages/redux-types/src/lib/helpers.ts",
-              "hash": "a138d536eb5f647f39426522caafeec5fe151f59"
+              "hash": "0239258d702a40079e159b5e5a2e759fd982f0d8"
             },
             {
               "file": "packages/redux-types/src/lib/types.ts",
-              "hash": "f5f03d0a5d4a4440e791c4aea28da00e74d8c24d"
+              "hash": "8336f6bfe97969512dd55f40944d048ab4e653fc"
             },
             {
               "file": "packages/redux-types/tsconfig.json",
@@ -1285,911 +804,6 @@
             },
             {
               "file": "packages/redux-types/tsconfig.spec.json",
-              "hash": "f95b08f8f79e54f596db3da65676c4dc00ac9dea"
-            }
-          ]
-        }
-      },
-      "redux-utils": {
-        "name": "redux-utils",
-        "type": "lib",
-        "data": {
-          "root": "packages/redux-utils",
-          "sourceRoot": "packages/redux-utils/src",
-          "projectType": "library",
-          "targets": {
-            "build": {
-              "executor": "@nrwl/js:tsc",
-              "outputs": [
-                "{options.outputPath}"
-              ],
-              "options": {
-                "outputPath": "dist/packages/redux-utils",
-                "main": "packages/redux-utils/src/index.ts",
-                "tsConfig": "packages/redux-utils/tsconfig.lib.json",
-                "assets": [
-                  "packages/redux-utils/*.md"
-                ]
-              }
-            },
-            "prod": {
-              "executor": "@nrwl/web:rollup",
-              "outputs": [
-                "{options.outputPath}"
-              ],
-              "options": {
-                "outputPath": "dist/packages/redux-utils",
-                "tsConfig": "packages/redux-utils/tsconfig.lib.json",
-                "project": "packages/redux-utils/package.json",
-                "entryFile": "packages/redux-utils/src/index.ts",
-                "format": [
-                  "esm",
-                  "cjs"
-                ],
-                "rollupConfig": [
-                  "rollup.lib.prod.js",
-                  "packages/redux-utils/rollup.lib.js"
-                ]
-              }
-            },
-            "publish": {
-              "executor": "@nrwl/workspace:run-commands",
-              "options": {
-                "command": "./node_modules/.bin/ts-node tools/scripts/packages/publish-single.ts redux-utils"
-              }
-            },
-            "lint": {
-              "executor": "@nrwl/linter:eslint",
-              "outputs": [
-                "{options.outputFile}"
-              ],
-              "options": {
-                "lintFilePatterns": [
-                  "packages/redux-utils/**/*.ts"
-                ]
-              }
-            },
-            "test": {
-              "executor": "@nrwl/jest:jest",
-              "outputs": [
-                "coverage/packages/redux-utils"
-              ],
-              "options": {
-                "jestConfig": "packages/redux-utils/jest.config.ts",
-                "passWithNoTests": true
-              }
-            }
-          },
-          "tags": [],
-          "files": [
-            {
-              "file": "packages/redux-utils/.babelrc",
-              "hash": "61641ec8ac3659e204441c80bb06defe323e3110"
-            },
-            {
-              "file": "packages/redux-utils/.eslintrc.json",
-              "hash": "9d9c0db55bb1e91c5f2e7b64a02bc6bf69fc7cb5"
-            },
-            {
-              "file": "packages/redux-utils/jest.config.ts",
-              "hash": "fbc8795e2f39555eb66f591de1cea62b7d2aae3a"
-            },
-            {
-              "file": "packages/redux-utils/package.json",
-              "hash": "856c95130a5b0ce38e8b10c17d967712dbc4b6a2"
-            },
-            {
-              "file": "packages/redux-utils/project.json",
-              "hash": "66a798ba657dcb558ca745da8720aeebe82ac347"
-            },
-            {
-              "file": "packages/redux-utils/README.md",
-              "hash": "8e9f55fea80a9b4bf5793d59486407d756b9a3a0"
-            },
-            {
-              "file": "packages/redux-utils/rollup.lib.js",
-              "hash": "44b974fb34afb7af21855f53651764407c8d5c7f",
-              "deps": [
-                "npm:rollup-plugin-copy"
-              ]
-            },
-            {
-              "file": "packages/redux-utils/src/index.ts",
-              "hash": "824790bdef823e23833cd295fc47df293e27f015"
-            },
-            {
-              "file": "packages/redux-utils/src/lib/combine-reducers.ts",
-              "hash": "cfcf0f3d187f8172b5faaf344c08f65ca304c57b",
-              "deps": [
-                "npm:redux"
-              ]
-            },
-            {
-              "file": "packages/redux-utils/src/lib/merge-reducers.ts",
-              "hash": "3be3b4bc7bf983a7961078d28e82086992df85ff",
-              "deps": [
-                "npm:redux"
-              ]
-            },
-            {
-              "file": "packages/redux-utils/tsconfig.json",
-              "hash": "27847903877abbdf65d7e168465084d52054d1e0"
-            },
-            {
-              "file": "packages/redux-utils/tsconfig.lib.json",
-              "hash": "cf2d064cfeff929fd8fb4d45027f6285205c2ace"
-            },
-            {
-              "file": "packages/redux-utils/tsconfig.spec.json",
-              "hash": "f95b08f8f79e54f596db3da65676c4dc00ac9dea"
-            }
-          ]
-        }
-      },
-      "sync-queue": {
-        "name": "sync-queue",
-        "type": "lib",
-        "data": {
-          "root": "packages/sync-queue",
-          "sourceRoot": "packages/sync-queue/src",
-          "projectType": "library",
-          "targets": {
-            "build": {
-              "executor": "@nrwl/js:tsc",
-              "outputs": [
-                "{options.outputPath}"
-              ],
-              "options": {
-                "outputPath": "dist/packages/sync-queue",
-                "main": "packages/sync-queue/src/index.ts",
-                "tsConfig": "packages/sync-queue/tsconfig.lib.json",
-                "assets": [
-                  "packages/sync-queue/*.md"
-                ]
-              }
-            },
-            "prod": {
-              "executor": "@nrwl/web:rollup",
-              "outputs": [
-                "{options.outputPath}"
-              ],
-              "options": {
-                "outputPath": "dist/packages/sync-queue",
-                "tsConfig": "packages/sync-queue/tsconfig.lib.json",
-                "project": "packages/sync-queue/package.json",
-                "entryFile": "packages/sync-queue/src/index.ts",
-                "format": [
-                  "esm",
-                  "cjs"
-                ],
-                "rollupConfig": [
-                  "rollup.lib.prod.js",
-                  "packages/sync-queue/rollup.lib.js"
-                ]
-              }
-            },
-            "publish": {
-              "executor": "@nrwl/workspace:run-commands",
-              "options": {
-                "command": "./node_modules/.bin/ts-node tools/scripts/packages/publish-single.ts sync-queue"
-              }
-            },
-            "lint": {
-              "executor": "@nrwl/linter:eslint",
-              "outputs": [
-                "{options.outputFile}"
-              ],
-              "options": {
-                "lintFilePatterns": [
-                  "packages/sync-queue/**/*.ts"
-                ]
-              }
-            },
-            "test": {
-              "executor": "@nrwl/jest:jest",
-              "outputs": [
-                "coverage/packages/sync-queue"
-              ],
-              "options": {
-                "jestConfig": "packages/sync-queue/jest.config.ts",
-                "passWithNoTests": true
-              }
-            }
-          },
-          "tags": [],
-          "files": [
-            {
-              "file": "packages/sync-queue/.babelrc",
-              "hash": "3949c55bc04b7751d86db82d6278c850cca144c7"
-            },
-            {
-              "file": "packages/sync-queue/.eslintrc.json",
-              "hash": "9d9c0db55bb1e91c5f2e7b64a02bc6bf69fc7cb5"
-            },
-            {
-              "file": "packages/sync-queue/jest.config.ts",
-              "hash": "548ba6e511736aae9bd981d75ca2feb383604499"
-            },
-            {
-              "file": "packages/sync-queue/LICENSE",
-              "hash": "4c6ceb2e1938bc590570c9d1995dab08756f2ac9"
-            },
-            {
-              "file": "packages/sync-queue/package.json",
-              "hash": "6a623ca52ad83b84df842d25fcfd435b03250b47"
-            },
-            {
-              "file": "packages/sync-queue/project.json",
-              "hash": "82f51a4ff57fa0fb2307d968cbf9ed808cd72e3a"
-            },
-            {
-              "file": "packages/sync-queue/README.md",
-              "hash": "47eee2de7131a50d645e645e5413621fa2f147fb"
-            },
-            {
-              "file": "packages/sync-queue/rollup.lib.js",
-              "hash": "79f1167ed3d1bfcf3f3b85402ead288be269de2a",
-              "deps": [
-                "npm:rollup-plugin-copy"
-              ]
-            },
-            {
-              "file": "packages/sync-queue/src/index.ts",
-              "hash": "fe1cbd44ed3fc86b133f2b8a8542a041395a547b"
-            },
-            {
-              "file": "packages/sync-queue/src/lib/sync-queue.spec.ts",
-              "hash": "66276b6f570702abd7520a0281740e0c70d0bbea"
-            },
-            {
-              "file": "packages/sync-queue/src/lib/sync-queue.ts",
-              "hash": "9f994af2518970dc4cd22a4ca72497c55b59b70b"
-            },
-            {
-              "file": "packages/sync-queue/tsconfig.json",
-              "hash": "27847903877abbdf65d7e168465084d52054d1e0"
-            },
-            {
-              "file": "packages/sync-queue/tsconfig.lib.json",
-              "hash": "66f1c4424b0304b6bb0209a5936415005033e289"
-            },
-            {
-              "file": "packages/sync-queue/tsconfig.spec.json",
-              "hash": "f95b08f8f79e54f596db3da65676c4dc00ac9dea"
-            }
-          ]
-        }
-      },
-      "url-parser": {
-        "name": "url-parser",
-        "type": "lib",
-        "data": {
-          "root": "packages/url-parser",
-          "sourceRoot": "packages/url-parser/src",
-          "projectType": "library",
-          "targets": {
-            "build": {
-              "executor": "@nrwl/js:tsc",
-              "outputs": [
-                "{options.outputPath}"
-              ],
-              "options": {
-                "outputPath": "dist/packages/url-parser",
-                "main": "packages/url-parser/src/index.ts",
-                "tsConfig": "packages/url-parser/tsconfig.lib.json",
-                "assets": [
-                  "packages/url-parser/*.md"
-                ]
-              }
-            },
-            "prod": {
-              "executor": "@nrwl/web:rollup",
-              "outputs": [
-                "{options.outputPath}"
-              ],
-              "options": {
-                "outputPath": "dist/packages/url-parser",
-                "tsConfig": "packages/url-parser/tsconfig.lib.json",
-                "project": "packages/url-parser/package.json",
-                "entryFile": "packages/url-parser/src/index.ts",
-                "format": [
-                  "esm",
-                  "cjs"
-                ],
-                "rollupConfig": [
-                  "rollup.lib.prod.js",
-                  "packages/url-parser/rollup.lib.js"
-                ]
-              }
-            },
-            "lint": {
-              "executor": "@nrwl/linter:eslint",
-              "outputs": [
-                "{options.outputFile}"
-              ],
-              "options": {
-                "lintFilePatterns": [
-                  "packages/url-parser/**/*.ts"
-                ]
-              }
-            },
-            "publish": {
-              "executor": "@nrwl/workspace:run-commands",
-              "options": {
-                "command": "./node_modules/.bin/ts-node tools/scripts/packages/publish-single.ts url-parser"
-              }
-            },
-            "test": {
-              "executor": "@nrwl/jest:jest",
-              "outputs": [
-                "coverage/packages/url-parser"
-              ],
-              "options": {
-                "jestConfig": "packages/url-parser/jest.config.ts",
-                "passWithNoTests": true
-              }
-            }
-          },
-          "tags": [],
-          "files": [
-            {
-              "file": "packages/url-parser/.babelrc",
-              "hash": "2c64266a65228de2e3bbe322748035145e5fe156"
-            },
-            {
-              "file": "packages/url-parser/.eslintrc.json",
-              "hash": "9d9c0db55bb1e91c5f2e7b64a02bc6bf69fc7cb5"
-            },
-            {
-              "file": "packages/url-parser/jest.config.ts",
-              "hash": "0dc289cf4183fe596bd50d18c8b4ce19886364db"
-            },
-            {
-              "file": "packages/url-parser/package.json",
-              "hash": "268d27978523c892633b7b188bc4ce767b5bf6c4"
-            },
-            {
-              "file": "packages/url-parser/project.json",
-              "hash": "abc64e3f75ea8cadf4b084ed329dceccbfdbd0cf"
-            },
-            {
-              "file": "packages/url-parser/README.md",
-              "hash": "f0583c09dc9eb422dfb69d6e3ddbc03e6418e433"
-            },
-            {
-              "file": "packages/url-parser/rollup.lib.js",
-              "hash": "8f68dc1e8df66b466a8138cf36e717be5e440efb",
-              "deps": [
-                "npm:rollup-plugin-copy"
-              ]
-            },
-            {
-              "file": "packages/url-parser/src/index.ts",
-              "hash": "019870e7a701b5445fe6d04388164262534efc5b"
-            },
-            {
-              "file": "packages/url-parser/src/lib/constants.ts",
-              "hash": "438bc501053386e7e6d4b4fbb7215e841de4951b"
-            },
-            {
-              "file": "packages/url-parser/src/lib/escape-regexes.ts",
-              "hash": "89fbc417207d5e66cac5b6499b2fe0f278652830"
-            },
-            {
-              "file": "packages/url-parser/src/lib/get-hash.ts",
-              "hash": "10800c276c8b2ccaca197883648c2c0340c3b556"
-            },
-            {
-              "file": "packages/url-parser/src/lib/is-list.ts",
-              "hash": "158d1811536d2e5479f9634c47334e982ca7a2db"
-            },
-            {
-              "file": "packages/url-parser/src/lib/is-optional.ts",
-              "hash": "96f794d43bdd306124b8033e0e44b6caa58494bf"
-            },
-            {
-              "file": "packages/url-parser/src/lib/param-name.ts",
-              "hash": "d3390c23ce334bad6dbba21cc9effdb6a2ac0108"
-            },
-            {
-              "file": "packages/url-parser/src/lib/parse-paths.ts",
-              "hash": "ff0f2460b22784ef1bbbe5409c817cf4624f87a0"
-            },
-            {
-              "file": "packages/url-parser/src/lib/parse-queries.ts",
-              "hash": "32befa7c69ddca0d6fd6279b22d59f83a1e26df9"
-            },
-            {
-              "file": "packages/url-parser/src/lib/parse-segment.ts",
-              "hash": "75d9af9b20826e7cb242f66dd113937af7b46c90"
-            },
-            {
-              "file": "packages/url-parser/src/lib/parse.ts",
-              "hash": "3e71b3c0063479fa1cde139489aacecbb93c01ea"
-            },
-            {
-              "file": "packages/url-parser/src/lib/parser.spec.ts",
-              "hash": "932d751611fca07089c6884887b9c90ff32f7cde"
-            },
-            {
-              "file": "packages/url-parser/src/lib/parser.ts",
-              "hash": "dbac1fdfe8a9b7b1a68b9a9d4383394ec3556615"
-            },
-            {
-              "file": "packages/url-parser/src/lib/path-to-url.ts",
-              "hash": "baa78914f843777e2011396de65fcc5e05d2dab9"
-            },
-            {
-              "file": "packages/url-parser/src/lib/reverse-segment.ts",
-              "hash": "b42c3d5dc77f48218e1ffec792923257c1d35a1a"
-            },
-            {
-              "file": "packages/url-parser/src/lib/reverse.ts",
-              "hash": "c72a755f430dc3d762e116281e1a34601c437641"
-            },
-            {
-              "file": "packages/url-parser/src/lib/split-path.ts",
-              "hash": "b54959e902ace650ff8f232e83ccc82ba26268f3"
-            },
-            {
-              "file": "packages/url-parser/src/lib/trim-slashes.ts",
-              "hash": "781431122926531182e80d14596fdb9e368a2633"
-            },
-            {
-              "file": "packages/url-parser/src/lib/types.ts",
-              "hash": "2b1e8553bce84a67846d1b54c268c89e0f7f0f20"
-            },
-            {
-              "file": "packages/url-parser/tsconfig.json",
-              "hash": "27847903877abbdf65d7e168465084d52054d1e0"
-            },
-            {
-              "file": "packages/url-parser/tsconfig.lib.json",
-              "hash": "dcfa51a94973d627e4a15f0b679440c8dea2970f"
-            },
-            {
-              "file": "packages/url-parser/tsconfig.spec.json",
-              "hash": "f95b08f8f79e54f596db3da65676c4dc00ac9dea"
-            }
-          ]
-        }
-      },
-      "set-utils": {
-        "name": "set-utils",
-        "type": "lib",
-        "data": {
-          "root": "packages/set-utils",
-          "sourceRoot": "packages/set-utils/src",
-          "projectType": "library",
-          "targets": {
-            "build": {
-              "executor": "@nrwl/js:tsc",
-              "outputs": [
-                "{options.outputPath}"
-              ],
-              "options": {
-                "outputPath": "dist/packages/set-utils",
-                "main": "packages/set-utils/src/index.ts",
-                "tsConfig": "packages/set-utils/tsconfig.lib.json",
-                "assets": [
-                  "packages/set-utils/*.md"
-                ]
-              }
-            },
-            "prod": {
-              "executor": "@nrwl/web:rollup",
-              "outputs": [
-                "{options.outputPath}"
-              ],
-              "options": {
-                "outputPath": "dist/packages/set-utils",
-                "tsConfig": "packages/set-utils/tsconfig.lib.json",
-                "project": "packages/set-utils/package.json",
-                "entryFile": "packages/set-utils/src/index.ts",
-                "format": [
-                  "esm",
-                  "cjs"
-                ],
-                "rollupConfig": [
-                  "rollup.lib.prod.js",
-                  "packages/set-utils/rollup.lib.js"
-                ]
-              }
-            },
-            "publish": {
-              "executor": "@nrwl/workspace:run-commands",
-              "options": {
-                "command": "./node_modules/.bin/ts-node tools/scripts/packages/publish-single.ts set-utils"
-              }
-            },
-            "lint": {
-              "executor": "@nrwl/linter:eslint",
-              "outputs": [
-                "{options.outputFile}"
-              ],
-              "options": {
-                "lintFilePatterns": [
-                  "packages/set-utils/**/*.ts"
-                ]
-              }
-            },
-            "test": {
-              "executor": "@nrwl/jest:jest",
-              "outputs": [
-                "coverage/packages/set-utils"
-              ],
-              "options": {
-                "jestConfig": "packages/set-utils/jest.config.ts",
-                "passWithNoTests": true
-              }
-            }
-          },
-          "tags": [],
-          "files": [
-            {
-              "file": "packages/set-utils/.babelrc",
-              "hash": "3949c55bc04b7751d86db82d6278c850cca144c7"
-            },
-            {
-              "file": "packages/set-utils/.eslintrc.json",
-              "hash": "9d9c0db55bb1e91c5f2e7b64a02bc6bf69fc7cb5"
-            },
-            {
-              "file": "packages/set-utils/jest.config.ts",
-              "hash": "f09d07680523c4a9f5cd4f3af2177421e30b3346"
-            },
-            {
-              "file": "packages/set-utils/LICENSE",
-              "hash": "4c6ceb2e1938bc590570c9d1995dab08756f2ac9"
-            },
-            {
-              "file": "packages/set-utils/package.json",
-              "hash": "a024dd23b4e56c1ab6d5637fb8c69109c80daa2b"
-            },
-            {
-              "file": "packages/set-utils/project.json",
-              "hash": "343e496be92e87e1ed21855ac58821f287f3cbf6"
-            },
-            {
-              "file": "packages/set-utils/README.md",
-              "hash": "e0fb89079fcbd7513c5f7f2b26720673684ac2c5"
-            },
-            {
-              "file": "packages/set-utils/rollup.lib.js",
-              "hash": "e581017f1e2ca3d756ec92f31da1a82360abfa98",
-              "deps": [
-                "npm:rollup-plugin-copy"
-              ]
-            },
-            {
-              "file": "packages/set-utils/src/index.ts",
-              "hash": "8db43b583fa2dfc98d334d945642879ce1fa5836"
-            },
-            {
-              "file": "packages/set-utils/src/lib/asymmetric-difference.test.ts",
-              "hash": "bcc329f188afa1e5055505fbf804e2488b3b64c0"
-            },
-            {
-              "file": "packages/set-utils/src/lib/asymmetric-difference.ts",
-              "hash": "93d149826f329736a346748f66f730b89a9847ae"
-            },
-            {
-              "file": "packages/set-utils/src/lib/index.ts",
-              "hash": "c00abf9d58843336892b83182775eaf2e6a29e92"
-            },
-            {
-              "file": "packages/set-utils/src/lib/intersection.test.ts",
-              "hash": "e75292354cb23ad4bd1386fae60708b0f002ca5d"
-            },
-            {
-              "file": "packages/set-utils/src/lib/intersection.ts",
-              "hash": "5ed5b43d972b2440e644022aaaaad53951918f46"
-            },
-            {
-              "file": "packages/set-utils/src/lib/symmetric-difference.test.ts",
-              "hash": "282f5a1c3a46c549c2ed19be157127ba3b0cc405"
-            },
-            {
-              "file": "packages/set-utils/src/lib/symmetric-difference.ts",
-              "hash": "de054b6e93ed7722b29b5675eb8648a53dff18c6"
-            },
-            {
-              "file": "packages/set-utils/src/lib/union.test.ts",
-              "hash": "edc01047c225da29e0bb0ba9092e9076bedb3842"
-            },
-            {
-              "file": "packages/set-utils/src/lib/union.ts",
-              "hash": "36626099ea901aea5d9fe114b0374be0e5299451"
-            },
-            {
-              "file": "packages/set-utils/tsconfig.json",
-              "hash": "14a5871aff60797c0969600becc2693b512b2cca"
-            },
-            {
-              "file": "packages/set-utils/tsconfig.lib.json",
-              "hash": "66f1c4424b0304b6bb0209a5936415005033e289"
-            },
-            {
-              "file": "packages/set-utils/tsconfig.spec.json",
-              "hash": "f95b08f8f79e54f596db3da65676c4dc00ac9dea"
-            }
-          ]
-        }
-      },
-      "machine": {
-        "name": "machine",
-        "type": "lib",
-        "data": {
-          "root": "packages/machine",
-          "sourceRoot": "packages/machine/src",
-          "projectType": "library",
-          "targets": {
-            "build": {
-              "executor": "@nrwl/js:tsc",
-              "outputs": [
-                "{options.outputPath}"
-              ],
-              "options": {
-                "outputPath": "dist/packages/machine",
-                "main": "packages/machine/src/index.ts",
-                "tsConfig": "packages/machine/tsconfig.lib.json",
-                "assets": [
-                  "packages/machine/*.md"
-                ]
-              }
-            },
-            "prod": {
-              "executor": "@nrwl/web:rollup",
-              "outputs": [
-                "{options.outputPath}"
-              ],
-              "options": {
-                "outputPath": "dist/packages/machine",
-                "tsConfig": "packages/machine/tsconfig.lib.json",
-                "project": "packages/machine/package.json",
-                "entryFile": "packages/machine/src/index.ts",
-                "format": [
-                  "esm",
-                  "cjs"
-                ],
-                "rollupConfig": [
-                  "rollup.lib.prod.js",
-                  "packages/machine/rollup.lib.js"
-                ]
-              }
-            },
-            "publish": {
-              "executor": "@nrwl/workspace:run-commands",
-              "options": {
-                "command": "./node_modules/.bin/ts-node tools/scripts/packages/publish-single.ts machine"
-              }
-            },
-            "lint": {
-              "executor": "@nrwl/linter:eslint",
-              "outputs": [
-                "{options.outputFile}"
-              ],
-              "options": {
-                "lintFilePatterns": [
-                  "packages/machine/**/*.ts"
-                ]
-              }
-            },
-            "test": {
-              "executor": "@nrwl/jest:jest",
-              "outputs": [
-                "coverage/packages/machine"
-              ],
-              "options": {
-                "jestConfig": "packages/machine/jest.config.ts",
-                "passWithNoTests": true
-              }
-            }
-          },
-          "tags": [],
-          "files": [
-            {
-              "file": "packages/machine/.babelrc",
-              "hash": "3949c55bc04b7751d86db82d6278c850cca144c7"
-            },
-            {
-              "file": "packages/machine/.eslintrc.json",
-              "hash": "9d9c0db55bb1e91c5f2e7b64a02bc6bf69fc7cb5"
-            },
-            {
-              "file": "packages/machine/jest.config.ts",
-              "hash": "783112f8ad07b2b386bf94859059235f7b1d47ec"
-            },
-            {
-              "file": "packages/machine/LICENSE",
-              "hash": "4c6ceb2e1938bc590570c9d1995dab08756f2ac9"
-            },
-            {
-              "file": "packages/machine/package.json",
-              "hash": "1af140fc0a68a7a229a6d34cd3214bf44a430149"
-            },
-            {
-              "file": "packages/machine/project.json",
-              "hash": "d2b3a76b2f2632978148b093226a52533b8ddcb0"
-            },
-            {
-              "file": "packages/machine/README.md",
-              "hash": "f3ef332bb2093b98dd80f7e013cd90a8efca61d8"
-            },
-            {
-              "file": "packages/machine/rollup.lib.js",
-              "hash": "7e744526c1cc7f8d0ca2ba42c10a5555ef96b78f",
-              "deps": [
-                "npm:rollup-plugin-copy"
-              ]
-            },
-            {
-              "file": "packages/machine/src/index.ts",
-              "hash": "af97c998b4ed5e973abe027ec1ff11028acf1b51"
-            },
-            {
-              "file": "packages/machine/src/lib/machine.spec.ts",
-              "hash": "7936052ec87b93d47bbb4a71ac07352d5f849377"
-            },
-            {
-              "file": "packages/machine/src/lib/machine.ts",
-              "hash": "3f1f9a806aea284b32f3ed3940603e4331e5e590",
-              "deps": [
-                "event-emitter"
-              ]
-            },
-            {
-              "file": "packages/machine/tsconfig.json",
-              "hash": "14a5871aff60797c0969600becc2693b512b2cca"
-            },
-            {
-              "file": "packages/machine/tsconfig.lib.json",
-              "hash": "a87bd6b7875df41b2c3e531387e4d5506b7015d2"
-            },
-            {
-              "file": "packages/machine/tsconfig.spec.json",
-              "hash": "f95b08f8f79e54f596db3da65676c4dc00ac9dea"
-            }
-          ]
-        }
-      },
-      "router": {
-        "name": "router",
-        "type": "lib",
-        "data": {
-          "root": "packages/router",
-          "sourceRoot": "packages/router/src",
-          "projectType": "library",
-          "targets": {
-            "build": {
-              "executor": "@nrwl/js:tsc",
-              "outputs": [
-                "{options.outputPath}"
-              ],
-              "options": {
-                "outputPath": "dist/packages/router",
-                "main": "packages/router/src/index.ts",
-                "tsConfig": "packages/router/tsconfig.lib.json",
-                "assets": [
-                  "packages/router/*.md"
-                ]
-              }
-            },
-            "prod": {
-              "executor": "@nrwl/web:rollup",
-              "outputs": [
-                "{options.outputPath}"
-              ],
-              "options": {
-                "outputPath": "dist/packages/router",
-                "tsConfig": "packages/router/tsconfig.lib.json",
-                "project": "packages/router/package.json",
-                "entryFile": "packages/router/src/index.ts",
-                "format": [
-                  "esm",
-                  "cjs"
-                ],
-                "rollupConfig": [
-                  "rollup.lib.prod.js",
-                  "packages/router/rollup.lib.js"
-                ]
-              }
-            },
-            "publish": {
-              "executor": "@nrwl/workspace:run-commands",
-              "options": {
-                "command": "./node_modules/.bin/ts-node tools/scripts/packages/publish-single.ts router"
-              }
-            },
-            "lint": {
-              "executor": "@nrwl/linter:eslint",
-              "outputs": [
-                "{options.outputFile}"
-              ],
-              "options": {
-                "lintFilePatterns": [
-                  "packages/router/**/*.ts"
-                ]
-              }
-            },
-            "test": {
-              "executor": "@nrwl/jest:jest",
-              "outputs": [
-                "coverage/packages/router"
-              ],
-              "options": {
-                "jestConfig": "packages/router/jest.config.ts",
-                "passWithNoTests": true
-              }
-            }
-          },
-          "tags": [],
-          "files": [
-            {
-              "file": "packages/router/.babelrc",
-              "hash": "0cae4a9a81270d6cf3315436f594bf2fbd4fb3e2"
-            },
-            {
-              "file": "packages/router/.eslintrc.json",
-              "hash": "9d9c0db55bb1e91c5f2e7b64a02bc6bf69fc7cb5"
-            },
-            {
-              "file": "packages/router/jest.config.ts",
-              "hash": "eac128ef4e50ac39df7313f65b13a1adc2dd3d59"
-            },
-            {
-              "file": "packages/router/LICENSE",
-              "hash": "4c6ceb2e1938bc590570c9d1995dab08756f2ac9"
-            },
-            {
-              "file": "packages/router/package.json",
-              "hash": "dd5cb443a8550ad7e7f153e3e0336902ae2a7b60"
-            },
-            {
-              "file": "packages/router/project.json",
-              "hash": "9898fd70ecd42e0044cc535df41f98dca610937b"
-            },
-            {
-              "file": "packages/router/README.md",
-              "hash": "b987fee2d01bbfc2421ef3116b8589f0beaf6ba2"
-            },
-            {
-              "file": "packages/router/rollup.lib.js",
-              "hash": "ed1c22dd5b0b20df68d9aca381d86c725140669a",
-              "deps": [
-                "npm:rollup-plugin-copy"
-              ]
-            },
-            {
-              "file": "packages/router/src/index.ts",
-              "hash": "b068ca40f219251b7568acf27afe5fbd47e093cd"
-            },
-            {
-              "file": "packages/router/src/lib/helpers/params-to-strings.ts",
-              "hash": "25b814488f2d0bff585a197d8913858707c39ffe"
-            },
-            {
-              "file": "packages/router/src/lib/router.spec.ts",
-              "hash": "a00d5d44b17e12a9b3e21c991f941f0acced9715"
-            },
-            {
-              "file": "packages/router/src/lib/router.ts",
-              "hash": "302daf3d2ffd872119de1ee4f412bbbd69fcf669",
-              "deps": [
-                "event-emitter",
-                "url-parser"
-              ]
-            },
-            {
-              "file": "packages/router/tsconfig.json",
-              "hash": "27847903877abbdf65d7e168465084d52054d1e0"
-            },
-            {
-              "file": "packages/router/tsconfig.lib.json",
-              "hash": "a87bd6b7875df41b2c3e531387e4d5506b7015d2"
-            },
-            {
-              "file": "packages/router/tsconfig.spec.json",
               "hash": "f95b08f8f79e54f596db3da65676c4dc00ac9dea"
             }
           ]
@@ -2215,7 +829,10 @@
                 "assets": [
                   "packages/query/*.md"
                 ]
-              }
+              },
+              "dependsOn": [
+                "^build"
+              ]
             },
             "prod": {
               "executor": "@nrwl/web:rollup",
@@ -2281,7 +898,7 @@
             },
             {
               "file": "packages/query/package.json",
-              "hash": "5768713025d9ae6eeaf211274c82ef840256795c"
+              "hash": "4bbf9ee0f946518985d37261c997a609ad97df5e"
             },
             {
               "file": "packages/query/project.json",
@@ -2300,22 +917,22 @@
             },
             {
               "file": "packages/query/src/index.ts",
-              "hash": "7e3bc7aba06804be7047627e234555f10d706929"
+              "hash": "650d37e8bcc95445e00d9ff8a821d2fe10925b46"
             },
             {
               "file": "packages/query/src/lib/helpers/serializer.ts",
-              "hash": "9d9bf65dc96b49a3501e3bea7f37693dbe55ba06"
+              "hash": "ff787230d352b1d244019334d2eb9777a00aeec3"
             },
             {
               "file": "packages/query/src/lib/query/query.spec.ts",
-              "hash": "f91b8dd44310ec461054be2d1b2ecad9e5a6a57f",
+              "hash": "bc54ff087a2f31e601723bd92795c4c47c75db52",
               "deps": [
                 "npm:@reduxjs/toolkit"
               ]
             },
             {
               "file": "packages/query/src/lib/query/query.ts",
-              "hash": "08dc20e99c63c534a4a6d823cb887e12fade914d",
+              "hash": "f67d6158e399b29ef8c215006614fa5cfbce85ba",
               "deps": [
                 "event-emitter",
                 "redux-types"
@@ -2323,50 +940,49 @@
             },
             {
               "file": "packages/query/src/lib/query/reducer.ts",
-              "hash": "4734a8725ab3c897c61d6dc8340e1401e842fb12",
+              "hash": "77492dd107bda2be18777f4e28d056efe2db98b6",
               "deps": [
                 "redux-types"
               ]
             },
             {
               "file": "packages/query/src/lib/query/resource.ts",
-              "hash": "2c9587634fee76a24f13ada8af957630c5f32016",
+              "hash": "7b340a93d748ad2be28c223734f03070910df510",
               "deps": [
-                "machine",
                 "async-queue"
               ]
             },
             {
               "file": "packages/query/src/lib/test/api/index.ts",
-              "hash": "7848059c562067bc114b4a75b0d46740196e008e"
+              "hash": "737a6cb63b45185ad3be65ee2106eeb24966ac12"
             },
             {
               "file": "packages/query/src/lib/test/index.ts",
-              "hash": "5904e2fc91af3e03b218eef175880b89b6fbb981"
+              "hash": "e34be5c6d938f59f6780e9211a708209fa5b7421"
             },
             {
               "file": "packages/query/src/lib/test/resources/comment/index.ts",
-              "hash": "2e20a1f8436748e79a5ec5df0ce2ce70eb364714"
+              "hash": "7b51eb3be38dc7ba8bfd798ac7dd05f26831adb1"
             },
             {
               "file": "packages/query/src/lib/test/resources/comment/transformations.ts",
-              "hash": "4eec3a890f80e8c1b3204a415791179134f869cf"
+              "hash": "1ec31d0506a04ac05809242ade6fed3caf5c9dc3"
             },
             {
               "file": "packages/query/src/lib/test/resources/user/index.ts",
-              "hash": "132876c6db0558e38fe7f19585b6de40ef55da24"
+              "hash": "066e94434c84b509151ce43f67195594fb4b0330"
             },
             {
               "file": "packages/query/src/lib/test/resources/user/transformations.ts",
-              "hash": "a154975210a767babc425ebe9c29e71b1779c037"
+              "hash": "c6904861eaeb0fd638d42874d92363078b44a130"
             },
             {
               "file": "packages/query/src/lib/test/types/user.ts",
-              "hash": "adf22f22d0ab293277f670295642515f8a62dd1a"
+              "hash": "3a23543a665872561042dbeb3f2cef3f8652d720"
             },
             {
               "file": "packages/query/src/lib/types.ts",
-              "hash": "16f8d7c3ff4a9b3d87ed1014610915e246b4c14e",
+              "hash": "00405a917920155d7b3d2307ab377980d6f2fb29",
               "deps": [
                 "redux-types"
               ]
@@ -2386,12 +1002,12 @@
           ]
         }
       },
-      "store": {
-        "name": "store",
+      "slice": {
+        "name": "slice",
         "type": "lib",
         "data": {
-          "root": "packages/store",
-          "sourceRoot": "packages/store/src",
+          "root": "packages/slice",
+          "sourceRoot": "packages/slice/src",
           "projectType": "library",
           "targets": {
             "build": {
@@ -2400,13 +1016,16 @@
                 "{options.outputPath}"
               ],
               "options": {
-                "outputPath": "dist/packages/store",
-                "main": "packages/store/src/index.ts",
-                "tsConfig": "packages/store/tsconfig.lib.json",
+                "outputPath": "dist/packages/slice",
+                "main": "packages/slice/src/index.ts",
+                "tsConfig": "packages/slice/tsconfig.lib.json",
                 "assets": [
-                  "packages/store/*.md"
+                  "packages/slice/*.md"
                 ]
-              }
+              },
+              "dependsOn": [
+                "^build"
+              ]
             },
             "prod": {
               "executor": "@nrwl/web:rollup",
@@ -2414,24 +1033,24 @@
                 "{options.outputPath}"
               ],
               "options": {
-                "outputPath": "dist/packages/store",
-                "tsConfig": "packages/store/tsconfig.lib.json",
-                "project": "packages/store/package.json",
-                "entryFile": "packages/store/src/index.ts",
+                "outputPath": "dist/packages/slice",
+                "tsConfig": "packages/slice/tsconfig.lib.json",
+                "project": "packages/slice/package.json",
+                "entryFile": "packages/slice/src/index.ts",
                 "format": [
                   "esm",
                   "cjs"
                 ],
                 "rollupConfig": [
                   "rollup.lib.prod.js",
-                  "packages/store/rollup.lib.js"
+                  "packages/slice/rollup.lib.js"
                 ]
               }
             },
             "publish": {
               "executor": "@nrwl/workspace:run-commands",
               "options": {
-                "command": "./node_modules/.bin/ts-node tools/scripts/packages/publish-single.ts store"
+                "command": "./node_modules/.bin/ts-node tools/scripts/packages/publish-single.ts slice"
               }
             },
             "lint": {
@@ -2441,17 +1060,17 @@
               ],
               "options": {
                 "lintFilePatterns": [
-                  "packages/store/**/*.ts"
+                  "packages/slice/**/*.ts"
                 ]
               }
             },
             "test": {
               "executor": "@nrwl/jest:jest",
               "outputs": [
-                "coverage/packages/store"
+                "coverage/packages/slice"
               ],
               "options": {
-                "jestConfig": "packages/store/jest.config.ts",
+                "jestConfig": "packages/slice/jest.config.ts",
                 "passWithNoTests": true
               }
             }
@@ -2459,81 +1078,65 @@
           "tags": [],
           "files": [
             {
-              "file": "packages/store/.babelrc",
-              "hash": "3949c55bc04b7751d86db82d6278c850cca144c7"
+              "file": "packages/slice/.babelrc",
+              "hash": "61641ec8ac3659e204441c80bb06defe323e3110"
             },
             {
-              "file": "packages/store/.eslintrc.json",
+              "file": "packages/slice/.eslintrc.json",
               "hash": "9d9c0db55bb1e91c5f2e7b64a02bc6bf69fc7cb5"
             },
             {
-              "file": "packages/store/jest.config.ts",
-              "hash": "35ccefd4863b360c61c4274b673568d6e0ecdf38"
+              "file": "packages/slice/jest.config.ts",
+              "hash": "e0110dfffedc2999798c3707f35fd0a1e1038bba"
             },
             {
-              "file": "packages/store/LICENSE",
-              "hash": "4c6ceb2e1938bc590570c9d1995dab08756f2ac9"
+              "file": "packages/slice/package.json",
+              "hash": "4136a1263820293554e136e4b275e8c8bebd3fbd"
             },
             {
-              "file": "packages/store/node_modules/.package-lock.json",
-              "hash": "73af704e3f1f5e199f6ac0bf1491120a67e5d1a8"
+              "file": "packages/slice/project.json",
+              "hash": "b3ba1034b9ff4c03ce665b2aa1012096f8a43f92"
             },
             {
-              "file": "packages/store/package-lock.json",
-              "hash": "ca16b50fef72209c578a062703a101c184a71cfc"
+              "file": "packages/slice/README.md",
+              "hash": "6630d6a0fb009c860c8ac76cd4b2e4e925bd851b"
             },
             {
-              "file": "packages/store/package.json",
-              "hash": "6ae9aa4705b4f38c40eed8c5310d9e87ef73d34e"
-            },
-            {
-              "file": "packages/store/project.json",
-              "hash": "d5ab47ff5bf236dea0597daf5163fc1e8e00d1f4"
-            },
-            {
-              "file": "packages/store/README.md",
-              "hash": "184f6f5379491d87841bae9a8abd9c1ccf95e63a"
-            },
-            {
-              "file": "packages/store/rollup.lib.js",
-              "hash": "6fb25ab21c33fc505867d3ebaec035cd0e12de25",
+              "file": "packages/slice/rollup.lib.js",
+              "hash": "08d97af2284ed2eff1a8da297e305f8fcef9b2a8",
               "deps": [
                 "npm:rollup-plugin-copy"
               ]
             },
             {
-              "file": "packages/store/src/index.ts",
-              "hash": "9f445f8edd3c8412bc25fbdc26638c484f3ed21c"
+              "file": "packages/slice/src/index.ts",
+              "hash": "29d8dcd6faeefe9b4521eaf1f98cb858e2db67b4"
             },
             {
-              "file": "packages/store/src/lib/create-store.spec.ts",
-              "hash": "5715094abcbaf245a94e819d839aff7f39874532"
-            },
-            {
-              "file": "packages/store/src/lib/create-store.ts",
-              "hash": "e50a5c8335d7946b73caae29e4f83d7cbfd30246",
+              "file": "packages/slice/src/lib/slice.spec.ts",
+              "hash": "67edf9e13026a9d5fff2c0af1f3d938f1d53f4ea",
               "deps": [
-                "sync-queue"
+                "dynamic-store"
               ]
             },
             {
-              "file": "packages/store/src/lib/store.spec.ts",
-              "hash": "0027ade205d345cb11f6bd372a2bad0de65ae604"
+              "file": "packages/slice/src/lib/slice.ts",
+              "hash": "37d1e8ac0daf7e830c252394e3e92cd2b0e85826",
+              "deps": [
+                "event-emitter",
+                "redux-types"
+              ]
             },
             {
-              "file": "packages/store/src/lib/store.ts",
-              "hash": "c32b7f35f275fdcbaf46d4651bcccc4aa85088a2"
+              "file": "packages/slice/tsconfig.json",
+              "hash": "99f3ced6f3d644c500ac77626c40bd325aea6f95"
             },
             {
-              "file": "packages/store/tsconfig.json",
-              "hash": "27847903877abbdf65d7e168465084d52054d1e0"
+              "file": "packages/slice/tsconfig.lib.json",
+              "hash": "a87bd6b7875df41b2c3e531387e4d5506b7015d2"
             },
             {
-              "file": "packages/store/tsconfig.lib.json",
-              "hash": "66f1c4424b0304b6bb0209a5936415005033e289"
-            },
-            {
-              "file": "packages/store/tsconfig.spec.json",
+              "file": "packages/slice/tsconfig.spec.json",
               "hash": "f95b08f8f79e54f596db3da65676c4dc00ac9dea"
             }
           ]
@@ -2564,7 +1167,10 @@
                 "production": {
                   "tsConfig": "libs/mylib/tsconfig-prod.lib.json"
                 }
-              }
+              },
+              "dependsOn": [
+                "^build"
+              ]
             },
             "prod": {
               "executor": "@nrwl/web:rollup",
@@ -2630,7 +1236,7 @@
             },
             {
               "file": "packages/utils/package.json",
-              "hash": "cdd308f7e6f76fa3482d9cf3c696cfcc88751b34"
+              "hash": "03c04bcac31e3f762181b0ffe300f5f4c0a8a8de"
             },
             {
               "file": "packages/utils/project.json",
@@ -2649,39 +1255,43 @@
             },
             {
               "file": "packages/utils/src/index.ts",
-              "hash": "513bc1438e21981afcc75170cb52df75c614acbc"
+              "hash": "f2a404e0cad667f3fb52c39ad30ab3f45b059357"
             },
             {
               "file": "packages/utils/src/lib/any.spec.ts",
-              "hash": "39ee965d77fb65ec78b6e55ebc4f7ff3b00ce584"
+              "hash": "d1770b1518fbe52de438f126b0b775501d8037a1"
             },
             {
               "file": "packages/utils/src/lib/any.ts",
-              "hash": "f476f821c9a68955f1213b89c5373a0f54e67de5"
+              "hash": "520ad4008f8ca0554ff8b55f572b5d686c962eb0"
             },
             {
               "file": "packages/utils/src/lib/array.ts",
-              "hash": "b5c3563c0625bae650776e1532f92f3e20b72d00"
+              "hash": "c18ee488161f52fe16b54ff9f65191e70b2bdf2f"
+            },
+            {
+              "file": "packages/utils/src/lib/classes.ts",
+              "hash": "60369610a0373379be60ad44f726932655a5a385"
             },
             {
               "file": "packages/utils/src/lib/function.ts",
-              "hash": "8d1a6a235ac6f810384924f778f948347a14e69d"
+              "hash": "993a9ef8d9055783b3aed218a7e9d933498c48da"
             },
             {
               "file": "packages/utils/src/lib/object.ts",
-              "hash": "e4c7e7271c8fd1537f60e5149935609a61cd0379"
+              "hash": "21075d2859568c5727e79ca180e7e197fac18364"
             },
             {
               "file": "packages/utils/src/lib/promise/create-externally-resolvable-promise.spec.ts",
-              "hash": "4886ba1de8da61b73517ab95461cfb61760b0aeb"
+              "hash": "fdee2e5a168a88036ace2abfc67a0710d06835e4"
             },
             {
               "file": "packages/utils/src/lib/promise/create-externally-resolvable-promise.ts",
-              "hash": "6d879d6b2a2cff19d1fea4fadfa746201e14973f"
+              "hash": "c8f47cb8fb829ccf1ff7ca8ee0c351dedb5a9978"
             },
             {
               "file": "packages/utils/src/lib/validate.ts",
-              "hash": "157b7164203b1509f16a7bab359a9465ecfc15e4"
+              "hash": "0482c6ca252447e1a7549d6b377dcd853c3f646d"
             },
             {
               "file": "packages/utils/tsconfig.json",
@@ -2698,13 +1308,13 @@
           ]
         }
       },
-      "xapp": {
-        "name": "xapp",
+      "crux": {
+        "name": "crux",
         "type": "lib",
         "data": {
-          "root": "packages/xapp",
+          "root": "packages/crux",
           "$schema": "../../node_modules/nx/schemas/project-schema.json",
-          "sourceRoot": "packages/xapp/src",
+          "sourceRoot": "packages/crux/src",
           "projectType": "library",
           "targets": {
             "build": {
@@ -2713,12 +1323,41 @@
                 "{options.outputPath}"
               ],
               "options": {
-                "outputPath": "dist/packages/xapp",
-                "main": "packages/xapp/src/index.ts",
-                "tsConfig": "packages/xapp/tsconfig.lib.json",
+                "outputPath": "dist/packages/crux",
+                "main": "packages/crux/src/index.ts",
+                "tsConfig": "packages/crux/tsconfig.lib.json",
                 "assets": [
-                  "packages/xapp/*.md"
+                  "packages/crux/*.md"
                 ]
+              },
+              "dependsOn": [
+                "^build"
+              ]
+            },
+            "prod": {
+              "executor": "@nrwl/web:rollup",
+              "outputs": [
+                "{options.outputPath}"
+              ],
+              "options": {
+                "outputPath": "dist/packages/crux",
+                "tsConfig": "packages/crux/tsconfig.lib.json",
+                "project": "packages/crux/package.json",
+                "entryFile": "packages/crux/src/index.ts",
+                "format": [
+                  "esm",
+                  "cjs"
+                ],
+                "rollupConfig": [
+                  "rollup.lib.prod.js",
+                  "packages/crux/rollup.lib.js"
+                ]
+              }
+            },
+            "publish": {
+              "executor": "@nrwl/workspace:run-commands",
+              "options": {
+                "command": "./node_modules/.bin/ts-node tools/scripts/packages/publish-single.ts crux"
               }
             },
             "lint": {
@@ -2728,17 +1367,17 @@
               ],
               "options": {
                 "lintFilePatterns": [
-                  "packages/xapp/**/*.ts"
+                  "packages/crux/**/*.ts"
                 ]
               }
             },
             "test": {
               "executor": "@nrwl/jest:jest",
               "outputs": [
-                "coverage/packages/xapp"
+                "coverage/packages/crux"
               ],
               "options": {
-                "jestConfig": "packages/xapp/jest.config.ts",
+                "jestConfig": "packages/crux/jest.config.ts",
                 "passWithNoTests": true
               }
             }
@@ -2746,510 +1385,198 @@
           "tags": [],
           "files": [
             {
-              "file": "packages/xapp/.babelrc",
+              "file": "packages/crux/.babelrc",
               "hash": "e24a5465f39c41b591d8bf49a58c93f0eb2b4916"
             },
             {
-              "file": "packages/xapp/.eslintrc.json",
-              "hash": "9d9c0db55bb1e91c5f2e7b64a02bc6bf69fc7cb5"
+              "file": "packages/crux/.eslintrc.json",
+              "hash": "f56528a413566023626e510881f072a8e3d0335e"
             },
             {
-              "file": "packages/xapp/jest.config.ts",
-              "hash": "97d4d80bde91af8c71e51842ee820a707057aec6"
+              "file": "packages/crux/jest.config.ts",
+              "hash": "4b1a78fae820870ae80513fb5b8891a74d0992fc"
             },
             {
-              "file": "packages/xapp/package.json",
-              "hash": "43d853cde0a399d31d3feed5ee30a5d58102a9ad"
-            },
-            {
-              "file": "packages/xapp/project.json",
-              "hash": "b75eaded12d828cc8767c891f2e7195deb4c5ef0"
-            },
-            {
-              "file": "packages/xapp/README.md",
-              "hash": "5596bbfe54147f6c1c3052d0a28581ade1e5f6ca"
-            },
-            {
-              "file": "packages/xapp/src/index.ts",
-              "hash": "36cb107b1061349b536c5441019fabc1ecf26f89"
-            },
-            {
-              "file": "packages/xapp/src/lib/mock/layout/index.ts",
-              "hash": "e30c92c75bbb8fa2c4b012a606d08357bb0966f5"
-            },
-            {
-              "file": "packages/xapp/src/lib/mock/layout/selector.ts",
-              "hash": "e7feb34082bb615d26ef083c5274940f4299ec3f"
-            },
-            {
-              "file": "packages/xapp/src/lib/mock/layout/view.ts",
-              "hash": "8822b30343925516978639ca3bd6f1b1673d1600"
-            },
-            {
-              "file": "packages/xapp/src/lib/mock/one/index.ts",
-              "hash": "057da92079c928db32cbcde1cf51200fc4ec6c20"
-            },
-            {
-              "file": "packages/xapp/src/lib/mock/one/selector.ts",
-              "hash": "35a102b535df7d46eac663996032c5a6625c6560"
-            },
-            {
-              "file": "packages/xapp/src/lib/mock/one/service.ts",
-              "hash": "15dc71c0ea2445810f3fcba12df2f0b573c8c47a"
-            },
-            {
-              "file": "packages/xapp/src/lib/mock/one/slice.ts",
-              "hash": "1214cdc2ce18ff45b64cb30177e20b53ec2c586b",
+              "file": "packages/crux/package.json",
+              "hash": "ea827c4996b57c0ae798e7564e7f975bcd43a136",
               "deps": [
-                "redux-slice"
-              ]
-            },
-            {
-              "file": "packages/xapp/src/lib/mock/one/subscription.ts",
-              "hash": "4559a4451521c17fb3256e48d6032c282d4ea2e0"
-            },
-            {
-              "file": "packages/xapp/src/lib/mock/one/types.ts",
-              "hash": "46d8e9d452363334b58ebbf828d8934d761a89f8"
-            },
-            {
-              "file": "packages/xapp/src/lib/mock/one/view.ts",
-              "hash": "c211c9993a9dbb6abe5708d6cf4a4774c3986260"
-            },
-            {
-              "file": "packages/xapp/src/lib/mock/shared/index.ts",
-              "hash": "41d829870b0ba9400c6ef341b23780ebc2954c74"
-            },
-            {
-              "file": "packages/xapp/src/lib/mock/shared/service.ts",
-              "hash": "42c85511f76c2b498ef868337f64431e51aa2820"
-            },
-            {
-              "file": "packages/xapp/src/lib/mock/two/index.ts",
-              "hash": "518fb722409ab9083c29d9b762fc84d84c8da66a"
-            },
-            {
-              "file": "packages/xapp/src/lib/mock/two/selector.ts",
-              "hash": "633b6d31e484e44656155f00e10936ef7cf783c7"
-            },
-            {
-              "file": "packages/xapp/src/lib/mock/two/service.ts",
-              "hash": "b7adb698128fa65e0a1d29642f7e42e604eef5f3"
-            },
-            {
-              "file": "packages/xapp/src/lib/mock/two/slice.ts",
-              "hash": "d2498057c6c50b4accf67e90d7091d28a864d5b6",
-              "deps": [
-                "redux-slice"
-              ]
-            },
-            {
-              "file": "packages/xapp/src/lib/mock/two/subscription.ts",
-              "hash": "52a5d8fc37c53f2830018b9f255075ac41e8a168"
-            },
-            {
-              "file": "packages/xapp/src/lib/mock/two/types.ts",
-              "hash": "bf1dc29fcea6c565490c909d851bfb20b61ab337"
-            },
-            {
-              "file": "packages/xapp/src/lib/mock/two/view.ts",
-              "hash": "7dc3c7751989c622c5b9c37536a2273227b1e288"
-            },
-            {
-              "file": "packages/xapp/src/lib/service.test.ts",
-              "hash": "fa3d0e68a3c4144ae188454f1504970c5da74d3f"
-            },
-            {
-              "file": "packages/xapp/src/lib/service.ts",
-              "hash": "70e085f802cc9fde6ebd01bbd81714e2006993a6"
-            },
-            {
-              "file": "packages/xapp/src/lib/slice.test.ts",
-              "hash": "2b470bd34db3b7ebfe154d811af70e8d6e40ce47",
-              "deps": [
-                "create-store",
-                "redux-types"
-              ]
-            },
-            {
-              "file": "packages/xapp/src/lib/slice.ts",
-              "hash": "b8920c31974b22748fa3fa40e601ffbadb2c4846",
-              "deps": [
-                "create-store",
+                "dynamic-store",
+                "event-emitter",
                 "redux-types",
+                "slice",
                 "string-utils"
               ]
             },
             {
-              "file": "packages/xapp/src/lib/subscription.test.ts",
-              "hash": "bd2d5b54a6c0831961c41b4c75af6f2d4851d7e4"
+              "file": "packages/crux/project.json",
+              "hash": "9d05b840da3c6f695808dd6b155e876ab55c4a1f"
             },
             {
-              "file": "packages/xapp/src/lib/subscription.ts",
-              "hash": "22b73c4cfed142c269506c2499b8287cf9660690"
+              "file": "packages/crux/README.md",
+              "hash": "63d7d1ceb3cb41652aab94413003f93d5bf6b3c4"
             },
             {
-              "file": "packages/xapp/src/lib/types.ts",
-              "hash": "e5cc6b45aa45c883cb74f3996d36e7b5147b843c",
-              "deps": [
-                "create-store",
-                "redux-types"
-              ]
+              "file": "packages/crux/src/index.ts",
+              "hash": "c0c4cccdd6b37b326cd8a0ee42b077150911cf88"
             },
             {
-              "file": "packages/xapp/src/lib/view.ts",
-              "hash": "f259fdcbf92ae560a52eed8d0efcbdfb3d444691"
-            },
-            {
-              "file": "packages/xapp/src/lib/xapp-with-emitter.ts",
-              "hash": "6b2999dd5adf36794baef9ca434b3c7f054cf158",
+              "file": "packages/crux/src/lib/crux-with-emitter.ts",
+              "hash": "3a5282b5ae1f09e880e71b7c4b2a48ce03f7b900",
               "deps": [
                 "event-emitter"
               ]
             },
             {
-              "file": "packages/xapp/src/lib/xapp.test.ts",
-              "hash": "b3de1aa9af764a10f1e44e96233cd102c458243d"
+              "file": "packages/crux/src/lib/crux.test.ts",
+              "hash": "e0130cf8931ff9ad2c2a43946dcf27aa86f92409"
             },
             {
-              "file": "packages/xapp/src/lib/xapp.ts",
-              "hash": "8a54683f6baf2aa80d5a44d8a782a61983ddfe55",
+              "file": "packages/crux/src/lib/crux.ts",
+              "hash": "0772c1472ed94e521bec1abf1052979968ee1b5c",
               "deps": [
-                "create-store",
+                "dynamic-store",
                 "event-emitter",
                 "redux-types"
               ]
             },
             {
-              "file": "packages/xapp/tsconfig.json",
-              "hash": "3ea81ac38bb0b7441d875cb8703e86addd87a998"
+              "file": "packages/crux/src/lib/mock/layout/index.ts",
+              "hash": "0b97cd1a4ae960cf1598752732d56d6c7dcffbe0"
             },
             {
-              "file": "packages/xapp/tsconfig.lib.json",
-              "hash": "e85ef50f65c2dad130031e439787141b4c433b22"
+              "file": "packages/crux/src/lib/mock/layout/selector.ts",
+              "hash": "4ea199fc0b327fe7b6f28a1903e906b0936ce3e3"
             },
             {
-              "file": "packages/xapp/tsconfig.spec.json",
-              "hash": "5bfc1ad85a824510eb7dd54b547fcb6af670560d"
-            }
-          ]
-        }
-      },
-      "app": {
-        "name": "app",
-        "type": "lib",
-        "data": {
-          "root": "packages/app",
-          "sourceRoot": "packages/app/src",
-          "projectType": "library",
-          "targets": {
-            "build": {
-              "executor": "@nrwl/js:tsc",
-              "outputs": [
-                "{options.outputPath}"
-              ],
-              "options": {
-                "outputPath": "dist/packages/app",
-                "main": "packages/app/src/index.ts",
-                "tsConfig": "packages/app/tsconfig.lib.json",
-                "assets": [
-                  "packages/app/*.md"
-                ]
-              }
-            },
-            "prod": {
-              "executor": "@nrwl/web:rollup",
-              "outputs": [
-                "{options.outputPath}"
-              ],
-              "options": {
-                "outputPath": "dist/packages/app",
-                "tsConfig": "packages/app/tsconfig.lib.json",
-                "project": "packages/app/package.json",
-                "entryFile": "packages/app/src/index.ts",
-                "format": [
-                  "esm",
-                  "cjs"
-                ],
-                "rollupConfig": [
-                  "rollup.lib.prod.js",
-                  "packages/app/rollup.lib.js"
-                ]
-              }
-            },
-            "publish": {
-              "executor": "@nrwl/workspace:run-commands",
-              "options": {
-                "command": "./node_modules/.bin/ts-node tools/scripts/packages/publish-single.ts app"
-              }
-            },
-            "lint": {
-              "executor": "@nrwl/linter:eslint",
-              "outputs": [
-                "{options.outputFile}"
-              ],
-              "options": {
-                "lintFilePatterns": [
-                  "packages/app/**/*.ts"
-                ]
-              }
-            },
-            "test": {
-              "executor": "@nrwl/jest:jest",
-              "outputs": [
-                "coverage/packages/app"
-              ],
-              "options": {
-                "jestConfig": "packages/app/jest.config.ts",
-                "passWithNoTests": true
-              }
-            }
-          },
-          "tags": [],
-          "files": [
-            {
-              "file": "packages/app/.babelrc",
-              "hash": "3949c55bc04b7751d86db82d6278c850cca144c7"
+              "file": "packages/crux/src/lib/mock/layout/view.ts",
+              "hash": "a0388b7fa505b6ea717ee6b1de132d908d6afbd1"
             },
             {
-              "file": "packages/app/.eslintrc.json",
-              "hash": "9d9c0db55bb1e91c5f2e7b64a02bc6bf69fc7cb5"
+              "file": "packages/crux/src/lib/mock/one/index.ts",
+              "hash": "f42e877a31d3ff6d71450ec53b802c474ac0666e"
             },
             {
-              "file": "packages/app/jest.config.ts",
-              "hash": "7ff894c7eda6f7e5f84c088a9f2063093f8d758a"
+              "file": "packages/crux/src/lib/mock/one/selector.ts",
+              "hash": "222a1bf21c719749f6614ddb62c5847a94507046"
             },
             {
-              "file": "packages/app/LICENSE",
-              "hash": "4c6ceb2e1938bc590570c9d1995dab08756f2ac9"
+              "file": "packages/crux/src/lib/mock/one/service.ts",
+              "hash": "43828b8008263930718063945fd7af8e1f6fae48"
             },
             {
-              "file": "packages/app/package.json",
-              "hash": "70b0954a7532f26b5b06074f15e4b3d0502b74cc"
-            },
-            {
-              "file": "packages/app/project.json",
-              "hash": "e608e9dfd981efff4468441aec91c2de30ac7836"
-            },
-            {
-              "file": "packages/app/README.md",
-              "hash": "32cd4dee3d810ce7955856a0ffd9043483817634"
-            },
-            {
-              "file": "packages/app/rollup.lib.js",
-              "hash": "407e56457f3198abe15e19a69be8bf42104c8f36",
+              "file": "packages/crux/src/lib/mock/one/slice.ts",
+              "hash": "2784995d55f2897a099a362c20f6f3c8881032e1",
               "deps": [
-                "npm:rollup-plugin-copy"
+                "slice"
               ]
             },
             {
-              "file": "packages/app/src/index.ts",
-              "hash": "c2276a9973d35a3077d9d1ea4cd628615e8e15a5"
+              "file": "packages/crux/src/lib/mock/one/subscription.ts",
+              "hash": "e45e0c4bcb8d207e6524b427d4e04f6025a5073a"
             },
             {
-              "file": "packages/app/src/lib/app.md",
-              "hash": "04a735cdab3192a1f1e3412cd2c3bb8f82bfa12d"
+              "file": "packages/crux/src/lib/mock/one/types.ts",
+              "hash": "8766015e6a9aff77feb0cc8de87465cd95c732cf"
             },
             {
-              "file": "packages/app/src/lib/app.ts",
-              "hash": "0738cf1545f4d58b661321c8ffd0701e210e1b68",
+              "file": "packages/crux/src/lib/mock/one/view.ts",
+              "hash": "7b9057055d6795786b1bb6609b1f3a4fbe2d1bf6"
+            },
+            {
+              "file": "packages/crux/src/lib/mock/shared/index.ts",
+              "hash": "74b34c8a1a29afa3ef37f6ee1ea308aca74456dd"
+            },
+            {
+              "file": "packages/crux/src/lib/mock/shared/service.ts",
+              "hash": "84b431f8f4551d982855e874d8ee60aede32d11d"
+            },
+            {
+              "file": "packages/crux/src/lib/mock/two/index.ts",
+              "hash": "2f29827b19417722d4a6485f0bcf60f757b53451"
+            },
+            {
+              "file": "packages/crux/src/lib/mock/two/selector.ts",
+              "hash": "c6077395ff273a3d0fd2a806f9ebdabe5cb63d9a"
+            },
+            {
+              "file": "packages/crux/src/lib/mock/two/service.ts",
+              "hash": "9181b07aaf1eaa4f4500d9743150885857eaa4cd"
+            },
+            {
+              "file": "packages/crux/src/lib/mock/two/slice.ts",
+              "hash": "9f772cfc0c1ef39d2032a0f3d5c028b4c6c2b4bb",
               "deps": [
-                "async-queue",
-                "redux-types",
-                "redux-slice",
-                "set-utils",
-                "utils"
+                "slice"
               ]
             },
             {
-              "file": "packages/app/src/lib/logger/index.ts",
-              "hash": "141ca1dba7f6676642fb8e8ba4ee21ffe7dbc855"
+              "file": "packages/crux/src/lib/mock/two/subscription.ts",
+              "hash": "883da2a137b689d9106131ca8e3d29cb303057a6"
             },
             {
-              "file": "packages/app/src/lib/redux-store/index.ts",
-              "hash": "160b2f645c0f416bf9fd297044a24ca62c550944",
+              "file": "packages/crux/src/lib/mock/two/types.ts",
+              "hash": "3c27e5ec5963f9cdca26f542345039ec7c23ca81"
+            },
+            {
+              "file": "packages/crux/src/lib/mock/two/view.ts",
+              "hash": "85163c9da296bbd4435be269b36a3c829cb8b832"
+            },
+            {
+              "file": "packages/crux/src/lib/service.test.ts",
+              "hash": "65c5bfea1b59dbda6b6eea125021d6ff0783245a"
+            },
+            {
+              "file": "packages/crux/src/lib/service.ts",
+              "hash": "13691bec16d2f29eefe4ba497258c798db00b3c0"
+            },
+            {
+              "file": "packages/crux/src/lib/slice.test.ts",
+              "hash": "daa6e950c810c701bb0da7779a93fd20256c087f",
               "deps": [
-                "npm:redux",
-                "redux-registry",
+                "dynamic-store",
                 "redux-types"
               ]
             },
             {
-              "file": "packages/app/src/lib/resolver.spec.ts",
-              "hash": "2102ab62e4ebbf3bbc245ebd62ceb324f9fbdb3e"
-            },
-            {
-              "file": "packages/app/src/lib/resolver.ts",
-              "hash": "811c3ef5900412925f3785859b3a823eb334c95c",
+              "file": "packages/crux/src/lib/slice.ts",
+              "hash": "9fddba789196be12277adf8bf47cdb335033b790",
               "deps": [
-                "utils"
+                "dynamic-store",
+                "redux-types",
+                "string-utils"
               ]
             },
             {
-              "file": "packages/app/tsconfig.json",
-              "hash": "cac0d9db4e50a5cbccc2a2c031f197f670dae19f"
+              "file": "packages/crux/src/lib/subscription.test.ts",
+              "hash": "7c97a92aca9cb11b332470332e866625633ae552"
             },
             {
-              "file": "packages/app/tsconfig.lib.json",
-              "hash": "a87bd6b7875df41b2c3e531387e4d5506b7015d2"
+              "file": "packages/crux/src/lib/subscription.ts",
+              "hash": "3ca851ea42e2dc86f296705a71b08768992fb353"
             },
             {
-              "file": "packages/app/tsconfig.spec.json",
-              "hash": "f95b08f8f79e54f596db3da65676c4dc00ac9dea"
-            }
-          ]
-        }
-      },
-      "di": {
-        "name": "di",
-        "type": "lib",
-        "data": {
-          "root": "packages/di",
-          "sourceRoot": "packages/di/src",
-          "projectType": "library",
-          "targets": {
-            "build": {
-              "executor": "@nrwl/js:tsc",
-              "outputs": [
-                "{options.outputPath}"
-              ],
-              "options": {
-                "outputPath": "dist/packages/di",
-                "main": "packages/di/src/index.ts",
-                "tsConfig": "packages/di/tsconfig.lib.json",
-                "assets": [
-                  "packages/di/*.md"
-                ]
-              },
-              "configurations": {
-                "production": {
-                  "tsConfig": "libs/mylib/tsconfig-prod.lib.json"
-                }
-              }
-            },
-            "prod": {
-              "executor": "@nrwl/web:rollup",
-              "outputs": [
-                "{options.outputPath}"
-              ],
-              "options": {
-                "outputPath": "dist/packages/di",
-                "tsConfig": "packages/di/tsconfig.lib.json",
-                "project": "packages/di/package.json",
-                "entryFile": "packages/di/src/index.ts",
-                "format": [
-                  "esm",
-                  "cjs"
-                ],
-                "rollupConfig": [
-                  "rollup.lib.prod.js",
-                  "packages/di/rollup.lib.js"
-                ]
-              }
-            },
-            "publish": {
-              "executor": "@nrwl/workspace:run-commands",
-              "options": {
-                "command": "./node_modules/.bin/ts-node tools/scripts/packages/publish-single.ts di"
-              }
-            },
-            "lint": {
-              "executor": "@nrwl/linter:eslint",
-              "outputs": [
-                "{options.outputFile}"
-              ],
-              "options": {
-                "lintFilePatterns": [
-                  "packages/di/**/*.ts"
-                ]
-              }
-            },
-            "test": {
-              "executor": "@nrwl/jest:jest",
-              "outputs": [
-                "coverage/packages/di"
-              ],
-              "options": {
-                "jestConfig": "packages/di/jest.config.ts",
-                "passWithNoTests": true
-              }
-            }
-          },
-          "tags": [],
-          "files": [
-            {
-              "file": "packages/di/.babelrc",
-              "hash": "3949c55bc04b7751d86db82d6278c850cca144c7"
-            },
-            {
-              "file": "packages/di/.eslintrc.json",
-              "hash": "9d9c0db55bb1e91c5f2e7b64a02bc6bf69fc7cb5"
-            },
-            {
-              "file": "packages/di/jest.config.ts",
-              "hash": "715215bcf616c84f633bb1e6a15b1d2b64cd7609"
-            },
-            {
-              "file": "packages/di/LICENSE",
-              "hash": "4c6ceb2e1938bc590570c9d1995dab08756f2ac9"
-            },
-            {
-              "file": "packages/di/package.json",
-              "hash": "7e402bca821ce1ad60b647dbad8319685be17010"
-            },
-            {
-              "file": "packages/di/project.json",
-              "hash": "d22487eef3395db64e87acd67d114985e294cd60"
-            },
-            {
-              "file": "packages/di/README.md",
-              "hash": "5572c532284e0c287d31e411b44ca771f4685dc7"
-            },
-            {
-              "file": "packages/di/rollup.lib.js",
-              "hash": "cad36fbb09e8b518bdb3c2cc0c4504512a8837d8",
+              "file": "packages/crux/src/lib/types.ts",
+              "hash": "1062b4e43592d6e5d300b2c58480f2a588d9d773",
               "deps": [
-                "npm:rollup-plugin-copy"
+                "dynamic-store",
+                "redux-types"
               ]
             },
             {
-              "file": "packages/di/src/index.ts",
-              "hash": "0629d7fa8f88b97e4a8104b58c9524ec3b6683ca"
+              "file": "packages/crux/src/lib/view.ts",
+              "hash": "db731931f7348021ab2892849a73f760596fb2e3"
             },
             {
-              "file": "packages/di/src/lib/all-dependencies-exist.ts",
-              "hash": "d44cbba6c00a9a7a3eb0d268263880f0db85f83f"
+              "file": "packages/crux/tsconfig.json",
+              "hash": "1a96f2185b92fd2a4a545cc76671f7ebe975090f"
             },
             {
-              "file": "packages/di/src/lib/by-dependency.ts",
-              "hash": "50ca8a248ef5a70e9b8a4495abda2445bfa4cdb9",
-              "deps": [
-                "utils"
-              ]
+              "file": "packages/crux/tsconfig.lib.json",
+              "hash": "e85ef50f65c2dad130031e439787141b4c433b22"
             },
             {
-              "file": "packages/di/src/lib/di.spec.ts",
-              "hash": "a293fcacddddf7e921a27a6acd59dc0154ca298b"
-            },
-            {
-              "file": "packages/di/src/lib/di.ts",
-              "hash": "ec95951a40b390c3872d8a5165c7fde5faa61811"
-            },
-            {
-              "file": "packages/di/src/lib/get-dependents.ts",
-              "hash": "f3eb9bfdb1d642eb33c7dacb1f378e7adb45f4ca"
-            },
-            {
-              "file": "packages/di/tsconfig.json",
-              "hash": "27847903877abbdf65d7e168465084d52054d1e0"
-            },
-            {
-              "file": "packages/di/tsconfig.lib.json",
-              "hash": "a87bd6b7875df41b2c3e531387e4d5506b7015d2"
-            },
-            {
-              "file": "packages/di/tsconfig.spec.json",
-              "hash": "f95b08f8f79e54f596db3da65676c4dc00ac9dea"
+              "file": "packages/crux/tsconfig.spec.json",
+              "hash": "e8c0a96484cb4dca4e070cadb02b6e4b8ccf148c"
             }
           ]
         }
@@ -3274,375 +1601,50 @@
               "executor": "@nrwl/workspace:run-commands",
               "options": {
                 "command": "vite build apps/dev --config apps/dev/vite.config.ts"
-              }
+              },
+              "dependsOn": [
+                "^build"
+              ]
             },
             "serve": {
               "executor": "@nrwl/workspace:run-commands",
               "options": {
                 "command": "vite serve apps/dev --config apps/dev/vite.config.ts --port 3000"
               }
+            },
+            "preview": {
+              "executor": "@nrwl/workspace:run-commands",
+              "options": {
+                "command": "vite preview apps/dev --config apps/dev/vite.config.ts"
+              }
+            },
+            "test": {
+              "executor": "@nrwl/jest:jest",
+              "outputs": [
+                "coverage/apps/dev"
+              ],
+              "options": {
+                "jestConfig": "apps/dev/jest.config.ts",
+                "passWithNoTests": true
+              }
             }
           },
           "files": [
             {
-              "file": "apps/dev/dist/assets/api.86e3c4b7.js",
-              "hash": "e26e2ac7942525ef98958365515997d5cf786d43"
-            },
-            {
-              "file": "apps/dev/dist/assets/async-cache.service.eafbb6c5.js",
-              "hash": "d25d7a2c157ec036d07359b9e990aad466bcc706"
-            },
-            {
-              "file": "apps/dev/dist/assets/auth.module.e78024b7.js",
-              "hash": "972aa3d54e1c50b01190fcc417396c0f6cf8cd3f"
-            },
-            {
-              "file": "apps/dev/dist/assets/cache.service.a5a72e72.js",
-              "hash": "c0527ac5ae3a8d7c2ee171309ac0dab2026fa9f9"
-            },
-            {
-              "file": "apps/dev/dist/assets/dark-mode.module.ce5f9b6e.js",
-              "hash": "095b0cd08062e0f312f2b177dba534b0bddb61e9"
-            },
-            {
-              "file": "apps/dev/dist/assets/dark-mode.view.d4b75ce8.js",
-              "hash": "fa66c3793c29f45b393912cbc22577b0be57c7d4"
-            },
-            {
-              "file": "apps/dev/dist/assets/data.module.3b4232a0.js",
-              "hash": "52b08bf71018f02fd6756a7ba6d6deb072be6c94"
-            },
-            {
-              "file": "apps/dev/dist/assets/directive.9b57a945.js",
-              "hash": "aacf027604c185e5d47d88a86b12d50eff09d079"
-            },
-            {
-              "file": "apps/dev/dist/assets/env.service.e4b665b8.js",
-              "hash": "a623ac49fac293d6c5bfcd1149fcfd0307f86273"
-            },
-            {
-              "file": "apps/dev/dist/assets/favicon.17e50649.svg",
-              "hash": "de4aeddc12bdfe6c668dd57c6b457a659c058914"
-            },
-            {
-              "file": "apps/dev/dist/assets/feature-flags.service.acbfde49.js",
-              "hash": "5ee7db57038002fa0d3a14bc56cccfbdf8976211"
-            },
-            {
-              "file": "apps/dev/dist/assets/index.791a460c.js",
-              "hash": "0d82e83c6f66ac8fd405c1846ada6d3d763e6a7c"
-            },
-            {
-              "file": "apps/dev/dist/assets/index.ab216954.css",
-              "hash": "77d40f482f21f0b89205a6c91a399692e09a0b07"
-            },
-            {
-              "file": "apps/dev/dist/assets/layout.module.7e34acc0.js",
-              "hash": "93e8e88d0b23e253bf528a70138d79f2bb086d1d"
-            },
-            {
-              "file": "apps/dev/dist/assets/layout.view.156c63d8.css",
-              "hash": "0eb2c6ce5d2a3693feee63e70ff379d7bc1adacd"
-            },
-            {
-              "file": "apps/dev/dist/assets/layout.view.e57d8e3d.js",
-              "hash": "899b3d1337118c7ba1587e289a4790230e48029b"
-            },
-            {
-              "file": "apps/dev/dist/assets/lit-html.9b9017eb.js",
-              "hash": "485eb0523f11810ff601aa3b5e7ba019d414bf47"
-            },
-            {
-              "file": "apps/dev/dist/assets/logging.service.d183d238.js",
-              "hash": "fc64978fc1f13e37ba661c647457ed76478f6167"
-            },
-            {
-              "file": "apps/dev/dist/assets/machine.26234c57.js",
-              "hash": "d47a1b132b23fd03a489847358e7aff81293cedf"
-            },
-            {
-              "file": "apps/dev/dist/assets/map.a4f06f37.js",
-              "hash": "1d7ef86fc099d32d621bb735a809257c6d4f8fab"
-            },
-            {
-              "file": "apps/dev/dist/assets/ref.7a167248.js",
-              "hash": "cba9073af7087d06856442645dbe560d714c32cf"
-            },
-            {
-              "file": "apps/dev/dist/assets/router.module.31ea6156.js",
-              "hash": "3ae23f160d2d1391e1524317cee0951432f3a2cb"
-            },
-            {
-              "file": "apps/dev/dist/assets/sign-up-form.module.ab20a2ce.js",
-              "hash": "f0168ee7b934803d2465ae9ab0bec4f063d47d07"
-            },
-            {
-              "file": "apps/dev/dist/assets/sign-up-form.view.ccb42b9b.js",
-              "hash": "4767934d08fe19465e6550017505155d815038fd"
-            },
-            {
-              "file": "apps/dev/dist/assets/toaster.module.65d21cf2.js",
-              "hash": "6082c66227ddbdc3ab13f50d8ac2b7f11297b4d1"
-            },
-            {
-              "file": "apps/dev/dist/assets/toaster.view.647f3256.js",
-              "hash": "926104a53dd63ecd5d90b4fb06c77f618855e543"
-            },
-            {
-              "file": "apps/dev/dist/assets/user-nav.view.7dea13d6.js",
-              "hash": "b805b65a613ccbe03c6600f9fb6730a45c4de765"
-            },
-            {
-              "file": "apps/dev/dist/assets/user.module.ff8d3fe7.js",
-              "hash": "654932c67a161da6acfed82ab2bc242148af1d17"
-            },
-            {
-              "file": "apps/dev/dist/assets/users-api.service.7d765f0a.js",
-              "hash": "5ff3ab0ac0c8c25506d60f818e41d2d295b58109"
-            },
-            {
-              "file": "apps/dev/dist/index.html",
-              "hash": "c072b88a92d5b228a332d5d00aec38ad4817dc51"
+              "file": "apps/dev/.gitignore",
+              "hash": "c925c21d56cb741fc68c67f58e97e718bcbdde5a"
             },
             {
               "file": "apps/dev/index.html",
-              "hash": "a2ca88f8720a8cc173a68f80ac52892d48eb91f4"
+              "hash": "03064e8a8ed498b30888942e28fa1a04ff7623c8"
+            },
+            {
+              "file": "apps/dev/jest.config.ts",
+              "hash": "9e10dd22e2131e6f412b8124b9f4dfff5a614287"
             },
             {
               "file": "apps/dev/mockServiceWorker.js",
-              "hash": "8afaaf7a91297682053b361492f00c26eb9c9a3e"
-            },
-            {
-              "file": "apps/dev/node_modules/.vite/deps/_metadata.json",
-              "hash": "485ff3e052b5bb9a4bbcb7d6f7995b9025c17a78"
-            },
-            {
-              "file": "apps/dev/node_modules/.vite/deps/@shoelace-style_shoelace_dist_components_alert_alert__js.js",
-              "hash": "998fc816e940d644117872740f6e572f07bd9083"
-            },
-            {
-              "file": "apps/dev/node_modules/.vite/deps/@shoelace-style_shoelace_dist_components_alert_alert__js.js.map",
-              "hash": "1cff4ab5ea422436db490da89b8fc0e83ee37503"
-            },
-            {
-              "file": "apps/dev/node_modules/.vite/deps/@shoelace-style_shoelace_dist_components_button_button__js.js",
-              "hash": "f4fb8e5a3c42c6e2285e6ae0688ac7981d46885b"
-            },
-            {
-              "file": "apps/dev/node_modules/.vite/deps/@shoelace-style_shoelace_dist_components_button_button__js.js.map",
-              "hash": "1480588e6e1682fddf099ed80a34d7320e71e641"
-            },
-            {
-              "file": "apps/dev/node_modules/.vite/deps/@shoelace-style_shoelace_dist_components_dialog_dialog__js.js",
-              "hash": "57236f1cf9cf4a7ccfc6febc7ff8d14b4089ccda"
-            },
-            {
-              "file": "apps/dev/node_modules/.vite/deps/@shoelace-style_shoelace_dist_components_dialog_dialog__js.js.map",
-              "hash": "248b9eb25acc792a8fa8c52a47a89f69b1294a30"
-            },
-            {
-              "file": "apps/dev/node_modules/.vite/deps/@shoelace-style_shoelace_dist_components_icon_icon__js.js",
-              "hash": "97ec463ce690fd3f3bdb4d9321f5550b8f2fee30"
-            },
-            {
-              "file": "apps/dev/node_modules/.vite/deps/@shoelace-style_shoelace_dist_components_icon_icon__js.js.map",
-              "hash": "b45219859f67251f927e7f1fb43ed43335c1e857"
-            },
-            {
-              "file": "apps/dev/node_modules/.vite/deps/@shoelace-style_shoelace_dist_components_input_input__js.js",
-              "hash": "8ab22314afca2348b02708f011b356a4ee8a6fe0"
-            },
-            {
-              "file": "apps/dev/node_modules/.vite/deps/@shoelace-style_shoelace_dist_components_input_input__js.js.map",
-              "hash": "27c4b210cbbcdfef85c46c7dc524acc0ffe383c8"
-            },
-            {
-              "file": "apps/dev/node_modules/.vite/deps/@shoelace-style_shoelace_dist_components_switch_switch__js.js",
-              "hash": "6bb93e985c72366b091e86be6669cdf93656ac5e"
-            },
-            {
-              "file": "apps/dev/node_modules/.vite/deps/@shoelace-style_shoelace_dist_components_switch_switch__js.js.map",
-              "hash": "b833d9bb5ddeb05d89da4877c0f0cf9493f620fe"
-            },
-            {
-              "file": "apps/dev/node_modules/.vite/deps/@shoelace-style_shoelace_dist_utilities_base-path__js.js",
-              "hash": "f49f3e8dbf7dd55f8fa67ed01fb78ab6044534af"
-            },
-            {
-              "file": "apps/dev/node_modules/.vite/deps/@shoelace-style_shoelace_dist_utilities_base-path__js.js.map",
-              "hash": "98652118b6862120fb1a693020ad8654fe85851d"
-            },
-            {
-              "file": "apps/dev/node_modules/.vite/deps/chunk-2ZX5ZFRK.js",
-              "hash": "4e12643429bf2352418e2f486f82319d55ef2587"
-            },
-            {
-              "file": "apps/dev/node_modules/.vite/deps/chunk-2ZX5ZFRK.js.map",
-              "hash": "0f8a2619a8053f1e4ccb4cc214c751c5285807ba"
-            },
-            {
-              "file": "apps/dev/node_modules/.vite/deps/chunk-3QY4R5C2.js",
-              "hash": "39061db089647164bdbe961b785a1661bca1b5a8"
-            },
-            {
-              "file": "apps/dev/node_modules/.vite/deps/chunk-3QY4R5C2.js.map",
-              "hash": "3e829ec9c5dfbe94eea7abc6d6628f93c1b38f31"
-            },
-            {
-              "file": "apps/dev/node_modules/.vite/deps/chunk-4UFTUIDS.js",
-              "hash": "297d879b44674c4ceec96d9a7a4ce145e9c8a6f7"
-            },
-            {
-              "file": "apps/dev/node_modules/.vite/deps/chunk-4UFTUIDS.js.map",
-              "hash": "93b22043525cda9c834420ab0bd8130ef817f3fc"
-            },
-            {
-              "file": "apps/dev/node_modules/.vite/deps/chunk-5MDSMEO3.js",
-              "hash": "cd3f717591edddee94a7f93b8e43d89dfa09224f"
-            },
-            {
-              "file": "apps/dev/node_modules/.vite/deps/chunk-5MDSMEO3.js.map",
-              "hash": "d268bc5ab71f52a12e17ec47fb6b6d8a518bfa28"
-            },
-            {
-              "file": "apps/dev/node_modules/.vite/deps/chunk-6WBDHGC6.js",
-              "hash": "0c7a913a57baf831b9b4614d008da97b2ba93b74"
-            },
-            {
-              "file": "apps/dev/node_modules/.vite/deps/chunk-6WBDHGC6.js.map",
-              "hash": "05da62f80e221504c4a5c0cfb54f66f41e65c369"
-            },
-            {
-              "file": "apps/dev/node_modules/.vite/deps/chunk-ALQTCBK2.js",
-              "hash": "699bc4a9d64e55a9bbd2ce04b358edaf9c1452b2"
-            },
-            {
-              "file": "apps/dev/node_modules/.vite/deps/chunk-ALQTCBK2.js.map",
-              "hash": "5396d0d371b53b0d03e29c587726517f4c471cf6"
-            },
-            {
-              "file": "apps/dev/node_modules/.vite/deps/chunk-CXL5JCQJ.js",
-              "hash": "02d5012568de16fa788aee475bb9c80349fd4811"
-            },
-            {
-              "file": "apps/dev/node_modules/.vite/deps/chunk-CXL5JCQJ.js.map",
-              "hash": "74fd667a1837ab85ae98488e276d2188805fa4b1"
-            },
-            {
-              "file": "apps/dev/node_modules/.vite/deps/chunk-MUQ7UUZS.js",
-              "hash": "9f886e057ab5fb31015b585f9ed37e265122c2bf"
-            },
-            {
-              "file": "apps/dev/node_modules/.vite/deps/chunk-MUQ7UUZS.js.map",
-              "hash": "8d6d7459d171674122f89b10db380d74e1dc13e3"
-            },
-            {
-              "file": "apps/dev/node_modules/.vite/deps/chunk-OROXOI2D.js",
-              "hash": "b538faeed53a602fd213f329960857d0fc2aeb76"
-            },
-            {
-              "file": "apps/dev/node_modules/.vite/deps/chunk-OROXOI2D.js.map",
-              "hash": "98652118b6862120fb1a693020ad8654fe85851d"
-            },
-            {
-              "file": "apps/dev/node_modules/.vite/deps/chunk-OYGEN2I4.js",
-              "hash": "d5def2beb19ba0cdc87815a1ffe0ac15043c4dc9"
-            },
-            {
-              "file": "apps/dev/node_modules/.vite/deps/chunk-OYGEN2I4.js.map",
-              "hash": "9add8c95811fae0160fc42653cae77125f4e694d"
-            },
-            {
-              "file": "apps/dev/node_modules/.vite/deps/chunk-PHIVQFFV.js",
-              "hash": "e53a57defcb3162acd512df5d8031dbb9ce7dffb"
-            },
-            {
-              "file": "apps/dev/node_modules/.vite/deps/chunk-PHIVQFFV.js.map",
-              "hash": "0452d206577aba8f48f2b4ad6f5920c3c2e08624"
-            },
-            {
-              "file": "apps/dev/node_modules/.vite/deps/chunk-QGAWNA6Y.js",
-              "hash": "945de65490a8eeef79ac46183cc99073e6926818"
-            },
-            {
-              "file": "apps/dev/node_modules/.vite/deps/chunk-QGAWNA6Y.js.map",
-              "hash": "a591b4901a05f10ce93a6f1934883308d7be3d15"
-            },
-            {
-              "file": "apps/dev/node_modules/.vite/deps/chunk-TKBYZKCW.js",
-              "hash": "f2745ccd46f2aeef89d8c050ee18b8161754e10a"
-            },
-            {
-              "file": "apps/dev/node_modules/.vite/deps/chunk-TKBYZKCW.js.map",
-              "hash": "618e56aabaab0b43d210942c9b1348b0eddae6a3"
-            },
-            {
-              "file": "apps/dev/node_modules/.vite/deps/chunk-X3SP7KNB.js",
-              "hash": "cf5bd6c75469520a46c9f07d6e73acac82036958"
-            },
-            {
-              "file": "apps/dev/node_modules/.vite/deps/chunk-X3SP7KNB.js.map",
-              "hash": "77962112b507c8bac6a887d3499d30129d95c926"
-            },
-            {
-              "file": "apps/dev/node_modules/.vite/deps/idb-keyval.js",
-              "hash": "6b1e7b95250b8575a2b44421b424d818cb1b0530"
-            },
-            {
-              "file": "apps/dev/node_modules/.vite/deps/idb-keyval.js.map",
-              "hash": "46e86b2379bd9f2a2aa3c6f1dde1ea07c1d6d9f3"
-            },
-            {
-              "file": "apps/dev/node_modules/.vite/deps/lit_directives_unsafe-html__js.js",
-              "hash": "253a718631c1c2f1d725f32e3e1ba675cd96d47c"
-            },
-            {
-              "file": "apps/dev/node_modules/.vite/deps/lit_directives_unsafe-html__js.js.map",
-              "hash": "ae8c54a312b1a3ab3865c1747548af288e401719"
-            },
-            {
-              "file": "apps/dev/node_modules/.vite/deps/lit-html_directives_map__js.js",
-              "hash": "70528cb5f5be7c6729bb76854d2baeaf98672882"
-            },
-            {
-              "file": "apps/dev/node_modules/.vite/deps/lit-html_directives_map__js.js.map",
-              "hash": "ebc894562382ba8d661415049bf2940affcb21af"
-            },
-            {
-              "file": "apps/dev/node_modules/.vite/deps/lit-html_directives_ref__js.js",
-              "hash": "0fb16688a9a22726650dfff32839153803aa27a1"
-            },
-            {
-              "file": "apps/dev/node_modules/.vite/deps/lit-html_directives_ref__js.js.map",
-              "hash": "102874acb3450464b9b318e3c7c78324a8169dcc"
-            },
-            {
-              "file": "apps/dev/node_modules/.vite/deps/lit-html.js",
-              "hash": "4d9c13b7232c148cd49f6636baf938f30b01243f"
-            },
-            {
-              "file": "apps/dev/node_modules/.vite/deps/lit-html.js.map",
-              "hash": "98652118b6862120fb1a693020ad8654fe85851d"
-            },
-            {
-              "file": "apps/dev/node_modules/.vite/deps/msw.js",
-              "hash": "b3512bf42ad8a2ef12a4fc2b0fea911b99f5dc33"
-            },
-            {
-              "file": "apps/dev/node_modules/.vite/deps/msw.js.map",
-              "hash": "ef4cebf5c4b73092686fc0a70e040720ae735221"
-            },
-            {
-              "file": "apps/dev/node_modules/.vite/deps/package.json",
-              "hash": "7c34deb5837d8d5e168b54f95f7872b2c50eca13"
-            },
-            {
-              "file": "apps/dev/node_modules/.vite/deps/redux.js",
-              "hash": "e9dc85362853f652091579a8803c230d80ac4738"
-            },
-            {
-              "file": "apps/dev/node_modules/.vite/deps/redux.js.map",
-              "hash": "2be0ced015a443527bf97344446e11cf061e1e1d"
+              "hash": "d037890682bf8b6b9b0c61974790888257bb40e4"
             },
             {
               "file": "apps/dev/package.json",
@@ -3650,312 +1652,546 @@
             },
             {
               "file": "apps/dev/project.json",
-              "hash": "74cf38c945d41c265163c87a1105c356a580a530"
+              "hash": "fe53f0cb86081e6a637aaecaa92dfa7eac94b797"
+            },
+            {
+              "file": "apps/dev/src/assets/logo-code-transparent.png",
+              "hash": "cb5aba190e3b52bb7c1759b98ec5c3dfe0085a97"
+            },
+            {
+              "file": "apps/dev/src/assets/logo-transparent-small.png",
+              "hash": "8def1ccb8a022c0f36500084d73d99fbeb7971ab"
+            },
+            {
+              "file": "apps/dev/src/design/alert/alert.module.scss",
+              "hash": "5cd6f9c5f77608d64f5d444f92e5a43bc4bed597"
+            },
+            {
+              "file": "apps/dev/src/design/alert/alert.ts",
+              "hash": "af031c91b6e007f482cf8290c527f0f48ea11fe3",
+              "deps": [
+                "npm:lit-html",
+                "utils"
+              ]
+            },
+            {
+              "file": "apps/dev/src/design/card/card.css",
+              "hash": "4b26b309af0ddcb9339ad3037d38be6e081f8e92"
+            },
+            {
+              "file": "apps/dev/src/design/directives/draggable/index.ts",
+              "hash": "c436879de55232f33263b97a30c8531d082c6edf"
+            },
+            {
+              "file": "apps/dev/src/design/divider/vertical-divider.module.scss",
+              "hash": "cfe6e775544f1bfcffce0e96632e1770b175d495"
+            },
+            {
+              "file": "apps/dev/src/design/divider/vertical-divider.ts",
+              "hash": "d31db6c9aa7163210ae611dbe16c99382564c2d3"
+            },
+            {
+              "file": "apps/dev/src/design/icon/icon.ts",
+              "hash": "f7303e53e9a8679642ee1bf3374065c44bd3f411",
+              "deps": [
+                "utils"
+              ]
+            },
+            {
+              "file": "apps/dev/src/design/template/template.css",
+              "hash": "23ef8dbccd63c95487ef35555f4a70a7b14858a0"
+            },
+            {
+              "file": "apps/dev/src/design/template/template.ts",
+              "hash": "88dd2c36712977211b82ea4eed9c785390a73de3"
+            },
+            {
+              "file": "apps/dev/src/design/toggle/toggle.module.scss",
+              "hash": "5c166b4a429cd3d717aa328f03d0f71fe22afab4"
+            },
+            {
+              "file": "apps/dev/src/design/toggle/toggle.ts",
+              "hash": "5fea4ad33a8ef855248c796b8b9ca2108bba8618",
+              "deps": [
+                "utils"
+              ]
             },
             {
               "file": "apps/dev/src/favicon.svg",
               "hash": "de4aeddc12bdfe6c668dd57c6b457a659c058914"
             },
             {
-              "file": "apps/dev/src/features/auth/api/api.ts",
-              "hash": "32244e5bcc6572be388d42b227540acb45f722a7"
+              "file": "apps/dev/src/features/dark-mode/dark-mode.config.ts",
+              "hash": "0835d20488fa24ced7304aaf5743c39826c00bd3"
             },
             {
-              "file": "apps/dev/src/features/auth/api/mock/build-token-fields.ts",
-              "hash": "c09eb376bf3a818f687e3b997ba6e2e8be6b833b",
+              "file": "apps/dev/src/features/dark-mode/dark-mode.index.ts",
+              "hash": "0fc98e1009a7a4b138efac18b926006a980e4101",
               "deps": [
-                "string-utils"
-              ]
-            },
-            {
-              "file": "apps/dev/src/features/auth/api/mock/build-user-fields.ts",
-              "hash": "508ee3ec3aaa5ecad899dd1a256dfb74b59714b9",
-              "deps": [
-                "string-utils"
-              ]
-            },
-            {
-              "file": "apps/dev/src/features/auth/api/mock/handlers.ts",
-              "hash": "35788b0ca27ac16166c78baa13885e24552bd500",
-              "deps": [
-                "npm:msw",
-                "npm:idb-keyval",
-                "async-queue"
-              ]
-            },
-            {
-              "file": "apps/dev/src/features/auth/api/mock/mock-users.ts",
-              "hash": "2e005e6b8243198c2747f6e08060ff04a6896ac0"
-            },
-            {
-              "file": "apps/dev/src/features/auth/api/types.ts",
-              "hash": "d7b3a1b95334b10283ea43d42892b1f25a5006f7"
-            },
-            {
-              "file": "apps/dev/src/features/auth/auth.module.ts",
-              "hash": "f22e2fd6ae1e0e9f8acd29bd0d561397a7823a74",
-              "deps": [
-                "app"
-              ]
-            },
-            {
-              "file": "apps/dev/src/features/auth/auth.slice.ts",
-              "hash": "36d8bb53b8cdae5b4489de95ba1ded02abec7a8e",
-              "deps": [
-                "machine",
-                "redux-slice",
-                "utils"
-              ]
-            },
-            {
-              "file": "apps/dev/src/features/auth/views/user-nav/user-nav.selectors.ts",
-              "hash": "fab081e3c7a7c37fc2faf62075c86996e1b998a3"
-            },
-            {
-              "file": "apps/dev/src/features/auth/views/user-nav/user-nav.view.ts",
-              "hash": "468f7a97c158433047baa752f06511a8b8acca30",
-              "deps": [
-                "npm:lit-html"
-              ]
-            },
-            {
-              "file": "apps/dev/src/features/dark-mode/dark-mode.module.ts",
-              "hash": "02fd81908ecfaf193d3480e3efb77ee0cc09367a",
-              "deps": [
-                "app"
+                "crux"
               ]
             },
             {
               "file": "apps/dev/src/features/dark-mode/dark-mode.scss",
-              "hash": "e32d8d40751ced618c8e2dffc21e1b25dc59ac57"
+              "hash": "f24c887e78363602762f1c121a25dbec83236aaf"
             },
             {
-              "file": "apps/dev/src/features/dark-mode/dark-mode.selectors.ts",
-              "hash": "c8b7612e50757e1f08532355f8e08d4ab21216e0"
+              "file": "apps/dev/src/features/dark-mode/dark-mode.service.ts",
+              "hash": "ea925dbe5b25397c8dd28c49bc689a626bb67512"
             },
             {
               "file": "apps/dev/src/features/dark-mode/dark-mode.slice.ts",
-              "hash": "ed30dae4d1a4ea17eba9047bf1d7f9bbf128a9c8",
+              "hash": "b3e7506260257cdf515e424a99827e4846825705",
               "deps": [
-                "redux-slice",
+                "slice",
                 "utils"
               ]
             },
             {
               "file": "apps/dev/src/features/dark-mode/dark-mode.view.ts",
-              "hash": "01d4daa3f9b7fb5ad1bdbdfc5843e34deb83bf27",
+              "hash": "3a3841dd53aaeded3dbf53ad36148be1bf19883c"
+            },
+            {
+              "file": "apps/dev/src/features/dark-mode/utils/is-boolean.ts",
+              "hash": "68438fad0bce7e961dbf4b6ccbecdf172a8491a1"
+            },
+            {
+              "file": "apps/dev/src/features/nav/nav.index.ts",
+              "hash": "aaca800050ba898c7c25e4f48015b5175d69776d",
               "deps": [
-                "npm:lit-html"
+                "crux",
+                "npm:reselect"
               ]
             },
             {
-              "file": "apps/dev/src/features/dark-mode/types.ts",
-              "hash": "8a780231c93d8759738dcdc5c9235e75b41c9dd7"
+              "file": "apps/dev/src/features/nav/nav.module.scss",
+              "hash": "5e557b04d2169ace6e65269e9c2ef1223e567801"
             },
             {
-              "file": "apps/dev/src/features/sign-up-form/sign-up-form.module.css",
-              "hash": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+              "file": "apps/dev/src/features/nav/nav.selectors.ts",
+              "hash": "bc7f9b6c8fda0bfa7939132a9e5da713b4fd2208"
             },
             {
-              "file": "apps/dev/src/features/sign-up-form/sign-up-form.module.ts",
-              "hash": "d713d53e18d8ebe0941a2991f2d4a785af42f08f",
-              "deps": [
-                "app"
-              ]
+              "file": "apps/dev/src/features/nav/nav.types.ts",
+              "hash": "133350bacd6d1e279b5c783535ffca67bfb3fd58"
             },
             {
-              "file": "apps/dev/src/features/sign-up-form/sign-up-form.selectors.ts",
-              "hash": "2ca48dc22f1ee328c4e400aca8d5471e81350ba7"
-            },
-            {
-              "file": "apps/dev/src/features/sign-up-form/sign-up-form.slice.ts",
-              "hash": "72ffe42a9c67cff078accc35b915489388dd1b8d",
-              "deps": [
-                "redux-slice",
-                "utils"
-              ]
-            },
-            {
-              "file": "apps/dev/src/features/sign-up-form/sign-up-form.view.ts",
-              "hash": "6af3a480a6830bbd9fad08023f966242381a5fdf",
-              "deps": [
-                "npm:@shoelace-style/shoelace",
-                "npm:lit-html"
-              ]
-            },
-            {
-              "file": "apps/dev/src/features/sign-up-form/sign-up.form.validators.ts",
-              "hash": "47f49f73552fbd9820ca381016cb7a6165346fba",
+              "file": "apps/dev/src/features/nav/nav.view.ts",
+              "hash": "f1932c2f8ab6a82edc97d8bb8f6d00f40184b24e",
               "deps": [
                 "utils"
               ]
             },
             {
-              "file": "apps/dev/src/features/toaster/toaster.module.ts",
-              "hash": "a7f0c9f0b3ca67e45fc029a55e535eb9f842b410"
+              "file": "apps/dev/src/features/template/template.index.ts",
+              "hash": "10dfc2340563b352e20a5c4166f9524446632936",
+              "deps": [
+                "crux"
+              ]
             },
             {
-              "file": "apps/dev/src/features/toaster/toaster.selectors.ts",
-              "hash": "0a4756ed5edfa770fd3db6b2410d7309e46aca76"
+              "file": "apps/dev/src/features/template/template.module.scss",
+              "hash": "8b137891791fe96927ad78e64b0aad7bded08bdc"
+            },
+            {
+              "file": "apps/dev/src/features/template/template.service.ts",
+              "hash": "06c257bb1bdf847c5f9a26a3f7a813b21b62266f"
+            },
+            {
+              "file": "apps/dev/src/features/template/template.slice.ts",
+              "hash": "d0b0b1b6076dd535959aa3207aa66b5ca77ff543",
+              "deps": [
+                "slice"
+              ]
+            },
+            {
+              "file": "apps/dev/src/features/template/template.view.ts",
+              "hash": "f0c377317d6cd1ee45831a14d6f64651605ec882"
+            },
+            {
+              "file": "apps/dev/src/features/toaster/toaster.index.ts",
+              "hash": "5d67b6956bccc17dd55840b28ea0353f0142dd14",
+              "deps": [
+                "crux"
+              ]
+            },
+            {
+              "file": "apps/dev/src/features/toaster/toaster.module.scss",
+              "hash": "0d67e521811e56ef34a1f3e25c7d11f4f2a13f93"
+            },
+            {
+              "file": "apps/dev/src/features/toaster/toaster.service.ts",
+              "hash": "ed6e224b132ce95ff5828ba8897ad16279dd5dca",
+              "deps": [
+                "string-utils",
+                "utils"
+              ]
             },
             {
               "file": "apps/dev/src/features/toaster/toaster.slice.ts",
-              "hash": "92dc6ce8c35dd377c323c505c14fa7816deb1b75",
+              "hash": "b91f035f6e40ae3cb85a27f897e16c987993b87d",
               "deps": [
-                "redux-slice",
-                "utils",
-                "npm:@shoelace-style/shoelace"
+                "slice",
+                "utils"
               ]
             },
             {
               "file": "apps/dev/src/features/toaster/toaster.view.ts",
-              "hash": "d65cbeb860fe5df650334c9248667c9e6fb37e10",
+              "hash": "f9a2bb807a67cd332698a6d51ee13b4dba038812",
               "deps": [
-                "npm:lit-html"
+                "utils"
               ]
             },
             {
-              "file": "apps/dev/src/features/users/user.module.ts",
-              "hash": "855566bb58f067d6f691183c593bac9a57badb7b"
+              "file": "apps/dev/src/features/todos/components/column/column.css",
+              "hash": "387b4e937ce013511496c25349e4f8a9509af8d5"
             },
             {
-              "file": "apps/dev/src/features/users/user.selectors.ts",
-              "hash": "c39ddbb48e180d870a9c64971707880718ff655c"
-            },
-            {
-              "file": "apps/dev/src/features/users/user.view.ts",
-              "hash": "81e80bcf01c2ce1735762f9af9bae5d60759ecc1",
+              "file": "apps/dev/src/features/todos/components/column/column.ts",
+              "hash": "084eb10805bbec9f2f96aa15483f126ed3dbab26",
               "deps": [
-                "npm:lit-html"
+                "utils"
+              ]
+            },
+            {
+              "file": "apps/dev/src/features/todos/components/container/container.css",
+              "hash": "8546811f3e46f22e8cdf87ccf2268012d0e41c36"
+            },
+            {
+              "file": "apps/dev/src/features/todos/components/container/container.ts",
+              "hash": "deaaed302c0ce08792b6b7d4928d77085feafe02"
+            },
+            {
+              "file": "apps/dev/src/features/todos/components/expanding-dropzone/expanding-dropzone.css",
+              "hash": "77f53b73c5c55ce9a1c1159efac6268e35df41f5"
+            },
+            {
+              "file": "apps/dev/src/features/todos/components/expanding-dropzone/expanding-dropzone.ts",
+              "hash": "60f44c3c4e38d1d95a6b71fba09198ce45602fd9"
+            },
+            {
+              "file": "apps/dev/src/features/todos/components/task-overlay/task-overlay.css",
+              "hash": "e7103c2a64eca333bf2c525784727781ef22f704"
+            },
+            {
+              "file": "apps/dev/src/features/todos/components/task-overlay/task-overlay.ts",
+              "hash": "fc9619833df53a26c4d92dbc25e43f6264a3488c"
+            },
+            {
+              "file": "apps/dev/src/features/todos/components/task/task.css",
+              "hash": "f3e805d045f098b2ebed50bf1e43a01a28dc4419"
+            },
+            {
+              "file": "apps/dev/src/features/todos/components/task/task.ts",
+              "hash": "ba3a7f5f4ec427177d10a56e813374f7e025432b",
+              "deps": [
+                "utils"
+              ]
+            },
+            {
+              "file": "apps/dev/src/features/todos/data/todos.data.ts",
+              "hash": "9fbcd616213732f8f9150a0dfce2bbb821912239",
+              "deps": [
+                "query"
+              ]
+            },
+            {
+              "file": "apps/dev/src/features/todos/data/todos.mock.api.ts",
+              "hash": "3e5fce3398dc32d07192a55251499366a25e757a",
+              "deps": [
+                "string-utils",
+                "npm:msw"
+              ]
+            },
+            {
+              "file": "apps/dev/src/features/todos/data/todos.subscription.ts",
+              "hash": "43e24e16abdb4336056824ffb04e459d17375144"
+            },
+            {
+              "file": "apps/dev/src/features/todos/data/transformations.ts",
+              "hash": "b905ec442046d479980dca0a07b18dc8ff53e35f"
+            },
+            {
+              "file": "apps/dev/src/features/todos/domain/todos.http.ts",
+              "hash": "90c1dbe6d87dd7dea6805ffcaf7eaa6dba847505"
+            },
+            {
+              "file": "apps/dev/src/features/todos/domain/todos.reducers.test.ts",
+              "hash": "a96d88ada6b9ec6ec880da7ee59f66ad3e7248de"
+            },
+            {
+              "file": "apps/dev/src/features/todos/domain/todos.reducers.ts",
+              "hash": "0d0ccabb8fdb762f81f00858e61e0568315dbbd4",
+              "deps": [
+                "utils"
+              ]
+            },
+            {
+              "file": "apps/dev/src/features/todos/domain/todos.selectors.ts",
+              "hash": "e02d32f0b27dcf28dfa74fe8b59545da80ec03b2"
+            },
+            {
+              "file": "apps/dev/src/features/todos/domain/todos.service.ts",
+              "hash": "d5541f1917b7a46aed2c61f19bdf450970940969"
+            },
+            {
+              "file": "apps/dev/src/features/todos/domain/todos.types.ts",
+              "hash": "de368a6b42b136ce87fecf1feebb6a1a66aeaa30"
+            },
+            {
+              "file": "apps/dev/src/features/todos/slice/todos.slice.ts",
+              "hash": "a5831da11ae1f95f94262a74044d80ea68c8b5b2",
+              "deps": [
+                "slice"
+              ]
+            },
+            {
+              "file": "apps/dev/src/features/todos/todos.index.ts",
+              "hash": "7252e02e414342e287c84bcabe59ed8fa07c90d4",
+              "deps": [
+                "crux",
+                "npm:reselect"
+              ]
+            },
+            {
+              "file": "apps/dev/src/features/todos/views/todos.module.css",
+              "hash": "a4b65935bd6f5e8593c6d7babc99df5b29182b2d"
+            },
+            {
+              "file": "apps/dev/src/features/todos/views/todos.view.ts",
+              "hash": "00599f2dde9cf0bd73d2732eb96e451293924d77",
+              "deps": [
+                "utils"
+              ]
+            },
+            {
+              "file": "apps/dev/src/layout/layout.index.ts",
+              "hash": "7e8bf691a715316023f17c9c2cbd22463cbae73c",
+              "deps": [
+                "crux",
+                "npm:reselect"
               ]
             },
             {
               "file": "apps/dev/src/layout/layout.module.scss",
-              "hash": "3fd8a8284c9ec9fb4440ff6caed8dc4b632443de"
+              "hash": "dc42640a86b248e1a60fd1fa0456063795753a24"
             },
             {
               "file": "apps/dev/src/layout/layout.module.ts",
-              "hash": "650fbeb0907d74916ab507130d350f8de28da7ba",
+              "hash": "d09197388e2a3ab6a3a251ef8d1522a7e8d27662",
               "deps": [
-                "redux-slice",
+                "slice",
                 "utils"
               ]
             },
             {
               "file": "apps/dev/src/layout/layout.selectors.ts",
-              "hash": "a3b09f6c9d24c957b39bd6e0ec3e3d819dda88a9"
+              "hash": "eff82dae1c771d6e2e229fd6030433fb96ebcab2"
             },
             {
-              "file": "apps/dev/src/layout/layout.view.ts",
-              "hash": "7dc87187976bec25e8104d10be4b5fcc2ead26d0",
+              "file": "apps/dev/src/layout/layout.slice.ts",
+              "hash": "dd74db3500bb4ad8e8b146dda69de741ed85e33d",
               "deps": [
-                "npm:lit-html"
+                "slice"
               ]
             },
             {
-              "file": "apps/dev/src/layout/normalise.css",
-              "hash": "9f7df11aabe7f92a8e932cc0104bc607087ea942"
+              "file": "apps/dev/src/layout/layout.view.ts",
+              "hash": "627b4ba17b63bd6b70780ee4360ba4d3700ae99e"
             },
             {
               "file": "apps/dev/src/layout/types.ts",
-              "hash": "5d888d2d7f3d6ddf5e10701eeae3816261f7ba68"
+              "hash": "57faf7c94faa419a93dc1e41110c5e4916aef8e8"
             },
             {
               "file": "apps/dev/src/logo.svg",
               "hash": "6b60c1042f58d9fabb75485aa3624dddcf633b5c"
             },
             {
-              "file": "apps/dev/src/main.css",
-              "hash": "4f4e703d312d744f03bdf32256588268e4524c54"
-            },
-            {
               "file": "apps/dev/src/main.ts",
-              "hash": "fe63e2b49e31a0ba821f5d79e086fd7768636106",
+              "hash": "2302f043554ad62c2074ef49f90248e79be323d4",
               "deps": [
-                "app",
-                "npm:@shoelace-style/shoelace"
+                "npm:animate.css",
+                "crux"
               ]
             },
             {
-              "file": "apps/dev/src/shared/api/users-api.service.ts",
-              "hash": "62cc2fad58476369957d33ec32d129173740d1de"
+              "file": "apps/dev/src/shared/async-cache/async-cache.index.ts",
+              "hash": "9277fad55bae48888f6440444e605a6a5600c798",
+              "deps": [
+                "crux"
+              ]
             },
             {
-              "file": "apps/dev/src/shared/cache/async-cache.service.ts",
-              "hash": "5ee4c928346c118fbaf50f4be456f98775672ea5",
+              "file": "apps/dev/src/shared/async-cache/async-cache.service.ts",
+              "hash": "e261b8b4f85122c80ab7634f1dec7e0ddea5f0f3",
               "deps": [
                 "npm:idb-keyval"
               ]
             },
             {
+              "file": "apps/dev/src/shared/cache/cache.index.ts",
+              "hash": "4da434b4e343333cbb16f33048b60d9bf8401999",
+              "deps": [
+                "crux"
+              ]
+            },
+            {
               "file": "apps/dev/src/shared/cache/cache.service.ts",
-              "hash": "cde56cb4bc67f6523a2cabf84d315d731246d7d8"
+              "hash": "51063b89969e36b8238bab4c8725edea3cc80838"
             },
             {
               "file": "apps/dev/src/shared/cache/types.ts",
-              "hash": "634c143ac625418027d05edb5e3dd50f59a09a5c"
+              "hash": "b469dbbeed63234ea1ca19f851a1791ba15c95bd"
             },
             {
-              "file": "apps/dev/src/shared/data/data.module.ts",
-              "hash": "df88e201cea5d69014b2fee26d0d08e31eb668b6",
+              "file": "apps/dev/src/shared/data/data.index.ts",
+              "hash": "0b2447c9929bc35a3564afe3b0caaddef3dcdda8",
               "deps": [
-                "query"
+                "crux"
+              ]
+            },
+            {
+              "file": "apps/dev/src/shared/data/data.service.ts",
+              "hash": "2cba979b685a5b6496a3b3403ac333ae7c90f431",
+              "deps": [
+                "query",
+                "crux"
               ]
             },
             {
               "file": "apps/dev/src/shared/data/data.slice.ts",
-              "hash": "043ad742c189496c0fecbbed1e1d28a56f83f50a",
+              "hash": "438c1932a1187f798b5de2091bc7aa25308dd014",
               "deps": [
                 "query"
               ]
             },
             {
               "file": "apps/dev/src/shared/data/users/transformations.ts",
-              "hash": "74f94462382e0ddae267b96c308825f3d9740d74"
+              "hash": "a477f6e7b35bc571d65fceca301778a623099575"
+            },
+            {
+              "file": "apps/dev/src/shared/data/users/users-data.index.ts",
+              "hash": "10d297583d86d5e0c24d65ae4e50e8bf7e69fcd3",
+              "deps": [
+                "crux"
+              ]
             },
             {
               "file": "apps/dev/src/shared/data/users/users-data.service.ts",
-              "hash": "4b7fbf4d4ef1fcd925ec45c07a49297a7bbd0568",
+              "hash": "6778f6be6a0e62cf1710a527bc78e779f27fb906",
               "deps": [
                 "query"
               ]
             },
             {
+              "file": "apps/dev/src/shared/env/env.index.ts",
+              "hash": "aa9a97736f535868c6451b57fcd28e8a582b3329",
+              "deps": [
+                "crux"
+              ]
+            },
+            {
               "file": "apps/dev/src/shared/env/env.service.ts",
-              "hash": "fe7580d8157116ae6b29fe221b9069ccddc643ff"
+              "hash": "9a1146aabd928b410b3c8783873b8bea9a0c37c9"
+            },
+            {
+              "file": "apps/dev/src/shared/feature-flags/feature-flags.index.ts",
+              "hash": "eeb2169565f5dd9a63b4c3b521ceb76d791dec66",
+              "deps": [
+                "crux"
+              ]
             },
             {
               "file": "apps/dev/src/shared/feature-flags/feature-flags.service.ts",
-              "hash": "f34dfb339d65814eddc2a65a4d177859e5162c5a"
+              "hash": "839fded5d375d6f3b44bc8c4bd9f4757ba30ae72"
             },
             {
-              "file": "apps/dev/src/shared/logging/logging.service.ts",
-              "hash": "e35a8554625bbca60457b8e185e4734d7b4bc4a5"
+              "file": "apps/dev/src/shared/http/users/users-http.index.ts",
+              "hash": "e5c46195fd19058838f14684ff306fe3c7a3b7b1",
+              "deps": [
+                "crux"
+              ]
+            },
+            {
+              "file": "apps/dev/src/shared/http/users/users-http.service.ts",
+              "hash": "4dfd8673710d851f6e3aa1ef982f27c1d7eb6d8b"
             },
             {
               "file": "apps/dev/src/shared/mock/server.ts",
-              "hash": "8412dea7bdbf73bceacb36e5b15238b93bca0e3e",
+              "hash": "52dde624166d9024f64bbe05b194f3d8693fc4e6",
               "deps": [
                 "npm:msw"
               ]
             },
             {
-              "file": "apps/dev/src/shared/router/router.module.ts",
-              "hash": "016cea274bd6a50a089b521d8ddc20ac39b31b19",
+              "file": "apps/dev/src/shared/reporting/reporting.index.ts",
+              "hash": "c784f8078786daddc05ddc0ca2a99791e1d0b896",
               "deps": [
-                "redux-router"
+                "crux"
+              ]
+            },
+            {
+              "file": "apps/dev/src/shared/reporting/reporting.service.ts",
+              "hash": "6ca9cc73d8d0463310db848472d7f4f86a53b17c"
+            },
+            {
+              "file": "apps/dev/src/shared/router/router.index.ts",
+              "hash": "11632cb8364d95feaefe6b54d1dcd9492d406055",
+              "deps": [
+                "crux"
               ]
             },
             {
               "file": "apps/dev/src/shared/router/router.selectors.ts",
-              "hash": "555525809f0ea7ea4766c2e4c8d3fc3355bd7675",
+              "hash": "c2e40f55529a086d22a085b33c07c4e3f7dcb4f4",
               "deps": [
-                "redux-router"
+                "npm:reselect"
               ]
             },
             {
+              "file": "apps/dev/src/shared/router/router.service.ts",
+              "hash": "daa68c6f6dd28cf04d09a068f75e360610c71b25"
+            },
+            {
+              "file": "apps/dev/src/shared/router/router.slice.ts",
+              "hash": "29f7e883c6a43669d1039effb218c3104fbc53d5",
+              "deps": [
+                "slice",
+                "utils"
+              ]
+            },
+            {
+              "file": "apps/dev/src/shared/router/utils/get-route-from-url.ts",
+              "hash": "f877d41d4565232667234d1c2ebaf4eec17e3b30"
+            },
+            {
+              "file": "apps/dev/src/shared/router/utils/get-url-from-route.ts",
+              "hash": "2cd1a07ea1c6d549b6a99388a8803b4fa96e1ded"
+            },
+            {
+              "file": "apps/dev/src/styles/main.scss",
+              "hash": "d3603cc68967b0ba50232e54850b42e9c1797224"
+            },
+            {
+              "file": "apps/dev/src/styles/normalise.css",
+              "hash": "d1e7c236187f303be110b62d7ce6a9d691223353"
+            },
+            {
+              "file": "apps/dev/src/styles/variables.scss",
+              "hash": "a5e56f5d7589120a64a1ab990acd251f606442b8"
+            },
+            {
               "file": "apps/dev/src/types.d.ts",
-              "hash": "d2b9a3d9d270cc85f8b0b57c6509e3412dd7aa33"
+              "hash": "604a74e6d5a562dccc2f68f7521beb3794cbe2a2"
+            },
+            {
+              "file": "apps/dev/src/utils/draggable/index.ts",
+              "hash": "5813b255e572aa7fc3d7f4eb2ed42516d86aabc1"
+            },
+            {
+              "file": "apps/dev/src/utils/relative-time.ts",
+              "hash": "4f6f4d133f349d5153ba78d41e622a9dd0c21961"
             },
             {
               "file": "apps/dev/src/vite-env.d.ts",
@@ -3975,10 +2211,11 @@
             },
             {
               "file": "apps/dev/vite.config.ts",
-              "hash": "f8c4a95a026e31a694d3c52355586f726b5faf23",
+              "hash": "9b8c00bd24f4f3d8a9aa0e4f225e9755aa5b66b5",
               "deps": [
                 "npm:vite",
-                "npm:path"
+                "npm:path",
+                "npm:rollup-plugin-postcss-lit"
               ]
             }
           ]
@@ -3993,86 +2230,22 @@
           "type": "static"
         }
       ],
-      "event-emitter": [],
-      "redux-machine": [
+      "dynamic-store": [
         {
-          "source": "redux-machine",
-          "target": "redux-utils",
-          "type": "static"
-        },
-        {
-          "source": "redux-machine",
-          "target": "redux-types",
-          "type": "static"
-        },
-        {
-          "source": "redux-machine",
-          "target": "redux-slice",
-          "type": "static"
-        }
-      ],
-      "create-store": [
-        {
-          "source": "create-store",
+          "source": "dynamic-store",
           "target": "redux-registry",
           "type": "static"
         },
         {
-          "source": "create-store",
+          "source": "dynamic-store",
           "target": "redux-types",
           "type": "static"
         }
       ],
-      "redux-router": [
-        {
-          "source": "redux-router",
-          "target": "router",
-          "type": "static"
-        },
-        {
-          "source": "redux-router",
-          "target": "redux-types",
-          "type": "static"
-        }
-      ],
+      "event-emitter": [],
       "string-utils": [],
       "async-queue": [],
-      "redux-slice": [
-        {
-          "source": "redux-slice",
-          "target": "event-emitter",
-          "type": "static"
-        },
-        {
-          "source": "redux-slice",
-          "target": "redux-types",
-          "type": "static"
-        }
-      ],
       "redux-types": [],
-      "redux-utils": [],
-      "sync-queue": [],
-      "url-parser": [],
-      "set-utils": [],
-      "machine": [
-        {
-          "source": "machine",
-          "target": "event-emitter",
-          "type": "static"
-        }
-      ],
-      "router": [
-        {
-          "source": "router",
-          "target": "event-emitter",
-          "type": "static"
-        },
-        {
-          "source": "router",
-          "target": "url-parser",
-          "type": "static"
-        }
-      ],
       "query": [
         {
           "source": "query",
@@ -4086,128 +2259,79 @@
         },
         {
           "source": "query",
-          "target": "machine",
-          "type": "static"
-        },
-        {
-          "source": "query",
           "target": "async-queue",
           "type": "static"
         }
       ],
-      "store": [
+      "slice": [
         {
-          "source": "store",
-          "target": "sync-queue",
+          "source": "slice",
+          "target": "dynamic-store",
+          "type": "static"
+        },
+        {
+          "source": "slice",
+          "target": "event-emitter",
+          "type": "static"
+        },
+        {
+          "source": "slice",
+          "target": "redux-types",
           "type": "static"
         }
       ],
       "utils": [],
-      "xapp": [
+      "crux": [
         {
-          "source": "xapp",
-          "target": "redux-slice",
+          "source": "crux",
+          "target": "dynamic-store",
           "type": "static"
         },
         {
-          "source": "xapp",
-          "target": "create-store",
-          "type": "static"
-        },
-        {
-          "source": "xapp",
-          "target": "redux-types",
-          "type": "static"
-        },
-        {
-          "source": "xapp",
-          "target": "string-utils",
-          "type": "static"
-        },
-        {
-          "source": "xapp",
+          "source": "crux",
           "target": "event-emitter",
           "type": "static"
-        }
-      ],
-      "app": [
-        {
-          "source": "app",
-          "target": "async-queue",
-          "type": "static"
         },
         {
-          "source": "app",
+          "source": "crux",
           "target": "redux-types",
           "type": "static"
         },
         {
-          "source": "app",
-          "target": "redux-slice",
+          "source": "crux",
+          "target": "slice",
           "type": "static"
         },
         {
-          "source": "app",
-          "target": "set-utils",
-          "type": "static"
-        },
-        {
-          "source": "app",
-          "target": "utils",
-          "type": "static"
-        },
-        {
-          "source": "app",
-          "target": "redux-registry",
-          "type": "static"
-        }
-      ],
-      "di": [
-        {
-          "source": "di",
-          "target": "utils",
+          "source": "crux",
+          "target": "string-utils",
           "type": "static"
         }
       ],
       "dev": [
         {
           "source": "dev",
-          "target": "string-utils",
-          "type": "static"
-        },
-        {
-          "source": "dev",
-          "target": "async-queue",
-          "type": "static"
-        },
-        {
-          "source": "dev",
-          "target": "app",
-          "type": "static"
-        },
-        {
-          "source": "dev",
-          "target": "machine",
-          "type": "static"
-        },
-        {
-          "source": "dev",
-          "target": "redux-slice",
-          "type": "static"
-        },
-        {
-          "source": "dev",
           "target": "utils",
           "type": "static"
         },
         {
           "source": "dev",
-          "target": "query",
+          "target": "crux",
           "type": "static"
         },
         {
           "source": "dev",
-          "target": "redux-router",
+          "target": "slice",
+          "type": "static"
+        },
+        {
+          "source": "dev",
+          "target": "string-utils",
+          "type": "static"
+        },
+        {
+          "source": "dev",
+          "target": "query",
           "type": "static"
         }
       ]

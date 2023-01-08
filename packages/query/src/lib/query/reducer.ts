@@ -5,7 +5,7 @@ export function createReducer(initialState: Record<string, State<any, any>>) {
   return function reducer(state: Record<string, State<any, any>>, action: Action<State<any, any>>) {
     const currentState = state || initialState;
 
-    if (action.type === '__crux-query__') {
+    if (action.type.startsWith('__cruxQuery')) {
       return {
         ...currentState,
         [action.meta.id]: {

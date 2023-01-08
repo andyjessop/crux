@@ -32,11 +32,11 @@ export function query(reducerId = 'crux') {
   }
 
   function createSetState(id: string) {
-    return function setState(state: Partial<State<any, any>>) {
+    return function setState(state: Partial<State<any, any>>, type?: string) {
       return dispatch({
         meta: { id },
         payload: state,
-        type: '__crux-query__',
+        type: `__cruxQuery${type ? '/' + type : ''}`,
       });
     };
   }
@@ -82,7 +82,10 @@ export function query(reducerId = 'crux') {
           })
         );
 
-        setResourceState({ data: null, error: null, loading: false, updating: false });
+        setResourceState(
+          { data: null, error: null, loading: false, updating: false },
+          'resource/init'
+        );
       }
 
       const { addSubscriber, mutate, refetch, removeSubscriber } = resources.get(id) as ReturnType<
